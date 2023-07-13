@@ -1,1 +1,1 @@
-from .Py-SRT import dwr2nc
+from .PySRT import dwr2nc
