@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Py_SRT',
-    version='0.1',
+    version='1.0',
     description='Py-SRT is a helpful open-source library developed by the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw DWR (Doppler Weather Radar) files into Py-ART compatible NetCDF files. Furthermore, Py-SRT provides useful tools and visualisation functions to make working with the data easier and more enjoyable.',
     author='Nitig Singh & Vaibhav Tyagi',
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
