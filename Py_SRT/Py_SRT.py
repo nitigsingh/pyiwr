@@ -17,6 +17,7 @@ def fread(fid, nelements, dtype):
 
 def dwr2nc(dwr_path, nc_directory):
     with open(dwr_path, 'rb') as fid:
+        print('Processing file:',os.path.basename(dwr_path))
         m5 = np.fromfile(fid, dtype='uint8')
         m5 = m5.astype(float)
 
@@ -318,5 +319,5 @@ def dwr2nc(dwr_path, nc_directory):
         filepath =os.path.basename(dwr_path)
         new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
         new_file_path = os.path.join(updated_dir, new_file_name)
-        
+        print('File ',os.path.basename(dwr_path),' converted successfully')
         return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
