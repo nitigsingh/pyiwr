@@ -10,5 +10,9 @@ setup(
     long_description=open('README.txt').read(),
     packages=['Py_SRT',],
     install_requires=['arm_pyart', 'numpy', 'xarray'],
+    classifiers=[
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console"
+    ],
     url='https://github.com/Space14Mann/Py-SRT.git'
 )
