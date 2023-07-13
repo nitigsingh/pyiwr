@@ -1,8 +1,12 @@
 print('''You are using Py-SRT an open-source module developed by Researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw DWR (Doppler Weather Radar) files into Py-ART compatible NetCDF files. Furthermore, Py-SRT provides useful tools and visualisation functions to make working with the radar data easier and more enjoyable.''')
 
-import numpy as np
+
 import os
 import pyart
+import os
+import datetime as dt
+import xarray as xr
+import numpy as np
 
 def fread(fid, nelements, dtype):
     if dtype is np.str_:
@@ -321,3 +325,55 @@ def dwr2nc(dwr_path, nc_directory):
         new_file_path = os.path.join(updated_dir, new_file_name)
         print('File ',os.path.basename(dwr_path),' converted successfully')
         return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
+
+def nc_datim_correct(file_path):
+    # Open the dataset
+    
+    print('Processing file: ',os.path.basename(file_path))
+
+    raw = xr.open_dataset(file_path, decode_times=False)
+    raw.attrs.clear()
+    
+    # Add attributes to the dataset in the given order
+    raw.attrs['instrument_name'] = 'Sohra S-band Dual-pol DWR'
+    raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
+    raw.attrs['version'] = 'Version 1.0'
+    raw.attrs['title'] = 'S Band DWR data'
+    raw.attrs['institution'] = 'ISRO'
+    raw.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
+    raw.attrs['source'] = 'DWR volume scan data'
+    raw.attrs['comment'] = ''
+    raw.attrs['Conventions'] = 'CF/Radial'
+    raw.attrs['field_names'] = 'DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV'
+    raw.attrs['history'] = 'DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file'
+    raw.attrs['volume_number'] = 0
+    raw.attrs['platform_type'] = 'fixed'
+    raw.attrs['instrument_type'] = 'radar'
+    raw.attrs['primary_axis'] = 'axis_z'
+
+    # Extract the start time from the dataset and convert it to datetime object
+    start_time_str = "".join(raw.time_coverage_start.astype(str).values)
+    start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+
+    # Update the "time_coverage_start" variable in the dataset with the correct datetime object
+    raw["time_coverage_start"] = start_time
+
+    # Update the "units" attribute of the "time" variable to match the correct format
+    time_units = f"seconds since {start_time}"
+    raw["time"].attrs["units"] = time_units
+
+    # Decode the CF conventions of the dataset
+    radar_pol = xr.decode_cf(raw)
+
+    # Create the "corrected" subdirectory if it doesn't exist
+    corrected_dir = os.path.join(os.path.dirname(file_path), "corrected")
+    os.makedirs(corrected_dir, exist_ok=True)
+
+    # Specify the new file path
+    new_file_name = f"corrected_{os.path.basename(file_path)}"
+    new_file_path = os.path.join(corrected_dir, new_file_name)
+
+    print('Date Time of Mosdac File ',os.path.basename(file_path),' corrected successfully')
+
+    # Save the updated dataset to a new netCDF file
+    return radar_pol.to_netcdf(new_file_path)
