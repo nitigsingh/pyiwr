@@ -7,5 +7,5 @@ setup(
     author='Nitig Singh and Vaibhav Tyagi',
     author_email='nitig14rdfsma@gmail.com, phd2201121012@iiti.ac.in and vaibhavtyagi7191@gmail.com',
     packages=find_packages(),
-    install_requires=open('requirement.txt').readlines(),
+    install_requires=['arm_pyart', 'numpy'],
 )
