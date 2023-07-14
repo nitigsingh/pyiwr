@@ -347,7 +347,7 @@ def nc_datim_correct(file_path):
     raw.attrs['instrument_name'] = a
     raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
     raw.attrs['version'] = 'Version 1.0'
-    raw.attrs['title'] = 'S Band DWR data'
+    raw.attrs['title'] = a[0:13] +'DWR data'
     raw.attrs['institution'] = 'ISRO'
     raw.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
     raw.attrs['source'] = 'DWR volume scan data'
