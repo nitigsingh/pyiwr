@@ -17,10 +17,6 @@ Py-SRT can be installed in different ways depending on your preference. Below ar
 ```shell
 conda create -n srt python=3.9 jupyter arm_pyart pandas wradlib git -c conda-forge
 conda activate srt
-pip install git+https://github.com/Space14Mann/Py-SRT.git
+pip install git+https://github.com/Space14Mann/Py_SRT.git
 
-
-git clone https://github.com/syedhamidali/PyScanCf.git
-cd PyScanCf
-python setup.py install --user
 
