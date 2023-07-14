@@ -14,5 +14,5 @@ setup(
     "Development Status :: 3 - Alpha",
     "Environment :: Console"
     ],
-    url='https://github.com/Space14Mann/Py-SRT.git'
+    url='https://github.com/Space14Mann/Py_SRT.git'
 )
