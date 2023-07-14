@@ -334,8 +334,17 @@ def nc_datim_correct(file_path):
     raw = xr.open_dataset(file_path, decode_times=False)
     raw.attrs.clear()
     
+    Station = os.path.basename(file_path)[2:5]
+    if Station == 'CHR':
+        a = 'Sohra S-band Dual-pol DWR'
+    elif Station == 'SHR':
+        a = 'SHAR S-band Dual-pol DWR'
+    else: 
+        a = 'TERLS C-band Dual-pol DWR'  
+        
+        
     # Add attributes to the dataset in the given order
-    raw.attrs['instrument_name'] = 'Sohra S-band Dual-pol DWR'
+    raw.attrs['instrument_name'] = a
     raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
     raw.attrs['version'] = 'Version 1.0'
     raw.attrs['title'] = 'S Band DWR data'
