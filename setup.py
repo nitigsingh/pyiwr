@@ -7,7 +7,7 @@ setup(
     author='Nitig Singh & Vaibhav Tyagi',
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     author_email='nitig14rdfsma@gmail.com, phd2201121012@iiti.ac.in and vaibhavtyagi7191@gmail.com',
-    description=open('README.txt').read(),
+    long_description=open('README.txt').read(),
     packages=['Py_SRT',],
     install_requires=['arm_pyart', 'numpy', 'xarray'],
     url='https://github.com/Space14Mann/Py_SRT.git',
