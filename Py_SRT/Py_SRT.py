@@ -389,6 +389,8 @@ def nc_datim_correct(file_path):
 
 
 def sweeps2xargridnc(dire, radar, grid_shape=(31, 501, 501), height=16.313, length=250):
+    print('Processing file: ',os.path.basename(dire))
+
     """
     Returns grid object from radar object.
     grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
@@ -400,6 +402,7 @@ def sweeps2xargridnc(dire, radar, grid_shape=(31, 501, 501), height=16.313, leng
     # 1 km resolution horizontally
     #radar installed at 1.313 km height
     """
+    
     grid = pyart.map.grid_from_radars(
         radar, grid_shape=grid_shape,
         grid_limits=((radar.altitude['data'][0], height * 1e3),
@@ -417,7 +420,7 @@ def sweeps2xargridnc(dire, radar, grid_shape=(31, 501, 501), height=16.313, leng
     filepath =os.path.basename(dire)
     new_file_name = f"gridded_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
     new_file_path = os.path.join(updated_dir, new_file_name)
-    print('Volumetric sweeps of radar PPI scan file: ',os.path.basename(dire),' gridded successfully')
+    print('Xarray gridding of volumetric sweeps of radar PPI scan file: ',os.path.basename(dire),' done successfully to', new_file_name)
     # Save the updated dataset to a new netCDF file
-    xg.to_netcdf(new_file_path)
-    return xg
+    
+    return xg.to_netcdf(new_file_path)
