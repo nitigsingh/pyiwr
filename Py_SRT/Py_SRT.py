@@ -388,7 +388,7 @@ def nc_datim_correct(file_path):
     return radar_pol.to_netcdf(new_file_path)
 
 
-def sweeps2grid(dire, radar, grid_shape=(31, 501, 501), height=16.313, length=250):
+def sweeps2xargridnc(dire, radar, grid_shape=(31, 501, 501), height=16.313, length=250):
     """
     Returns grid object from radar object.
     grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
