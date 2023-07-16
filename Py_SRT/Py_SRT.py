@@ -388,9 +388,8 @@ def nc_datim_correct(file_path):
     return radar_pol.to_netcdf(new_file_path)
 
 
-def sweeps2grid(radar, grid_shape=(31, 501, 501), height=16.313, length=250):
+def sweeps2grid(dire, radar, grid_shape=(31, 501, 501), height=16.313, length=250):
     """
-    Example:
     Returns grid object from radar object.
     grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
 
@@ -409,4 +408,16 @@ def sweeps2grid(radar, grid_shape=(31, 501, 501), height=16.313, length=250):
         fields=radar.fields.keys(),
         weighting_function='Barnes2',
         min_radius=length)
-    return grid
+    
+    xg = grid.to_xarray()
+    # Create the "updated" subdirectory if it doesn't exist
+    updated_dir = os.path.join(os.path.dirname(dire), "gridded_radar_ncfiles")
+    os.makedirs(updated_dir, exist_ok=True)
+    # Specify the new file path
+    filepath =os.path.basename(dire)
+    new_file_name = f"gridded_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+    new_file_path = os.path.join(updated_dir, new_file_name)
+    print('Volumetric sweeps of radar PPI scan file: ',os.path.basename(dire),' gridded successfully')
+    # Save the updated dataset to a new netCDF file
+    xg.to_netcdf(new_file_path)
+    return xg
