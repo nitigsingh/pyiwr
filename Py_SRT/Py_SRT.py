@@ -386,3 +386,27 @@ def nc_datim_correct(file_path):
 
     # Save the updated dataset to a new netCDF file
     return radar_pol.to_netcdf(new_file_path)
+
+
+def sweeps2grid(radar, grid_shape=(31, 501, 501), height=16.313, length=250):
+    """
+    Example:
+    Returns grid object from radar object.
+    grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
+
+    height:(int) = 15, height in km
+    length:(int) = 250, Range of radar in km
+    
+    # 0.5 km vertical resoltion
+    # 1 km resolution horizontally
+    #radar installed at 1.313 km height
+    """
+    grid = pyart.map.grid_from_radars(
+        radar, grid_shape=grid_shape,
+        grid_limits=((radar.altitude['data'][0], height * 1e3),
+                     (-length * 1e3, length * 1e3),
+                     (-length * 1e3, length*1e3)),
+        fields=radar.fields.keys(),
+        weighting_function='Barnes2',
+        min_radius=length)
+    return grid
