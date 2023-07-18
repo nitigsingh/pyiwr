@@ -3,7 +3,7 @@
 
 # Py-SRT
 
-Py-SRT is an advanced open-source library developed by the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw Doppler Weather Radar (DWR) files into Py-ART compatible NetCDF files. Py-SRT also provides a range of useful tools and visualization functions to facilitate working with weather radar data.
+Py-SRT is an advanced open-source library developed by researchers at SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw Doppler Weather Radar (DWR) files into Py-ART compatible NetCDF files. Py-SRT also provides a range of useful tools and visualization functions to facilitate working with weather radar data.
 
 ## Features
 
