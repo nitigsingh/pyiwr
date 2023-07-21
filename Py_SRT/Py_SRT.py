@@ -326,7 +326,7 @@ def dwr2nc(dwr_path, nc_directory):
         print('File ',os.path.basename(dwr_path),' converted successfully')
         return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
 
-def nc_datim_correct(file_path, save_file=True):
+def mosdac_corrected(file_path, save_file=True):
     # Open the dataset
     
     print('Processing file: ', os.path.basename(file_path))
