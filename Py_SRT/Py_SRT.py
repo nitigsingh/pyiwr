@@ -431,7 +431,7 @@ def sweeps2xargridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length
     # 1 km resolution horizontally
     # radar installed at 1.313 km height
     """
-    raw = xr.open_dataset(file_path, decode_times=False)
+    raw = xr.open_dataset(file_path, decode_times=False, engine='netcdf4')
     raw.attrs.clear()
     
     # Create a new DataArray with the added data for 'sweep_start_ray_index'
@@ -521,17 +521,6 @@ def sweeps2xargridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully and saved in', new_file_name,'in the newly added "gridded_radar_ncfiles" folder in your file path')
         return xg
     else:
-        # Save the corrected xarray.Dataset to a temporary in-memory file
-        with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
-            xg.to_netcdf(tmp_file.name)
-
-        # Read the data from the in-memory file and return the xarray grid object
-        xg_temp = xr.open_dataset(tmp_file.name)
-
-        # Close the xarray dataset
-        xg_temp.close()
-
-        # Delete the temporary in-memory file
-        os.remove(tmp_file.name)
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully')
-        return xg_temp
+        return xg
+
