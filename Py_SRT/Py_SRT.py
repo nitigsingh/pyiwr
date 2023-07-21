@@ -3,9 +3,9 @@ print('''You are using Py-SRT an open-source module developed by Researchers at 
 
 import os
 import pyart
-import os
 import datetime as dt
 import xarray as xr
+import tempfile
 import numpy as np
 
 def fread(fid, nelements, dtype):
@@ -326,14 +326,29 @@ def dwr2nc(dwr_path, nc_directory):
         print('File ',os.path.basename(dwr_path),' converted successfully')
         return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
 
-def nc_datim_correct(file_path):
+def nc_datim_correct(file_path, save_file=True):
     # Open the dataset
     
-    print('Processing file: ',os.path.basename(file_path))
+    print('Processing file: ', os.path.basename(file_path))
 
     raw = xr.open_dataset(file_path, decode_times=False)
     raw.attrs.clear()
     
+    # Create a new DataArray with the added data for 'sweep_start_ray_index'
+    sweep_start_ray_index_data = np.arange(0, raw.time.size, raw.time.size//raw.sweep.size, dtype='int64')
+    sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=['sweep'])
+
+    # Include the new DataArray as a new variable in the Dataset
+    raw['sweep_start_ray_index'] = sweep_start_ray_index_da
+
+    # Create a new DataArray with the added data for 'sweep_end_ray_index'
+    sweep_end_ray_index_data = sweep_start_ray_index_data + int((raw.time.size//raw.sweep.size) - 1)
+    sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=['sweep'])
+
+    # Include the new DataArray as a new variable in the Dataset
+    raw['sweep_end_ray_index'] = sweep_end_ray_index_da
+
+
     Station = os.path.basename(file_path)[2:5]
     if Station == 'CHR':
         a = 'Sohra S-band Dual-pol DWR'
@@ -347,7 +362,7 @@ def nc_datim_correct(file_path):
     raw.attrs['instrument_name'] = a
     raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
     raw.attrs['version'] = 'Version 1.0'
-    raw.attrs['title'] = a[0:13] +'DWR data'
+    raw.attrs['title'] = a[0:13] + 'DWR data'
     raw.attrs['institution'] = 'ISRO'
     raw.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
     raw.attrs['source'] = 'DWR volume scan data'
@@ -374,19 +389,31 @@ def nc_datim_correct(file_path):
     # Decode the CF conventions of the dataset
     radar_pol = xr.decode_cf(raw)
 
-    # Create the "corrected" subdirectory if it doesn't exist
-    corrected_dir = os.path.join(os.path.dirname(file_path), "corrected")
-    os.makedirs(corrected_dir, exist_ok=True)
+    # Save the updated dataset to a new netCDF file if specified
+    if save_file:
+        # Create the "corrected" subdirectory if it doesn't exist
+        corrected_dir = os.path.join(os.path.dirname(file_path), "corrected")
+        os.makedirs(corrected_dir, exist_ok=True)
 
-    # Specify the new file path
-    new_file_name = f"corrected_{os.path.basename(file_path)}"
-    new_file_path = os.path.join(corrected_dir, new_file_name)
+        # Specify the new file path
+        new_file_name = f"corrected_{os.path.basename(file_path)}"
+        new_file_path = os.path.join(corrected_dir, new_file_name)
 
-    print('Date Time of Mosdac File ',os.path.basename(file_path),' corrected successfully')
+        radar_pol.to_netcdf(new_file_path)
+        print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully and saved in the newly added "corrected" folder in your file path')
+        return pyart.io.read_cfradial(new_file_path)
+    else:
+        # Save the corrected xarray.Dataset to a temporary in-memory file
+        with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
+            radar_pol.to_netcdf(tmp_file.name)
 
-    # Save the updated dataset to a new netCDF file
-    return radar_pol.to_netcdf(new_file_path)
+        # Read the data from the in-memory file and return the Py-ART radar object
+        radar = pyart.io.read_cfradial(tmp_file.name)
 
+        # Delete the temporary in-memory file
+        os.remove(tmp_file.name)
+        print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully')
+        return radar
 
 def sweeps2xargridnc(dire, radar, grid_shape=(31, 501, 501), height=16.313, length=250):
     print('Processing file: ',os.path.basename(dire))
