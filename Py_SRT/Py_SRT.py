@@ -528,6 +528,9 @@ def sweeps2xargridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length
         # Read the data from the in-memory file and return the xarray grid object
         xg_temp = xr.open_dataset(tmp_file.name)
 
+        # Close the xarray dataset
+        xg_temp.close()
+
         # Delete the temporary in-memory file
         os.remove(tmp_file.name)
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully')
