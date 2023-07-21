@@ -411,6 +411,9 @@ def mosdac_corrected(file_path, save_file=True):
         # Read the data from the in-memory file and return the Py-ART radar object
         radar = pyart.io.read_cfradial(tmp_file.name)
 
+        # Close the xarray dataset
+        tmp_file.name.close()
+
         # Delete the temporary in-memory file
         os.remove(tmp_file.name)
         print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully')
