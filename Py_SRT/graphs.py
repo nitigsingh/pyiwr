@@ -10,30 +10,29 @@ from datetime import datetime
 
 
 
-def cappi(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
+def cappi(xg, altitude_level, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
     """
     Plot CAPPI at the specified altitude level.
 
     Parameters:
         xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
         altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
+        radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
     """
     alt_index = int(altitude_level * 2)  # Calculate the index corresponding to the altitude level
-    if ticks_in_km==True:
+    if ticks_in_km:
         plt.contourf(xg.x / 1000, xg.y / 1000, xg['DBZ'][0][alt_index], levels=range(-20, 70), cmap='pyart_NWSRef')
     else:
         plt.contourf(xg.x, xg.y, xg['DBZ'][0][alt_index], levels=range(-20, 70), cmap='pyart_NWSRef')
- 
+
     plt.colorbar(label='dBZ')
 
-    # Extracting the station code from the file name
-    a = os.path.basename(filenamel4)[0:5]
-    if a == 'RSCHR':
+    if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
-    elif a == 'RSSHR':
+    elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
         k = 'TERLS C-band Dual-pol DWR'
@@ -46,15 +45,15 @@ def cappi(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
         plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
 
     if rings:
-        if ticks_in_km==True:
-            t = np.linspace(0, 2*np.pi)
+        if ticks_in_km:
+            t = np.linspace(0, 2 * np.pi)
             for r in [50, 150, 250]:
                 a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
         else:
-            t = np.linspace(0,2*np.pi)
-            for r in [50000,150000,250000]:
-                a, = plt.plot(r*np.cos(t),r*np.sin(t), color='k')
-            
+            t = np.linspace(0, 2 * np.pi)
+            for r in [50000, 150000, 250000]:
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+
     if ticks_in_km:
         plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
         plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
@@ -67,13 +66,15 @@ def cappi(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
 
 
 
-def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
+
+def cappi_max(xg, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
     """
-    Plot CAPPI at the specified altitude level.
+    Plot MAX Z CAPPI.
 
     Parameters:
         xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
         altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
+        radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
@@ -84,11 +85,9 @@ def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
         plt.contourf(xg.x, xg.y, xg['DBZ'][0].max("z"), levels=range(-20, 70), cmap='pyart_NWSRef')
     plt.colorbar(label='dBZ')
 
-    # Extracting the station code from the file name
-    a = os.path.basename(filenamel4)[0:5]
-    if a == 'RSCHR':
+    if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
-    elif a == 'RSSHR':
+    elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
         k = 'TERLS C-band Dual-pol DWR'
@@ -122,14 +121,17 @@ def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
 
 
 
-def marginal_maxz(xg, max_range=250, max_height=15, show_rings=True, show_grid=True, show_cross_sections=True):
+
+def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False, show_cross_sections=True):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
     Parameters:
         xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
-        show_rings (bool, optional): If True, display range rings. Default is True.
-        show_grid (bool, optional): If True, display gridlines. Default is True.
+        radar_location (str, optional): Radar location name. Default is 'SOHRA'.
+        show_rings (bool, optional): If True, display range rings. Default is False.
+        show_grid (bool, optional): If True, display gridlines. Default is False.
+        show_cross_sections (bool, optional): If True, display cross-sections. Default is True.
     """
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_aspect(1.)
@@ -138,11 +140,9 @@ def marginal_maxz(xg, max_range=250, max_height=15, show_rings=True, show_grid=T
     cappi = xg['DBZ'][0].max("z")
     cappi.plot.contourf(cmap='pyart_NWSRef', levels=range(-10, 70), cbar_kwargs={'pad': 0.02, 'shrink': 0.8}, ax=ax)
 
-    # Extracting the station code from the file name
-    a = os.path.basename(filenamel4)[0:5]
-    if a == 'RSCHR':
+    if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
-    elif a == 'RSSHR':
+    elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
         k = 'TERLS C-band Dual-pol DWR'
@@ -154,11 +154,11 @@ def marginal_maxz(xg, max_range=250, max_height=15, show_rings=True, show_grid=T
         plt.title(title_str, pad=100)
     else:
         plt.title(title_str)
-
+    plt.xlabel('X distance (in m) from Radar (at Center) in Cartesian')
+    plt.ylabel('Y distance (in m) from Radar (at Center) in Cartesian')
     if show_grid:
         plt.grid()
-        plt.xlabel('X distance (in m) from Radar (at Center) in Cartesian')
-        plt.ylabel('Y distance (in m) from Radar (at Center) in Cartesian')
+
 
     if show_rings:
         # Range rings
