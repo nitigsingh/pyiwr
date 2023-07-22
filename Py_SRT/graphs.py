@@ -10,7 +10,7 @@ from datetime import datetime
 
 
 
-def plot_cappi_at_altitude(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
+def cappi(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
     """
     Plot CAPPI at the specified altitude level.
 
