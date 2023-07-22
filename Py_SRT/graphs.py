@@ -1,9 +1,12 @@
 print('''You are using Py-SRT an open-source module developed by Researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw DWR (Doppler Weather Radar) files into Py-ART compatible NetCDF files. Furthermore, Py-SRT provides useful tools and visualisation functions to make working with the radar data easier and more enjoyable.''')
 
 
+import os
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+from matplotlib.ticker import NullFormatter
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from datetime import datetime
 
 def plot_cappi_at_altitude(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
     """
@@ -60,10 +63,6 @@ def plot_cappi_at_altitude(xg, altitude_level, grid=False, rings=False, ticks_in
     plt.show()
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-
 def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
     """
     Plot CAPPI at the specified altitude level.
@@ -117,11 +116,7 @@ def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
     plt.show()
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.ticker import NullFormatter
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from datetime import datetime
+
 
 def marginal_maxz(xg, max_range=250, max_height=15, show_rings=True, show_grid=True, show_cross_sections=True):
     """
