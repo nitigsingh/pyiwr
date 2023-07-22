@@ -8,6 +8,8 @@ from matplotlib.ticker import NullFormatter
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from datetime import datetime
 
+
+
 def plot_cappi_at_altitude(xg, altitude_level, grid=False, rings=False, ticks_in_km=True):
     """
     Plot CAPPI at the specified altitude level.
@@ -61,6 +63,8 @@ def plot_cappi_at_altitude(xg, altitude_level, grid=False, rings=False, ticks_in
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
     plt.show()
+
+
 
 
 def cappi_max(xg, grid=False, rings=False, ticks_in_km=True):
