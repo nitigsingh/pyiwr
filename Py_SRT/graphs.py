@@ -204,4 +204,264 @@ def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False,
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
         plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
 
+
+
+def elevations(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True):
+    """
+    Plot radar data for the specified elevation.
+
+    Parameters:
+        radar: MOSDAC corrected Py-SRT Radar object based on pyart.core.Radar.
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
+        elevation_index (int, optional): Index of the desired elevation. Default is 0.
+        rings (bool, optional): If True, display range rings. Default is True.
+        grid (bool, optional): If True, display gridlines. Default is True.
+        range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
+    """
+    fig, ax = plt.subplots()
+        
+    if range_in_km:
+        rngs = radar.range['data'] / 1000.
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+
+    else:
+        rngs = radar.range['data']
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+
+    ele_data = radar.fields[field_name]['data'][radar.sweep_start_ray_index['data'][elevation_index]:radar.sweep_end_ray_index['data'][elevation_index]+1].T
+    
+    # Define colormap based on the field_name
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+    
+    # Get the colormap for the field_name
+    cmap = colormaps.get(field_name, 'pyart_NWSRef')
+    
+    # Define levels for the color bar
+    levels_dict = {
+        'DBZ': [-20, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+    levels = levels_dict.get(field_name, [-20, 70])
+    
+    # Plot radar data for the specified elevation
+    plt.contourf(xs0, ys0, ele_data, levels=range(*levels), cmap=cmap)
+    plt.colorbar(label=field_name)
+    
+    if range_in_km:
+        plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
+        plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
+
+    else:
+        plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
+        plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
+    
+    k = radar.metadata['instrument_name']
+    title_str = f"{k} {radar.fields[field_name]['standard_name']}\nTime: {str(radar.time['units'])[14:]}, PPI @ elevation {str(radar.fixed_angle['data'][elevation_index])}"
+
+    # Title
+    plt.title(title_str)
+
+    if grid:
+        plt.grid()
+
+    if rings:
+        if range_in_km:
+            t = np.linspace(0, 2 * np.pi)
+            for r in [50, 150, 250]:
+                x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                ax.text(x+15, y+15, f"{r}", ha='center', va='center', fontsize=10)
+        else:
+            t = np.linspace(0, 2 * np.pi)
+            for r in [50000, 150000, 250000]:
+                x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                ax.text(x+17000, y+17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+
+
+    plt.show()
+
+
+
+
+def all_elevations(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True):
+    """
+    Plot radar data for all elevation angles.
+
+    Parameters:
+        radar: MOSDAC corrected Py-SRT Radar object based on pyart.core.Radar.
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
+        rings (bool, optional): If True, display range rings. Default is True.
+        grid (bool, optional): If True, display gridlines. Default is True.
+        range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
+    """
+    fig = plt.figure(figsize=(15, 15))  # Increase figure size for better visibility
+    k = radar.metadata['instrument_name']
+    title_str = f"{k} {radar.fields[field_name]['standard_name']} @ various elevation angles"
+
+    # Title
+    fig.suptitle(title_str, fontsize=16, y=1.0)
+
+    if range_in_km:
+        rngs = radar.range['data'] / 1000.
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+    else:
+        rngs = radar.range['data']
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360]*100) / 100))
+
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+
+    levels_dict = {
+        'DBZ': [-20, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+    
+    # Get the colormap for the field_name
+    cmap = colormaps.get(field_name, 'pyart_NWSRef')
+    levels = levels_dict.get(field_name, [-20, 70])
+
+    for i in range(radar.fixed_angle['data'].size):
+        ax = fig.add_subplot(4, 3, i+1)
+        slice_indices = radar.get_slice(i)
+        all_ele = radar.fields[field_name]['data'][slice_indices].T
+
+        plt.contourf(xs0, ys0, all_ele, levels=range(*levels), cmap=cmap)
+        plt.colorbar(label=field_name)
+        plt.title("PPI @ Elevation angle = %.3f" % radar.fixed_angle['data'][i])
+
+        if range_in_km:
+            plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
+            plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
+        else:
+            plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
+            plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
+
+        if grid:
+            plt.grid()
+
+        if rings:
+            if range_in_km:
+                t = np.linspace(0, 2 * np.pi)
+                for r in [50, 150, 250]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.text(x + 15, y + 15, f"{r}", ha='center', va='center', fontsize=10)
+            else:
+                t = np.linspace(0, 2 * np.pi)
+                for r in [50000, 150000, 250000]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+def products_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True):
+    """
+    Plot multiple radar products at the specified elevation.
+
+    Parameters:
+        radar: MOSDAC corrected Py-SRT Radar object based on pyart.core.Radar.
+        elevation_index (int, optional): Index of the desired elevation. Default is 0.
+        range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
+        rings (bool, optional): If True, display range rings. Default is True.
+        grid (bool, optional): If True, display gridlines. Default is True.
+    """
+    
+    fig = plt.figure(figsize=(15, 10))
+    k = radar.metadata['instrument_name']
+    title_str = f"{k} \nTime: {str(radar.time['units'])[14:]}, PPI Products @ elevation {str(radar.fixed_angle['data'][elevation_index])}"
+
+    fig.suptitle(title_str, fontsize=16, y=1)    
+
+    product_names = ['DBZ', 'VEL', 'WIDTH', 'ZDR', 'PHIDP', 'RHOHV']
+    titles = ['Reflectivity', 'Doppler Velocity', 'Spectral Width', 'Differential Reflectivity',
+              'Differential Phase', 'Correlation Coefficient']
+    cmap_names = ['pyart_NWSRef', 'pyart_NWSVel', 'pyart_NWS_SPW', 'pyart_RefDiff', 'pyart_PD17', 'pyart_EWilson17']
+    levels = [[-20, 70], [-30, 30], [-30, 30], [-10, 20], [-300, 300], [-10, 30]]
+
+    if range_in_km:
+        rngs = radar.range['data'] / 1000.
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360] * 100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360] * 100) / 100))
+
+    else:
+        rngs = radar.range['data']
+        xs0 = rngs[:, np.newaxis] * np.sin(np.deg2rad(np.around(radar.azimuth['data'][0:360] * 100) / 100))
+        ys0 = rngs[:, np.newaxis] * np.cos(np.deg2rad(np.around(radar.azimuth['data'][0:360] * 100) / 100))
+
+    for i, product_name in enumerate(product_names):
+        ax = fig.add_subplot(2, 3, i + 1)
+        ele_data = radar.fields[product_name]['data'][radar.sweep_start_ray_index['data'][elevation_index]:radar.sweep_end_ray_index['data'][elevation_index] + 1].T
+        
+        # Get the colormap for the product
+        cmap = cmap_names[i]
+        
+        vmin, vmax = levels[i]
+        
+        plt.contourf(xs0, ys0, ele_data, levels=np.linspace(vmin, vmax, 31), cmap=cmap, vmin=vmin, vmax=vmax)
+        plt.colorbar(label=product_name)
+        plt.title(titles[i])
+        if range_in_km:
+            plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
+            plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
+        else:
+            plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
+            plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
+        if grid:
+            plt.grid()
+        if rings:
+            if range_in_km:
+                t = np.linspace(0, 2 * np.pi)
+                for r in [50, 150, 250]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.text(x + 15, y + 15, f"{r}", ha='center', va='center', fontsize=10)  # Display the radius at 30 degrees
+            else:
+                t = np.linspace(0, 2 * np.pi)
+                for r in [50000, 150000, 250000]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)  # Display the radius at 30 degrees
+
+    plt.tight_layout()  # Adjust subplot parameters to avoid overlapping
+    plt.subplots_adjust(top=0.90, hspace=0.3)  # Adjust top margin and horizontal spacing between subplots
     plt.show()
