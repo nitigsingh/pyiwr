@@ -95,24 +95,21 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
 
 
-def cappi_max(xg, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
+def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
     """
     Plot MAX Z CAPPI.
 
     Parameters:
-        xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
-        altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
+        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
         radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
+        
+        Example usage:
+        cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True)
     """
-    if ticks_in_km:
-        plt.contourf(xg.x / 1000, xg.y / 1000, xg['DBZ'][0].max("z"), levels=range(-20, 70), cmap='pyart_NWSRef')
-    else:
-        plt.contourf(xg.x, xg.y, xg['DBZ'][0].max("z"), levels=range(-20, 70), cmap='pyart_NWSRef')
-    plt.colorbar(label='dBZ')
-
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
     elif radar_location == 'SHAR':
@@ -120,23 +117,48 @@ def cappi_max(xg, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=T
     else:
         k = 'TERLS C-band Dual-pol DWR'
 
-    plt.title(f"{k} Radar Reflectivity (dBZ)\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI")
+    # Define colormap based on the field_name
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+
+    # Define levels for each field
+    levels = {
+        'DBZ': [-20, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+
+    if ticks_in_km:
+        plt.contourf(xg.x / 1000, xg.y / 1000, xg[field_name][0].max("z"), levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
+    else:
+        plt.contourf(xg.x, xg.y, xg[field_name][0].max("z"), levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
+
+    plt.colorbar(label='dBZ')
+
+    plt.title(f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI")
 
     if grid:
         plt.grid()
-        plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
-        plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
 
     if rings:
-        if ticks_in_km==True:
+        if ticks_in_km:
             t = np.linspace(0, 2*np.pi)
             for r in [50, 150, 250]:
                 a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
         else:
-            t = np.linspace(0,2*np.pi)
-            for r in [50000,150000,250000]:
-                a, = plt.plot(r*np.cos(t),r*np.sin(t), color='k')
-            
+            t = np.linspace(0, 2*np.pi)
+            for r in [50000, 150000, 250000]:
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+
     if ticks_in_km:
         plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
         plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
@@ -145,6 +167,7 @@ def cappi_max(xg, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=T
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
     plt.show()
+
 
 
 
