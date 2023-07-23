@@ -252,8 +252,8 @@ def marginal_maxz(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False
         ax_y = divider.append_axes("right", 1.2, pad=0.05)
 
         # Plot cross-sections
-        xg[field_name][0].max(axis=1).plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_x)
-        xg[field_name][0].max(axis=2).T.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_y)
+        xg[field_name][0].max(axis=1).plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), ax=ax_x)
+        xg[field_name][0].max(axis=2).T.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), ax=ax_y)
 
         ax_x.xaxis.set_major_formatter(NullFormatter())
         ax_y.yaxis.set_major_formatter(NullFormatter())
