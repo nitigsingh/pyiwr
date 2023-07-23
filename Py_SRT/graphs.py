@@ -68,7 +68,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
     else:
         k = 'TERLS C-band Dual-pol DWR'
 
-    plt.title(f"{k} Radar Reflectivity (dBZ)\nTime: {str(xg.time['time'].values[0])[:19]}, CAPPI @ Altitude {altitude_level} km")
+    plt.title(f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, CAPPI @ Altitude {altitude_level} km")
 
     if grid:
         plt.grid()
@@ -91,7 +91,6 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
     plt.show()
-
 
 
 
