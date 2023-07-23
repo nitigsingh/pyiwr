@@ -15,23 +15,49 @@ from datetime import datetime
 
 
 
-def cappi(xg, altitude_level, radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
+def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
     """
     Plot CAPPI at the specified altitude level.
 
     Parameters:
-        xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
+        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
         altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
+
+        Example usage:
+        cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True)
     """
     alt_index = int(altitude_level * 2)  # Calculate the index corresponding to the altitude level
+
+    # Define colormap based on the field_name
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+
+    # Define levels for each field
+    levels = {
+        'DBZ': [-20, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+
+    # Access the field from the xg dataset using the field_name parameter
     if ticks_in_km:
-        plt.contourf(xg.x / 1000, xg.y / 1000, xg['DBZ'][0][alt_index], levels=range(-20, 70), cmap='pyart_NWSRef')
+        plt.contourf(xg.x / 1000, xg.y / 1000, xg[field_name][0][alt_index], levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
     else:
-        plt.contourf(xg.x, xg.y, xg['DBZ'][0][alt_index], levels=range(-20, 70), cmap='pyart_NWSRef')
+        plt.contourf(xg.x, xg.y, xg[field_name][0][alt_index], levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
 
     plt.colorbar(label='dBZ')
 
@@ -46,8 +72,6 @@ def cappi(xg, altitude_level, radar_location='SOHRA', grid=False, rings=False, t
 
     if grid:
         plt.grid()
-        plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
-        plt.ylabel('Range (in km) of Radar (at Center) in Cartesian')
 
     if rings:
         if ticks_in_km:
