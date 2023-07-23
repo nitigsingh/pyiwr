@@ -170,26 +170,53 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
 
 
-
-
-
-def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False, show_cross_sections=True):
+def marginal_maxz(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
     Parameters:
-        xg (xarray.Dataset): Xarray Dataset containing gridded radar data.
+        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
         radar_location (str, optional): Radar location name. Default is 'SOHRA'.
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         show_rings (bool, optional): If True, display range rings. Default is False.
         show_grid (bool, optional): If True, display gridlines. Default is False.
         show_cross_sections (bool, optional): If True, display cross-sections. Default is True.
+
+        Example usage:
+        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', show_rings=True, show_grid=True, show_cross_sections=True)
     """
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_aspect(1.)
 
+    # Define colormap based on the field_name
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+    
+    # Get the colormap for the field_name
+    cmap = colormaps.get(field_name, 'pyart_NWSRef')
+    
+    # Define levels for each field_name
+    levels = {
+        'DBZ': [-20, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+    
+    # Get the levels for the field_name
+    cmap_levels = levels.get(field_name, [-20, 70])
+
     # Plot the MAX-Z CAPPI
-    cappi = xg['DBZ'][0].max("z")
-    cappi.plot.contourf(cmap='pyart_NWSRef', levels=range(-10, 70), cbar_kwargs={'pad': 0.02, 'shrink': 0.8}, ax=ax)
+    cappi = xg[field_name][0].max("z")
+    cappi.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), cbar_kwargs={'pad': 0.02, 'shrink': 0.8}, ax=ax)
 
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
@@ -199,7 +226,7 @@ def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False,
         k = 'TERLS C-band Dual-pol DWR'
     
     # Title
-    title_str = f"{k} Radar Reflectivity (dBZ)\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
+    title_str = f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
 
     if show_cross_sections:
         plt.title(title_str, pad=100)
@@ -225,8 +252,8 @@ def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False,
         ax_y = divider.append_axes("right", 1.2, pad=0.05)
 
         # Plot cross-sections
-        xg['DBZ'][0].max(axis=1).plot.contourf(cmap='pyart_NWSRef', levels=range(-10, 70), add_colorbar=False, add_title=None, ax=ax_x)
-        xg['DBZ'][0].max(axis=2).T.plot.contourf(cmap='pyart_NWSRef', levels=range(-10, 70), add_colorbar=False, add_title=None, ax=ax_y)
+        xg[field_name][0].max(axis=1).plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_x)
+        xg[field_name][0].max(axis=2).T.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_y)
 
         ax_x.xaxis.set_major_formatter(NullFormatter())
         ax_y.yaxis.set_major_formatter(NullFormatter())
@@ -254,6 +281,8 @@ def marginal_maxz(xg, radar_location='SOHRA', show_rings=False, show_grid=False,
         # Show the datetime
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
         plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
+        
+        plt.show()
 
 
 
