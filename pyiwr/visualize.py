@@ -95,18 +95,16 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
-    plt.show()
+
+    plt.tight_layout()
      # Save the image if save_image is True and file_name is provided
-    
     if save_image:
         if img_name is None:
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600)
-
-
-
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
 
 
 
@@ -185,14 +183,16 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
-    plt.show()
-    # Save the image if save_image is True and file_name is provided
+    plt.tight_layout()
+     # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600)
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
+
 
 
 
@@ -311,14 +311,16 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
         plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
         
-        plt.show()
-        # Save the image if save_image is True and file_name is provided
-        if save_image:
-            if img_name is None:
-                raise ValueError("Please provide the 'img_name' parameter to save the image.")
-            
-            # Save the image as a PNG file with 600 DPI
-            plt.savefig(img_name, dpi=600)
+    plt.tight_layout()
+     # Save the image if save_image is True and file_name is provided
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
+
 
 
 
@@ -416,14 +418,15 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
                 ax.text(x+17000, y+17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
     plt.tight_layout()
-    plt.show()
-    # Save the image if save_image is True and file_name is provided
+     # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600)
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
+
 
 
 
@@ -520,14 +523,15 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
     plt.tight_layout()
-    plt.show()
-    # Save the image if save_image is True and file_name is provided  
+     # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600)
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
+
 
 
 
@@ -610,11 +614,12 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
 
     plt.tight_layout()  # Adjust subplot parameters to avoid overlapping
     plt.subplots_adjust(top=0.90, hspace=0.3)  # Adjust top margin and horizontal spacing between subplots
-    plt.show()
-    # Save the image if save_image is True and file_name is provided
+     # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600)
+        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+    plt.show()
+
