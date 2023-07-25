@@ -332,7 +332,7 @@ def dwr2nc(dwr_path, nc_directory):
         print('File ',os.path.basename(dwr_path),' converted successfully')
         return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
 
-def mosdac_corrected(file_path, save_file=True):
+def mosdac_correctednc(file_path, save_file=True):
     # Open the dataset
     
     print('Processing file: ', os.path.basename(file_path))
@@ -422,7 +422,7 @@ def mosdac_corrected(file_path, save_file=True):
         return radar
 
 
-def sweeps2xargridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length=250, save_file=True):
+def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length=250, save_file=True):
     print('Processing file: ', os.path.basename(file_path))
 
     """
