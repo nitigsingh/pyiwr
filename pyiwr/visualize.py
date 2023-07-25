@@ -96,7 +96,6 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
 
-    plt.tight_layout()
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -183,7 +182,6 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         plt.xlabel('Range (in m) of Radar (at Center) in Cartesian')
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
-    plt.tight_layout()
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -311,7 +309,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
         plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
         
-    plt.tight_layout()
+
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -417,7 +415,7 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
                 ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                 ax.text(x+17000, y+17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
-    plt.tight_layout()
+
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -522,7 +520,7 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
                     ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
-    plt.tight_layout()
+
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -612,7 +610,7 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
                     ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color # Plot the circle
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)  # Display the radius at 30 degrees
 
-    plt.tight_layout()  # Adjust subplot parameters to avoid overlapping
+
     plt.subplots_adjust(top=0.90, hspace=0.3)  # Adjust top margin and horizontal spacing between subplots
      # Save the image if save_image is True and file_name is provided
     if save_image:
