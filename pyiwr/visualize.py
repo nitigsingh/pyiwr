@@ -54,7 +54,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         'VEL': [-30, 30],
         'WIDTH': [0, 10],
         'PHIDP': [0, 360],
-        'RHOHV': [0, 1],
+        'RHOHV': [0.6, 1],
         'ZDR': [-10, 10],
     }
 
@@ -64,7 +64,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
     else:
         plt.contourf(xg.x, xg.y, xg[field_name][0][alt_index], levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
 
-    plt.colorbar(label='dBZ')
+    plt.colorbar(label=field_name)
 
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
@@ -150,7 +150,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         'VEL': [-30, 30],
         'WIDTH': [0, 10],
         'PHIDP': [0, 360],
-        'RHOHV': [0, 1],
+        'RHOHV': [0.6, 1],
         'ZDR': [-10, 10],
     }
 
@@ -159,7 +159,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
     else:
         plt.contourf(xg.x, xg.y, xg[field_name][0].max("z"), levels=np.linspace(*levels.get(field_name, [-20, 70]), 31), cmap=colormaps.get(field_name, 'pyart_NWSRef'))
 
-    plt.colorbar(label='dBZ')
+    plt.colorbar(label=field_name)
 
     plt.title(f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI")
 
@@ -236,7 +236,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         'VEL': [-30, 30],
         'WIDTH': [0, 10],
         'PHIDP': [0, 360],
-        'RHOHV': [0, 1],
+        'RHOHV': [0.6, 1],
         'ZDR': [-10, 10],
     }
     
@@ -281,8 +281,8 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         ax_y = divider.append_axes("right", 1.2, pad=0.05)
 
         # Plot cross-sections
-        xg[field_name][0].max(axis=1).plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), ax=ax_x)
-        xg[field_name][0].max(axis=2).T.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), ax=ax_y)
+        xg[field_name][0].max(axis=1).plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_x)
+        xg[field_name][0].max(axis=2).T.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), add_colorbar=False, add_title=None, ax=ax_y)
 
         ax_x.xaxis.set_major_formatter(NullFormatter())
         ax_y.yaxis.set_major_formatter(NullFormatter())
@@ -375,7 +375,7 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
         'VEL': [-30, 30],
         'WIDTH': [0, 10],
         'PHIDP': [0, 360],
-        'RHOHV': [0, 1],
+        'RHOHV': [0.6, 1],
         'ZDR': [-10, 10],
     }
     levels = levels_dict.get(field_name, [-20, 70])
@@ -479,7 +479,7 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
         'VEL': [-30, 30],
         'WIDTH': [0, 10],
         'PHIDP': [0, 360],
-        'RHOHV': [0, 1],
+        'RHOHV': [0.6, 1],
         'ZDR': [-10, 10],
     }
     
@@ -564,7 +564,7 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
     titles = ['Reflectivity', 'Doppler Velocity', 'Spectral Width', 'Differential Reflectivity',
               'Differential Phase', 'Correlation Coefficient']
     cmap_names = ['pyart_NWSRef', 'pyart_NWSVel', 'pyart_NWS_SPW', 'pyart_RefDiff', 'pyart_PD17', 'pyart_EWilson17']
-    levels = [[-20, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0, 1]]
+    levels = [[-20, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0.6, 1]]
 
     if range_in_km:
         rngs = radar.range['data'] / 1000.
