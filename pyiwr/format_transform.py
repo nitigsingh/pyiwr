@@ -251,7 +251,7 @@ def dwr2nc(dwr_path, nc_directory):
         ], dtype='|S1')
 
         radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
-        radar.metadata = {'instrument_name': 'Sohra S-band Dual-pol DWR', 'Created using': 'Py-SRT Module developed at SIGMA Research Lab, IIT Indore', 'version': 'Version 1.0', 'title': 'S Band DWR data','institution': 'ISRO', 'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html', 'source': 'DWR volume scan data ', 'history': 'DWR raw (.dwr) data encoded into Py-ART compatible NetCDF file', 'comment': '', 'platform_type': 'fixed', 'instrument_type': 'radar', 'primary_axis': 'axis_z'}
+        radar.metadata = {'instrument_name': 'Sohra S-band Dual-pol DWR', 'Created using': 'pyiwr (Indian Weather Radar) Module developed at SIGMA Research Lab, IIT Indore', 'version': 'Version 1.0.0', 'title': 'S Band DWR data','institution': 'ISRO', 'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html', 'source': 'DWR volume scan data ', 'history': 'DWR raw (.dwr) data encoded into Py-ART compatible NetCDF file', 'comment': '', 'platform_type': 'fixed', 'instrument_type': 'radar', 'primary_axis': 'axis_z'}
 
 
         ref = (np.array(np.reshape(dats[14][:,:360,:], (dats[14][:,:360,:].shape[0], -1)))).T
@@ -370,7 +370,7 @@ def mosdac_correctednc(file_path, save_file=True):
         
     # Add attributes to the dataset in the given order
     raw.attrs['instrument_name'] = a
-    raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
+    raw.attrs['Created using'] = 'pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
     raw.attrs['version'] = 'Version 1.0'
     raw.attrs['title'] = a[0:13] + 'DWR data'
     raw.attrs['institution'] = 'ISRO'
@@ -469,7 +469,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length=25
         
     # Add attributes to the dataset in the given order
     raw.attrs['instrument_name'] = a
-    raw.attrs['Created using'] = 'Py-SRT Module developed by Researchers at SIGMA Research Lab, IIT Indore'
+    raw.attrs['Created using'] = 'pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
     raw.attrs['version'] = 'Version 1.0'
     raw.attrs['title'] = a[0:13] + 'DWR data'
     raw.attrs['institution'] = 'ISRO'
