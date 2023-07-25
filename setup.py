@@ -10,6 +10,6 @@ setup(
     long_description=open('README.txt').read(),
     packages=['pyiwr',],
     install_requires=['arm_pyart', 'numpy', 'xarray', 'datetime', 'matplotlib', 'mpl_toolkits'],
-    url='https://github.com/Space14Mann/pyiwr.git',
+    url='https://github.com/nitigsingh/pyiwr.git', 
 )
 
