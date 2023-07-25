@@ -5,6 +5,8 @@ print('''pyiwr is an advanced open-source library developed by researchers at th
 '''
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
+@reference: Shahla KP/Sci-Eng -SC/RDA-ISTRAC ISRO
+
 
 @email: nitig14rdfsma[at]gmail[dot]com
 @email: vaibhavtyagi7191[at]gmail[dot]com
