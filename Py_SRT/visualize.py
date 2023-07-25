@@ -1,9 +1,10 @@
-print('''You are using Py-SRT an open-source module developed by Researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO DWR (Doppler Weather Radar) data files into Py-ART compatible NetCDF files. Furthermore, Py-SRT provides useful tools and visualisation functions to make working with the radar data easier and more enjoyable.''')
 #!/usr/bin/env python
 # coding: utf-8
 '''
-@author: Nitig Singh
+@author1: Nitig Singh
+@author2: Vaibhav Tyagi
 @email: nitig14rdfsma[at]gmail[dot]com
+@email: vaibhavtyagi7191[at]gmail[dot]com
 '''
 
 import os
