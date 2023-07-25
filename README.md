@@ -1,4 +1,3 @@
-![SIGMA](SIGMA.png)
 ![pyiwr logo](pyiwr logo.png)
 
 # Py-SRT
