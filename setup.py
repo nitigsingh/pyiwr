@@ -9,7 +9,7 @@ setup(
     author_email='nitig14rdfsma@gmail.com, phd2201121012@iiti.ac.in and vaibhavtyagi7191@gmail.com',
     long_description=open('README.txt').read(),
     packages=['pyiwr',],
-    install_requires=['arm_pyart', 'numpy', 'xarray', 'datetime', 'matplotlib'],
+    install_requires=['arm_pyart', 'numpy', 'xarray', 'matplotlib'],
     url='https://github.com/nitigsingh/pyiwr.git', 
 )
 
