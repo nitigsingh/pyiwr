@@ -492,19 +492,21 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     # Include the new DataArray as a new variable in the Dataset
     raw['sweep_end_ray_index'] = sweep_end_ray_index_da
 
-
     Station = os.path.basename(file_path)[2:5]
     if Station == 'CHR':
         a = 'Sohra S-band Dual-pol DWR'
-        height = height + 1.313
     elif Station == 'SHR':
         a = 'SHAR S-band Dual-pol DWR'
-        height = height + 0.029
-    elif Station == 'TLS':
+    else: 
         a = 'TERLS C-band Dual-pol DWR'  
-        height = height + 0.027
+
+
+    if Station == 'CHR':
+        height = height + 1.313
+    elif Station == 'SHR':
+        height = height + 0.029
     else:
-        a = 'Unknown Radar Station'
+        height = height + 0.027
 
         
         
