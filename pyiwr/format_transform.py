@@ -20,6 +20,7 @@ import xarray as xr
 import tempfile
 import numpy as np
 
+
 def fread(fid, nelements, dtype):
     if dtype is np.str_:
         dt = np.uint8  
@@ -30,8 +31,7 @@ def fread(fid, nelements, dtype):
     data_array.shape = (nelements, 1)
     return data_array
 
-
-def dwr2nc(dwr_path, nc_directory):
+def dwr2nc(dwr_path, save_file=True):
     with open(dwr_path, 'rb') as fid:
         print('Processing file:',os.path.basename(dwr_path))
         m5 = np.fromfile(fid, dtype='uint8')
@@ -205,13 +205,10 @@ def dwr2nc(dwr_path, nc_directory):
             ZDR1t,
             PHIDP1t,
             RDP1t
-        ]
+        ] 
+        
 
-
-
-        # def isro_radar_object(dats, dwr_directory):
         radar = pyart.testing.make_empty_ppi_radar(1600, 360, 10)
-
         data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
         tstart = dats[1][:-1]+'T'+dats[2][1:]+'Z'
 
@@ -235,8 +232,6 @@ def dwr2nc(dwr_path, nc_directory):
         radar.init_gate_altitude()
         radar.init_gate_x_y_z()
 
-        #radar.sweep_start_ray_index["data"] = np.array(np.arange(0, 3600, 360), dtype=np.int64)
-        #radar.sweep_end_ray_index["data"] = np.array(np.arange(359, 3600, 360), dtype=np.int64)
         radar.altitude['data'] = np.array(dats[6], dtype=np.int32).flatten()
         radar.azimuth["data"] = np.repeat(np.arange(360, dtype=np.float32), 10)
         radar.sweep_mode['data'] = np.array([
@@ -252,9 +247,27 @@ def dwr2nc(dwr_path, nc_directory):
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'']
         ], dtype='|S1')
 
-        radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
-        radar.metadata = {'instrument_name': 'Sohra S-band Dual-pol DWR', 'Created using': 'pyiwr (Indian Weather Radar) Module developed at SIGMA Research Lab, IIT Indore', 'version': 'Version 1.0.0', 'title': 'S Band DWR data','institution': 'ISRO', 'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html', 'source': 'DWR volume scan data ', 'history': 'DWR raw (.dwr) data encoded into Py-ART compatible NetCDF file', 'comment': '', 'platform_type': 'fixed', 'instrument_type': 'radar', 'primary_axis': 'axis_z'}
+        # Add the condition to determine the 'source' attribute
+        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+            a = 'DWR Short Volume Scan File (250km)'
+        else:
+            a = 'DWR Long Volume Scan File (500km)'
 
+        radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
+        radar.metadata = {
+            'instrument_name': 'Sohra S-band Dual-pol DWR',
+            'Created using': 'pyiwr (Indian Weather Radar) Module developed at SIGMA Research Lab, IIT Indore',
+            'version': 'Version 1.0.0',
+            'title': 'S Band DWR data',
+            'institution': 'ISRO',
+            'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html',
+            'source': a,  # 'a' determines the 'source' attribute based on the condition
+            'history': f'DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into Py-ART compatible NetCDF file',
+            'comment': '',
+            'platform_type': 'fixed',
+            'instrument_type': 'radar',
+            'primary_axis': 'axis_z'
+        }
 
         ref = (np.array(np.reshape(dats[14][:,:360,:], (dats[14][:,:360,:].shape[0], -1)))).T
         ref = np.nan_to_num(ref, nan=0.0)
@@ -327,16 +340,36 @@ def dwr2nc(dwr_path, nc_directory):
             'Polarization': 'Horizontal and Vertical',
             '_FillValue': fill_value
         }
-        # Create the "updated" subdirectory if it doesn't exist
-        updated_dir = os.path.join(nc_directory, "radar_ncfiles")
-        os.makedirs(updated_dir, exist_ok=True)
 
-        # Specify the new file path
-        filepath =os.path.basename(dwr_path)
-        new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
-        new_file_path = os.path.join(updated_dir, new_file_name)
-        print('File ',os.path.basename(dwr_path),' converted successfully')
-        return pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
+        # Save the radar object to a NetCDF file if specified
+        if save_file:
+            # Create the "radar_ncfiles" subdirectory if it doesn't exist
+            nc_directory = os.path.join(os.path.dirname(dwr_path), "radar_ncfiles")
+            os.makedirs(nc_directory, exist_ok=True)
+
+            # Specify the new file path
+            filepath = os.path.basename(dwr_path)
+            new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+            new_file_path = os.path.join(nc_directory, new_file_name)
+            print('File', os.path.basename(dwr_path), 'converted successfully and saved in the "radar_ncfiles" folder')
+            pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
+            return pyart.io.read_cfradial(new_file_path)
+
+        else:
+            # Save the radar object to a temporary in-memory file
+            with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
+                pyart.io.write_cfradial(tmp_file.name, radar, format='NETCDF4')
+
+            # Read the data from the in-memory file and return the Py-ART radar object
+            radar = pyart.io.read_cfradial(tmp_file.name)
+
+            # Delete the temporary in-memory file
+            os.remove(tmp_file.name)
+            print('File', os.path.basename(dwr_path), 'converted successfully')
+            return radar
+
+
+
 
 def mosdac_correctednc(file_path, save_file=True):
     # Open the dataset
