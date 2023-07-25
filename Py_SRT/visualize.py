@@ -170,7 +170,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
 
 
-def marginal_maxz(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True):
+def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
@@ -286,7 +286,7 @@ def marginal_maxz(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False
 
 
 
-def elevations(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True):
+def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True):
     """
     Plot radar data for the specified elevation.
 
@@ -382,7 +382,7 @@ def elevations(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True
 
 
 
-def all_elevations(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True):
+def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True):
     """
     Plot radar data for all elevation angles.
 
@@ -472,7 +472,7 @@ def all_elevations(radar, field_name='DBZ', rings=True, grid=True, range_in_km=T
 
 
 
-def products_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True):
+def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True):
     """
     Plot multiple radar products at the specified elevation.
 
