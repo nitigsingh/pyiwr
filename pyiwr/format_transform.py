@@ -461,7 +461,7 @@ def mosdac_correctednc(file_path, save_file=True):
         return radar
 
 
-def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length=250, save_file=True):
+def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=True):
     print('Processing file: ', os.path.basename(file_path))
 
     """
@@ -496,10 +496,13 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=16.313, length=25
     Station = os.path.basename(file_path)[2:5]
     if Station == 'CHR':
         a = 'Sohra S-band Dual-pol DWR'
+        height = height + 1.313
     elif Station == 'SHR':
         a = 'SHAR S-band Dual-pol DWR'
+        height = height + 0.029
     else: 
         a = 'TERLS C-band Dual-pol DWR'  
+        height = height + 0.027
         
         
     # Add attributes to the dataset in the given order
