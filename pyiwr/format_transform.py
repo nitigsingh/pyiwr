@@ -499,16 +499,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
         a = 'SHAR S-band Dual-pol DWR'
     else: 
         a = 'TERLS C-band Dual-pol DWR'  
-
-
-    if Station == 'CHR':
-        height = height + 1.313
-    elif Station == 'SHR':
-        height = height + 0.029
-    else:
-        height = height + 0.027
-
-        
+      
         
     # Add attributes to the dataset in the given order
     raw.attrs['instrument_name'] = a
