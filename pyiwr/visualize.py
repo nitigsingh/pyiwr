@@ -79,11 +79,11 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         if ticks_in_km:
             t = np.linspace(0, 2 * np.pi)
             for r in [50, 150, 250]:
-                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
         else:
             t = np.linspace(0, 2 * np.pi)
             for r in [50000, 150000, 250000]:
-                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
 
     if ticks_in_km:
         plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
@@ -155,11 +155,11 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         if ticks_in_km:
             t = np.linspace(0, 2*np.pi)
             for r in [50, 150, 250]:
-                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
         else:
             t = np.linspace(0, 2*np.pi)
             for r in [50000, 150000, 250000]:
-                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+                a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
 
     if ticks_in_km:
         plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
@@ -244,7 +244,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         # Range rings
         t = np.linspace(0, 2 * np.pi)
         for r in [50000, 150000, 250000]:
-            a, = plt.plot(r * np.cos(t), r * np.sin(t), color='k')
+            a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
     
     if show_cross_sections:
 
@@ -365,14 +365,14 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
             for r in [50, 150, 250]:
                 x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                 y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                ax.plot(r * np.cos(t), r * np.sin(t),color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                 ax.text(x+15, y+15, f"{r}", ha='center', va='center', fontsize=10)
         else:
             t = np.linspace(0, 2 * np.pi)
             for r in [50000, 150000, 250000]:
                 x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                 y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                 ax.text(x+17000, y+17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
     plt.tight_layout()
@@ -458,14 +458,14 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
                 for r in [50, 150, 250]:
                     x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                     y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                     ax.text(x + 15, y + 15, f"{r}", ha='center', va='center', fontsize=10)
             else:
                 t = np.linspace(0, 2 * np.pi)
                 for r in [50000, 150000, 250000]:
                     x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                     y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
     plt.tight_layout()
@@ -534,14 +534,14 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
                 for r in [50, 150, 250]:
                     x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                     y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color  # Plot the circle
                     ax.text(x + 15, y + 15, f"{r}", ha='center', va='center', fontsize=10)  # Display the radius at 30 degrees
             else:
                 t = np.linspace(0, 2 * np.pi)
                 for r in [50000, 150000, 250000]:
                     x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
                     y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                    ax.plot(r * np.cos(t), r * np.sin(t), color='k')  # Plot the circle
+                    ax.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color # Plot the circle
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)  # Display the radius at 30 degrees
 
     plt.tight_layout()  # Adjust subplot parameters to avoid overlapping
