@@ -48,14 +48,14 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         'ZDR': 'pyart_RefDiff',
     }
 
-    # Define levels for each field
+    # Define levels for the color bar
     levels = {
         'DBZ': [-20, 70],
         'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
+        'WIDTH': [0, 10],
+        'PHIDP': [0, 360],
+        'RHOHV': [0, 1],
+        'ZDR': [-10, 10],
     }
 
     # Access the field from the xg dataset using the field_name parameter
@@ -111,7 +111,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
 
 
-def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
+def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
     """
     Plot MAX Z CAPPI.
 
@@ -122,9 +122,12 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
         
         Example usage:
-        cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True)
+        cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, img_name='cappi_max_image.png')
     """
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
@@ -143,14 +146,14 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         'ZDR': 'pyart_RefDiff',
     }
 
-    # Define levels for each field
+    # Define levels for the color bar
     levels = {
         'DBZ': [-20, 70],
         'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
+        'WIDTH': [0, 10],
+        'PHIDP': [0, 360],
+        'RHOHV': [0, 1],
+        'ZDR': [-10, 10],
     }
 
     if ticks_in_km:
@@ -183,10 +186,17 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
     plt.show()
+    # Save the image if save_image is True and file_name is provided
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600)
 
 
 
-def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True):
+def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True, save_image=False, img_name=None):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
@@ -197,9 +207,12 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         show_rings (bool, optional): If True, display range rings. Default is False.
         show_grid (bool, optional): If True, display gridlines. Default is False.
         show_cross_sections (bool, optional): If True, display cross-sections. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
 
         Example usage:
-        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', show_rings=True, show_grid=True, show_cross_sections=True)
+        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', show_rings=True, show_grid=True, show_cross_sections=True, save_image=True, img_name='marg_max_image.png')
     """
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_aspect(1.)
@@ -217,14 +230,14 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
     # Get the colormap for the field_name
     cmap = colormaps.get(field_name, 'pyart_NWSRef')
     
-    # Define levels for each field_name
+    # Define levels for the color bar
     levels = {
         'DBZ': [-20, 70],
         'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
+        'WIDTH': [0, 10],
+        'PHIDP': [0, 360],
+        'RHOHV': [0, 1],
+        'ZDR': [-10, 10],
     }
     
     # Get the levels for the field_name
@@ -299,6 +312,13 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
         
         plt.show()
+        # Save the image if save_image is True and file_name is provided
+        if save_image:
+            if img_name is None:
+                raise ValueError("Please provide the 'img_name' parameter to save the image.")
+            
+            # Save the image as a PNG file with 600 DPI
+            plt.savefig(img_name, dpi=600)
 
 
 
