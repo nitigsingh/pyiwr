@@ -302,7 +302,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
 
 
 
-def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True):
+def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=False, img_name=None):
     """
     Plot radar data for the specified elevation.
 
@@ -313,6 +313,12 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
         rings (bool, optional): If True, display range rings. Default is True.
         grid (bool, optional): If True, display gridlines. Default is True.
         range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
+
+        Example usage:
+        pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=True, img_name='ele_image.png')
     """
     fig, ax = plt.subplots()
         
@@ -345,10 +351,10 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
     levels_dict = {
         'DBZ': [-20, 70],
         'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
+        'WIDTH': [0, 10],
+        'PHIDP': [0, 360],
+        'RHOHV': [0, 1],
+        'ZDR': [-10, 10],
     }
     levels = levels_dict.get(field_name, [-20, 70])
     
@@ -391,14 +397,18 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
 
     plt.tight_layout()
     plt.show()
+    # Save the image if save_image is True and file_name is provided
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600)
 
 
-    plt.show()
 
 
-
-
-def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True):
+def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=False, img_name=None):
     """
     Plot radar data for all elevation angles.
 
@@ -408,6 +418,12 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
         rings (bool, optional): If True, display range rings. Default is True.
         grid (bool, optional): If True, display gridlines. Default is True.
         range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
+
+        Example usage:
+        pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=True, img_name='all_ele_image.png')
     """
     fig = plt.figure(figsize=(15, 15))  # Increase figure size for better visibility
     k = radar.metadata['instrument_name']
@@ -434,13 +450,14 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
         'ZDR': 'pyart_RefDiff',
     }
 
+    # Define levels for the color bar
     levels_dict = {
         'DBZ': [-20, 70],
         'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
+        'WIDTH': [0, 10],
+        'PHIDP': [0, 360],
+        'RHOHV': [0, 1],
+        'ZDR': [-10, 10],
     }
     
     # Get the colormap for the field_name
@@ -484,11 +501,17 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
 
     plt.tight_layout()
     plt.show()
+    # Save the image if save_image is True and file_name is provided  
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600)
 
 
 
-
-def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True):
+def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=False, img_name=None):
     """
     Plot multiple radar products at the specified elevation.
 
@@ -498,6 +521,13 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
         range_in_km (bool, optional): If True, display range axis in kilometers. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         grid (bool, optional): If True, display gridlines. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
+
+
+        Example usage:
+        pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=True, img_name='fields_ele_image.png')
     """
     
     fig = plt.figure(figsize=(15, 10))
@@ -510,7 +540,7 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
     titles = ['Reflectivity', 'Doppler Velocity', 'Spectral Width', 'Differential Reflectivity',
               'Differential Phase', 'Correlation Coefficient']
     cmap_names = ['pyart_NWSRef', 'pyart_NWSVel', 'pyart_NWS_SPW', 'pyart_RefDiff', 'pyart_PD17', 'pyart_EWilson17']
-    levels = [[-20, 70], [-30, 30], [-30, 30], [-10, 20], [-300, 300], [-10, 30]]
+    levels = [[-20, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0, 1]]
 
     if range_in_km:
         rngs = radar.range['data'] / 1000.
@@ -561,3 +591,10 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
     plt.tight_layout()  # Adjust subplot parameters to avoid overlapping
     plt.subplots_adjust(top=0.90, hspace=0.3)  # Adjust top margin and horizontal spacing between subplots
     plt.show()
+    # Save the image if save_image is True and file_name is provided
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600)
