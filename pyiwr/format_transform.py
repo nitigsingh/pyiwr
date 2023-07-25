@@ -500,9 +500,12 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     elif Station == 'SHR':
         a = 'SHAR S-band Dual-pol DWR'
         height = height + 0.029
-    else: 
+    elif Station == 'TLS':
         a = 'TERLS C-band Dual-pol DWR'  
         height = height + 0.027
+    else:
+        a = 'Unknown Radar Station'
+
         
         
     # Add attributes to the dataset in the given order
