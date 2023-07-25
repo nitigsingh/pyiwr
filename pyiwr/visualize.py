@@ -17,7 +17,7 @@ from datetime import datetime
 
 
 
-def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True):
+def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
     """
     Plot CAPPI at the specified altitude level.
 
@@ -29,9 +29,12 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
+        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
+        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+
 
         Example usage:
-        cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True)
+        cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='cappi_image.png')
     """
     alt_index = int(altitude_level * 2)  # Calculate the index corresponding to the altitude level
 
@@ -93,6 +96,17 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         plt.ylabel('Range (in m) of Radar (at Center) in Cartesian')
 
     plt.show()
+     # Save the image if save_image is True and file_name is provided
+    
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+        
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600)
+
+
+
 
 
 
