@@ -310,12 +310,13 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         ax_cnr.xaxis.set_major_formatter(NullFormatter())
 
         # Labels along the bottom edge are off
-        plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
+        plt.text(0.06, 0.8, 'MAX-CAPPI', size=12, weight='bold')
         plt.text(0.02, 0.65, 'Max Range:'+str(int(xg.x[-1])/1e3)+'km', size=8)
         plt.text(0.02, 0.5, 'Max Height:'+str(int(xg.z[-1])/1e3)+'km', size=8)
 
         # Show the datetime
-        plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
+
+        plt.text(0.15, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=12)
         plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
         plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')
 
@@ -327,6 +328,308 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
         # Save the image as a PNG file with 600 DPI
         plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
+
+
+
+def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None):
+    """
+    Plot the MAX-Z CAPPI on a base map using cartopy.
+
+    Parameters:      
+        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
+        radar_location (str, optional): Radar location name. Default is 'SHAR'.
+        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
+        background (str, optional): Type of background map to use. Options are 'watercolor', 'terrain', 'toner', or 'terrain-background'. Default is 'terrain-background'.
+        cross_sections (bool, optional): If True, display cross-sections. Default is True.
+        save_image (bool, optional): If True, the plot will be saved as an image. Default is False.
+        img_name (str, optional): The file name to save the plot as an image. This parameter is required if save_image is True.
+        
+        
+        # Example usage
+        marginal_max_map(xg, radar_location='TERLS', field_name='corrected_reflectivity', background='terrain-background', cross_sections=True, save_image=True, img_name='cartmaxcappi.png')
+    """
+    fig = plt.figure(figsize=[10, 10])
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    if radar_location=='SHAR':
+        ax.set_extent([78, 82.52043879663267, 11.5, 15.901390588443753], crs=ccrs.PlateCarree())
+        ax.set_xticks(np.arange(78, 82.52043879663267, 1), crs=ccrs.PlateCarree())
+        ax.set_yticks(np.arange(11.5, 15.901390588443753, 1), crs=ccrs.PlateCarree())
+        k = 'SHAR S-band Dual-Pol DWR'
+    elif radar_location=='SOHRA':
+        ax.set_extent([89, 94.5, 22.5, 28], crs=ccrs.Geodetic())
+        ax.set_xticks(np.arange(89, 94.5, 1), crs=ccrs.PlateCarree())
+        ax.set_yticks(np.arange(22.5, 28, 1), crs=ccrs.PlateCarree())       
+        k = 'SOHRA S-band Dual-pol DWR'
+    else:
+        ax.set_extent([74.5, 79.12701779571718, 6.0,10.77846057031159], crs=ccrs.Geodetic())
+        ax.set_xticks(np.arange(74.5, 79.12701779571718, 1), crs=ccrs.PlateCarree())
+        ax.set_yticks(np.arange(6, 10.77846057031159, 1), crs=ccrs.PlateCarree())
+        k = 'TERLS C-band Dual-pol DWR'     
+        
+    ax.add_feature(cfeature.BORDERS, alpha=0.9, lw=0.9)
+    ax.add_feature(cfeature.COASTLINE, alpha=0.5, lw=0.5)
+    ax.add_feature(cfeature.STATES.with_scale("10m"), alpha=0.5, lw=0.5)
+    ax.add_feature(cfeature.LAND, alpha=0.5)
+    ax.add_feature(cfeature.OCEAN, alpha=0.5)
+    
+
+    # For the x-axis
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(base=1))
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{int(x)}"))
+
+    # For the y-axis
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f"{int(y)}"))
+    
+    if background =='watercolor':
+        st = tj.Stamen(background)
+    elif background =='terrain':
+        st = tj.Stamen(background)
+    elif background =='toner':
+        st = tj.Stamen(background)
+    else:
+        background =='terrain-background'
+        st = tj.Stamen(background)
+
+    ax.add_image(st, 8)
+
+    # Define colormap based on the field_name
+    colormaps = {
+        'DBZ': 'pyart_NWSRef',
+        'VEL': 'pyart_NWSVel',
+        'WIDTH': 'pyart_NWS_SPW',
+        'PHIDP': 'pyart_PD17',
+        'RHOHV': 'pyart_EWilson17',
+        'ZDR': 'pyart_RefDiff',
+    }
+
+    # Get the colormap for the field_name
+    cmap = colormaps.get(field_name, 'pyart_NWSRef')
+
+    # Define levels for each field_name
+    levels = {
+        'DBZ': [-10, 70],
+        'VEL': [-30, 30],
+        'WIDTH': [-30, 30],
+        'PHIDP': [-10, 20],
+        'RHOHV': [-300, 300],
+        'ZDR': [-10, 30],
+    }
+
+    # Get the levels for the field_name
+    cmap_levels = levels.get(field_name, [-10, 70])
+
+    # Plot main contourf
+    cf_main = ax.contourf(xg.x['lon'], xg.y['lat'], xg[field_name][0].max("z"), levels=range(cmap_levels[0], cmap_levels[1] + 1), cmap=cmap)
+
+   
+    # Title
+    title_str = f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
+
+    if cross_sections:
+        plt.title(title_str, fontsize=16, pad=100)
+        cb_main = plt.colorbar(cf_main, label=xg[field_name].units, fraction=0.039, pad=0.2)
+
+    else:
+        plt.title(title_str, fontsize=16)
+        cb_main = plt.colorbar(cf_main, label=xg[field_name].units, fraction=0.044, pad=0.03)
+  
+    
+    # Set labels and title
+    plt.xlabel('Longitudes due East', fontsize=14)
+    plt.ylabel('Latitude due North', fontsize=14)
+    
+
+    if radar_location=='SHAR':
+
+        # Site locations
+        site = (80.2274, 13.6645, 27)
+        site1 = (80.237617, 13.6067439, 6.7)
+
+        # Plot site locations
+        ax.plot(site[0], site[1], 'ro', markersize=8)
+        ax.plot(site1[0], site1[1], 'bo', markersize=8)
+
+        # Add text labels for site locations
+        ax.text(site[0] + 0.3, site[1] + 0.05, 'SHAR DWR', ha='center', va='bottom', fontsize=15)
+        ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Chennai', ha='center', va='bottom', fontsize=15)    
+
+    elif radar_location=='SOHRA':
+
+        # Site locations
+        site = (91.73, 25.26, 1313)
+        site1 = (91.893254, 25.578773, 1496)
+
+        # Plot site locations
+        ax.plot(site[0], site[1], 'ro', markersize=8)
+        ax.plot(site1[0], site1[1], 'bo', markersize=8)
+
+        # Add text labels for site locations
+        ax.text(site[0] + 0.3, site[1] + 0.05, 'SOHRA DWR', ha='center', va='bottom', fontsize=15)
+        ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Shillong', ha='center', va='bottom', fontsize=15)    
+
+    else:
+
+        # Site locations
+        site = (76.8657, 8.5374, 29)
+        site1 = (76.94924, 8.4855, 10)
+
+        # Plot site locations
+        ax.plot(site[0], site[1], 'ro', markersize=8)
+        ax.plot(site1[0], site1[1], 'bo', markersize=8)
+
+        # Add text labels for site locations
+        ax.text(site[0] + 0.3, site[1] + 0.05, 'TERLS DWR', ha='center', va='bottom', fontsize=15)
+        ax.text(site1[0] + 0.4, site1[1] - 0.2, 'Thiruvananthapuram', ha='center', va='bottom', fontsize=15)    
+    
+    if cross_sections:
+        
+        if radar_location=='SHAR':
+            # Create inset axes for shared contourf on top and right
+            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
+            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
+
+            ax_x.xaxis.set_tick_params(labelbottom=False)
+            ax_y.yaxis.set_tick_params(labelleft=False)
+
+            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
+            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff, ax_x.get_xlim()[1])
+
+            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
+            ax_y.set_ylim(ax_y.get_yticks()[0] + y_diff, ax_y.get_ylim()[1])
+
+            ax_x.set_title(None)
+            ax_y.set_title(None)
+            ax_y.set_ylabel(None)
+            ax_x.set_xlabel(None)
+            ax_x.set_ylabel("Height AMSL (m)", size=10)
+            ax_y.set_xlabel("Height AMSL (m)", size=10)
+
+            # Add corner box
+            left1, bottom1, width1, height1 = 0.721, 0.788, 0.118, 0.1155
+            ax_cnr = plt.axes((left1, bottom1, width1, height1))
+            plt.sca(ax_cnr)
+            plt.tick_params(
+                axis='both',
+                which='both',
+                bottom=False,
+                top=False,
+                left=False,
+                right=False,
+                labelbottom=False)
+            ax_cnr.yaxis.set_major_formatter(NullFormatter())
+            ax_cnr.xaxis.set_major_formatter(NullFormatter())
+
+            # Labels along the bottom edge are off
+            plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
+            plt.text(0.02, 0.65, f'Max Range: 250 km', size=8)
+            plt.text(0.02, 0.5, f'Max Height: 15 km', size=8)
+            plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
+            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
+            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')        
+        elif radar_location=='SOHRA':
+            
+            # Create inset axes for shared contourf on top and right
+            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
+            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
+
+            ax_x.xaxis.set_tick_params(labelbottom=False)
+            ax_y.yaxis.set_tick_params(labelleft=False)
+
+            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
+            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff, ax_x.get_xlim()[1])
+
+            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
+            ax_y.set_ylim(ax_y.get_yticks()[0] + y_diff, ax_y.get_ylim()[1])
+
+            ax_x.set_title(None)
+            ax_y.set_title(None)
+            ax_y.set_ylabel(None)
+            ax_x.set_xlabel(None)
+            ax_x.set_ylabel("Height AMSL (m)", size=10)
+            ax_y.set_xlabel("Height AMSL (m)", size=10)
+
+            # Add corner box
+            left1, bottom1, width1, height1 = 0.721, 0.797, 0.118, 0.1175
+            ax_cnr = plt.axes((left1, bottom1, width1, height1))
+            plt.sca(ax_cnr)
+            plt.tick_params(
+                axis='both',
+                which='both',
+                bottom=False,
+                top=False,
+                left=False,
+                right=False,
+                labelbottom=False)
+            ax_cnr.yaxis.set_major_formatter(NullFormatter())
+            ax_cnr.xaxis.set_major_formatter(NullFormatter())
+
+            # Labels along the bottom edge are off
+            plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
+            plt.text(0.02, 0.65, f'Max Range: 250 km', size=8)
+            plt.text(0.02, 0.5, f'Max Height: 15 km', size=8)
+            plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
+            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
+            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')            
+        else:
+            # Create inset axes for shared contourf on top and right
+            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
+            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
+
+            ax_x.xaxis.set_tick_params(labelbottom=False)
+            ax_y.yaxis.set_tick_params(labelleft=False)
+
+            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
+            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff/2, ax_x.get_xlim()[1])
+
+            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
+            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
+            ax_y.set_ylim(ax_y.get_yticks()[0], ax_y.get_ylim()[1])
+
+            ax_x.set_title(None)
+            ax_y.set_title(None)
+            ax_y.set_ylabel(None)
+            ax_x.set_xlabel(None)
+            ax_x.set_ylabel("Height AMSL (m)", size=10)
+            ax_y.set_xlabel("Height AMSL (m)", size=10)
+
+            # Add corner box
+            left1, bottom1, width1, height1 = 0.721, 0.805, 0.118, 0.1228
+            ax_cnr = plt.axes((left1, bottom1, width1, height1))
+            plt.sca(ax_cnr)
+            plt.tick_params(
+                axis='both',
+                which='both',
+                bottom=False,
+                top=False,
+                left=False,
+                right=False,
+                labelbottom=False)
+            ax_cnr.yaxis.set_major_formatter(NullFormatter())
+            ax_cnr.xaxis.set_major_formatter(NullFormatter())
+
+            # Labels along the bottom edge are off
+            plt.text(0.06, 0.8, 'MAX-CAPPI', size=12, weight='bold')
+            plt.text(0.02, 0.65, 'Max Range:'+str(int(xg.x[-1])/1e3)+'km', size=8)
+            plt.text(0.02, 0.5, 'Max Height:'+str(int(xg.z[-1])/1e3)+'km', size=8)
+            plt.text(0.15, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=12)
+            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
+            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')
+            
+            
+     # Save the image if save_image is True and file_name is provided
+    if save_image:
+        if img_name is None:
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
+
+        # Save the image as a PNG file with 600 DPI
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
+    plt.show();
 
 
 
@@ -635,302 +938,3 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
     plt.tight_layout()
     plt.show()
 
-def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None):
-    """
-    Plot the MAX-Z CAPPI on a base map using cartopy.
-
-    Parameters:      
-        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
-        radar_location (str, optional): Radar location name. Default is 'SHAR'.
-        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
-        background (str, optional): Type of background map to use. Options are 'watercolor', 'terrain', 'toner', or 'terrain-background'. Default is 'terrain-background'.
-        cross_sections (bool, optional): If True, display cross-sections. Default is True.
-        save_image (bool, optional): If True, the plot will be saved as an image. Default is False.
-        img_name (str, optional): The file name to save the plot as an image. This parameter is required if save_image is True.
-        
-        
-        # Example usage
-        marginal_max_map(xg, radar_location='TERLS', field_name='corrected_reflectivity', background='terrain-background', cross_sections=True, save_image=True, img_name='cartmaxcappi.png')
-    """
-    fig = plt.figure(figsize=[10, 10])
-    ax = plt.axes(projection=ccrs.PlateCarree())
-    if radar_location=='SHAR':
-        ax.set_extent([78, 82.52043879663267, 11.5, 15.901390588443753], crs=ccrs.PlateCarree())
-        ax.set_xticks(np.arange(78, 82.52043879663267, 1), crs=ccrs.PlateCarree())
-        ax.set_yticks(np.arange(11.5, 15.901390588443753, 1), crs=ccrs.PlateCarree())
-        k = 'SHAR S-band Dual-Pol DWR'
-    elif radar_location=='SOHRA':
-        ax.set_extent([89, 94.5, 22.5, 28], crs=ccrs.Geodetic())
-        ax.set_xticks(np.arange(89, 94.5, 1), crs=ccrs.PlateCarree())
-        ax.set_yticks(np.arange(22.5, 28, 1), crs=ccrs.PlateCarree())       
-        k = 'SOHRA S-band Dual-pol DWR'
-    else:
-        ax.set_extent([74.5, 79.12701779571718, 6.0,10.77846057031159], crs=ccrs.Geodetic())
-        ax.set_xticks(np.arange(74.5, 79.12701779571718, 1), crs=ccrs.PlateCarree())
-        ax.set_yticks(np.arange(6, 10.77846057031159, 1), crs=ccrs.PlateCarree())
-        k = 'TERLS C-band Dual-pol DWR'     
-        
-    ax.add_feature(cfeature.BORDERS, alpha=0.9, lw=0.9)
-    ax.add_feature(cfeature.COASTLINE, alpha=0.5, lw=0.5)
-    ax.add_feature(cfeature.STATES.with_scale("10m"), alpha=0.5, lw=0.5)
-    ax.add_feature(cfeature.LAND, alpha=0.5)
-    ax.add_feature(cfeature.OCEAN, alpha=0.5)
-    
-
-    # For the x-axis
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(base=1))
-    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{int(x)}"))
-
-    # For the y-axis
-    ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
-    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f"{int(y)}"))
-    
-    if background =='watercolor':
-        st = tj.Stamen(background)
-    elif background =='terrain':
-        st = tj.Stamen(background)
-    elif background =='toner':
-        st = tj.Stamen(background)
-    else:
-        background =='terrain-background'
-        st = tj.Stamen(background)
-
-    ax.add_image(st, 8)
-
-    # Define colormap based on the field_name
-    colormaps = {
-        'DBZ': 'pyart_NWSRef',
-        'VEL': 'pyart_NWSVel',
-        'WIDTH': 'pyart_NWS_SPW',
-        'PHIDP': 'pyart_PD17',
-        'RHOHV': 'pyart_EWilson17',
-        'ZDR': 'pyart_RefDiff',
-    }
-
-    # Get the colormap for the field_name
-    cmap = colormaps.get(field_name, 'pyart_NWSRef')
-
-    # Define levels for each field_name
-    levels = {
-        'DBZ': [-10, 70],
-        'VEL': [-30, 30],
-        'WIDTH': [-30, 30],
-        'PHIDP': [-10, 20],
-        'RHOHV': [-300, 300],
-        'ZDR': [-10, 30],
-    }
-
-    # Get the levels for the field_name
-    cmap_levels = levels.get(field_name, [-10, 70])
-
-    # Plot main contourf
-    cf_main = ax.contourf(xg.x['lon'], xg.y['lat'], xg[field_name][0].max("z"), levels=range(cmap_levels[0], cmap_levels[1] + 1), cmap=cmap)
-
-   
-    # Title
-    title_str = f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
-
-    if cross_sections:
-        plt.title(title_str, fontsize=16, pad=100)
-        cb_main = plt.colorbar(cf_main, label=xg[field_name].units, fraction=0.039, pad=0.2)
-
-    else:
-        plt.title(title_str, fontsize=16)
-        cb_main = plt.colorbar(cf_main, label=xg[field_name].units, fraction=0.044, pad=0.03)
-  
-    
-    # Set labels and title
-    plt.xlabel('Longitudes due East', fontsize=14)
-    plt.ylabel('Latitude due North', fontsize=14)
-    
-
-    if radar_location=='SHAR':
-
-        # Site locations
-        site = (80.2274, 13.6645, 27)
-        site1 = (80.237617, 13.6067439, 6.7)
-
-        # Plot site locations
-        ax.plot(site[0], site[1], 'ro', markersize=8)
-        ax.plot(site1[0], site1[1], 'bo', markersize=8)
-
-        # Add text labels for site locations
-        ax.text(site[0] + 0.3, site[1] + 0.05, 'SHAR DWR', ha='center', va='bottom', fontsize=15)
-        ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Chennai', ha='center', va='bottom', fontsize=15)    
-
-    elif radar_location=='SOHRA':
-
-        # Site locations
-        site = (91.73, 25.26, 1313)
-        site1 = (91.893254, 25.578773, 1496)
-
-        # Plot site locations
-        ax.plot(site[0], site[1], 'ro', markersize=8)
-        ax.plot(site1[0], site1[1], 'bo', markersize=8)
-
-        # Add text labels for site locations
-        ax.text(site[0] + 0.3, site[1] + 0.05, 'SOHRA DWR', ha='center', va='bottom', fontsize=15)
-        ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Shillong', ha='center', va='bottom', fontsize=15)    
-
-    else:
-
-        # Site locations
-        site = (76.8657, 8.5374, 29)
-        site1 = (76.94924, 8.4855, 10)
-
-        # Plot site locations
-        ax.plot(site[0], site[1], 'ro', markersize=8)
-        ax.plot(site1[0], site1[1], 'bo', markersize=8)
-
-        # Add text labels for site locations
-        ax.text(site[0] + 0.3, site[1] + 0.05, 'TERLS DWR', ha='center', va='bottom', fontsize=15)
-        ax.text(site1[0] + 0.4, site1[1] - 0.2, 'Thiruvananthapuram', ha='center', va='bottom', fontsize=15)    
-    
-    if cross_sections:
-        
-        if radar_location=='SHAR':
-            # Create inset axes for shared contourf on top and right
-            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
-            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
-
-            ax_x.xaxis.set_tick_params(labelbottom=False)
-            ax_y.yaxis.set_tick_params(labelleft=False)
-
-            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
-            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff, ax_x.get_xlim()[1])
-
-            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
-            ax_y.set_ylim(ax_y.get_yticks()[0] + y_diff, ax_y.get_ylim()[1])
-
-            ax_x.set_title(None)
-            ax_y.set_title(None)
-            ax_y.set_ylabel(None)
-            ax_x.set_xlabel(None)
-            ax_x.set_ylabel("Height AMSL (m)", size=10)
-            ax_y.set_xlabel("Height AMSL (m)", size=10)
-
-            # Add corner box
-            left1, bottom1, width1, height1 = 0.721, 0.788, 0.118, 0.1155
-            ax_cnr = plt.axes((left1, bottom1, width1, height1))
-            plt.sca(ax_cnr)
-            plt.tick_params(
-                axis='both',
-                which='both',
-                bottom=False,
-                top=False,
-                left=False,
-                right=False,
-                labelbottom=False)
-            ax_cnr.yaxis.set_major_formatter(NullFormatter())
-            ax_cnr.xaxis.set_major_formatter(NullFormatter())
-
-            # Labels along the bottom edge are off
-            plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
-            plt.text(0.02, 0.65, f'Max Range: 250 km', size=8)
-            plt.text(0.02, 0.5, f'Max Height: 15 km', size=8)
-            plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
-            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
-            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')        
-        elif radar_location=='SOHRA':
-            
-            # Create inset axes for shared contourf on top and right
-            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
-            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
-
-            ax_x.xaxis.set_tick_params(labelbottom=False)
-            ax_y.yaxis.set_tick_params(labelleft=False)
-
-            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
-            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff, ax_x.get_xlim()[1])
-
-            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
-            ax_y.set_ylim(ax_y.get_yticks()[0] + y_diff, ax_y.get_ylim()[1])
-
-            ax_x.set_title(None)
-            ax_y.set_title(None)
-            ax_y.set_ylabel(None)
-            ax_x.set_xlabel(None)
-            ax_x.set_ylabel("Height AMSL (m)", size=10)
-            ax_y.set_xlabel("Height AMSL (m)", size=10)
-
-            # Add corner box
-            left1, bottom1, width1, height1 = 0.721, 0.797, 0.118, 0.1175
-            ax_cnr = plt.axes((left1, bottom1, width1, height1))
-            plt.sca(ax_cnr)
-            plt.tick_params(
-                axis='both',
-                which='both',
-                bottom=False,
-                top=False,
-                left=False,
-                right=False,
-                labelbottom=False)
-            ax_cnr.yaxis.set_major_formatter(NullFormatter())
-            ax_cnr.xaxis.set_major_formatter(NullFormatter())
-
-            # Labels along the bottom edge are off
-            plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
-            plt.text(0.02, 0.65, f'Max Range: 250 km', size=8)
-            plt.text(0.02, 0.5, f'Max Height: 15 km', size=8)
-            plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
-            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
-            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')            
-        else:
-            # Create inset axes for shared contourf on top and right
-            ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
-            ax_y = inset_axes(ax, width="25%", height="100%", loc='upper right', bbox_to_anchor=(0.41, 0, 0.8, 1), bbox_transform=ax.transAxes, borderpad=0)
-
-            ax_x.xaxis.set_tick_params(labelbottom=False)
-            ax_y.yaxis.set_tick_params(labelleft=False)
-
-            cf_x = ax_x.contourf(xg.x['lon'], xg.z, xg[field_name][0].max(axis=1), cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            x_diff = ax_x.get_xticks()[1] - ax_x.get_xticks()[0]
-            ax_x.set_xlim(ax_x.get_xticks()[0] + x_diff/2, ax_x.get_xlim()[1])
-
-            cf_y = ax_y.contourf(xg.z, xg.y['lat'], xg[field_name][0].max(axis=2).T, cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1] + 1))
-            y_diff = ax_y.get_yticks()[1] - ax_y.get_yticks()[0]
-            ax_y.set_ylim(ax_y.get_yticks()[0], ax_y.get_ylim()[1])
-
-            ax_x.set_title(None)
-            ax_y.set_title(None)
-            ax_y.set_ylabel(None)
-            ax_x.set_xlabel(None)
-            ax_x.set_ylabel("Height AMSL (m)", size=10)
-            ax_y.set_xlabel("Height AMSL (m)", size=10)
-
-            # Add corner box
-            left1, bottom1, width1, height1 = 0.721, 0.805, 0.118, 0.1228
-            ax_cnr = plt.axes((left1, bottom1, width1, height1))
-            plt.sca(ax_cnr)
-            plt.tick_params(
-                axis='both',
-                which='both',
-                bottom=False,
-                top=False,
-                left=False,
-                right=False,
-                labelbottom=False)
-            ax_cnr.yaxis.set_major_formatter(NullFormatter())
-            ax_cnr.xaxis.set_major_formatter(NullFormatter())
-
-            # Labels along the bottom edge are off
-            plt.text(0.06, 0.8, 'MAX-CAPPI', size=12, weight='bold')
-            plt.text(0.02, 0.65, 'Max Range:'+str(int(xg.x[-1])/1e3)+'km', size=8)
-            plt.text(0.02, 0.5, 'Max Height:'+str(int(xg.z[-1])/1e3)+'km', size=8)
-            plt.text(0.15, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=12)
-            plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
-            plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')
-            
-            
-     # Save the image if save_image is True and file_name is provided
-    if save_image:
-        if img_name is None:
-            raise ValueError("Please provide the 'img_name' parameter to save the image.")
-
-        # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_inches='tight')
-    plt.show();
