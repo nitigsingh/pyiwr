@@ -8,3 +8,4 @@ from .visualize import marginal_max
 from .visualize import elevation
 from .visualize import all_elevation
 from .visualize import fields_elevation
+from .visualize import marginal_max_map
