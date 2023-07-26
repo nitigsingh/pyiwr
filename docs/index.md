@@ -10,9 +10,6 @@
 <aside id="sidebar-toc">
   <iframe src="sidebar.html"></iframe>
 </aside>
-<p align="center">
-  <img src="./pyiwr/priwr.png" alt="pyiwr">
-</p>
 
 
 <!-- Main content -->
