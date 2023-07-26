@@ -34,7 +34,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
 
         Example usage:
-        cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='cappi_image.png')
+        pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='cappi_image.png')
     """
     alt_index = int(altitude_level * 2)  # Calculate the index corresponding to the altitude level
 
@@ -124,7 +124,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
         
         Example usage:
-        cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, img_name='cappi_max_image.png')
+         pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, img_name='cappi_max_image.png')
     """
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
@@ -302,12 +302,13 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
 
         # Labels along the bottom edge are off
         plt.text(0.2, 0.8, 'MAX-Z', size=14, weight='bold')
-        plt.text(0.02, 0.65, 'Max Range: 250 km', size=8)
-        plt.text(0.02, 0.5, 'Max Height: 15 km', size=8)
+        plt.text(0.02, 0.65, 'Max Range:'+str(int(xg.x[-1])/1e3)+'km', size=8)
+        plt.text(0.02, 0.5, 'Max Height:'+str(int(xg.z[-1])/1e3)+'km', size=8)
 
         # Show the datetime
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
-        plt.text(0.1, 0.05, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B\n%Y UTC'), size=9)
+        plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
+        plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')
 
      # Save the image if save_image is True and file_name is provided
     if save_image:
