@@ -133,7 +133,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
         
         Example usage:
-         pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, img_name='cappi_max_image.png')
+         pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name='cappi_max_image.png')
     """
     if radar_location == 'SOHRA':
         k = 'Sohra S-band Dual-Pol DWR'
@@ -346,7 +346,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
         
         
         # Example usage
-        marginal_max_map(xg, radar_location='TERLS', field_name='corrected_reflectivity', background='terrain-background', cross_sections=True, save_image=True, img_name='cartmaxcappi.png')
+        marginal_max_map(xg, radar_location='TERLS', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=True, img_name='cartmaxcappi.png')
     """
     fig = plt.figure(figsize=[10, 10])
     ax = plt.axes(projection=ccrs.PlateCarree())
