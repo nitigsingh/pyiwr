@@ -541,7 +541,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
 
     grid = pyart.map.grid_from_radars(
         radar, grid_shape=grid_shape,
-        grid_limits=((radar.altitude['data'][0], height * 1e3),
+        grid_limits=((0, height * 1e3),               #(radar.altitude['data'][0]
                      (-length * 1e3, length * 1e3),
                      (-length * 1e3, length * 1e3)),
         fields=radar.fields.keys(),
