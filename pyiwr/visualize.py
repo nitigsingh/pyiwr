@@ -446,9 +446,9 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
         Example usage:
         pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=True, img_name='all_ele_image.png')
     """
-    fig = plt.figure(figsize=(15, 15))  # Increase figure size for better visibility
+    fig = plt.figure(figsize=(20, 18))  # Increase figure size for better visibility
     k = radar.metadata['instrument_name']
-    title_str = f"{k} {radar.fields[field_name]['standard_name']} @ various elevation angles"
+    title_str = f"{k} \nTime: {str(radar.time['units'])[14:]}, {radar.fields[field_name]['standard_name']} @ various elevation angles"
 
     # Title
     fig.suptitle(title_str, fontsize=16, y=1.0)
@@ -521,6 +521,7 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
                     ax.text(x + 17000, y + 17000, f"{int(r/1000)}", ha='center', va='center', fontsize=10)
 
 
+    plt.subplots_adjust(top=0.95, hspace=0.3)  # Adjust top margin and horizontal spacing between subplots
      # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
@@ -528,7 +529,9 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
         
         # Save the image as a PNG file with 600 DPI
         plt.savefig(img_name, dpi=600,bbox_inches='tight')
+    plt.tight_layout()
     plt.show()
+
 
 
 
@@ -552,11 +555,11 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
         pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=True, img_name='fields_ele_image.png')
     """
     
-    fig = plt.figure(figsize=(15, 10))
+    fig = plt.figure(figsize=(20, 10))
     k = radar.metadata['instrument_name']
     title_str = f"{k} \nTime: {str(radar.time['units'])[14:]}, PPI Products @ elevation {str(radar.fixed_angle['data'][elevation_index])}"
 
-    fig.suptitle(title_str, fontsize=16, y=1)    
+    fig.suptitle(title_str, fontsize=16, y=.98)    
 
     product_names = ['DBZ', 'VEL', 'WIDTH', 'ZDR', 'PHIDP', 'RHOHV']
     titles = ['Reflectivity', 'Doppler Velocity', 'Spectral Width', 'Differential Reflectivity',
@@ -618,6 +621,8 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_inches='tight')
+        plt.savefig(img_name, dpi=600, bbox_inches='tight')
+
+    plt.tight_layout()
     plt.show()
 
