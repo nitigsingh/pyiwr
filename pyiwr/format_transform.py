@@ -31,7 +31,7 @@ def fread(fid, nelements, dtype):
     data_array.shape = (nelements, 1)
     return data_array
 
-def dwr2nc(dwr_path, save_file=True):
+def dwr2nc(dwr_path, save_file=False):
     with open(dwr_path, 'rb') as fid:
         print('Processing file:',os.path.basename(dwr_path))
         m5 = np.fromfile(fid, dtype='uint8')
@@ -371,7 +371,7 @@ def dwr2nc(dwr_path, save_file=True):
 
 
 
-def mosdac_correctednc(file_path, save_file=True):
+def mosdac_correctednc(file_path, save_file=False):
     # Open the dataset
     
     print('Processing file: ', os.path.basename(file_path))
@@ -462,7 +462,7 @@ def mosdac_correctednc(file_path, save_file=True):
         return radar
 
 
-def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=True):
+def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
     print('Processing file: ', os.path.basename(file_path))
 
     """
@@ -519,9 +519,11 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     raw.attrs['instrument_type'] = 'radar'
     raw.attrs['primary_axis'] = 'axis_z'
 
+    
     # Extract the start time from the dataset and convert it to datetime object
-    start_time_str = "".join(raw.time_coverage_start.astype(str).values)
+    start_time_str = raw.time_coverage_start.item().decode('utf-8')  # Convert bytes to a regular string
     start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+
 
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
     raw["time_coverage_start"] = start_time
@@ -567,4 +569,3 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     else:
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully')
         return xg
-
