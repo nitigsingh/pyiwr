@@ -102,7 +102,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
 
@@ -188,7 +188,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
 
@@ -316,7 +316,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
 
@@ -422,7 +422,7 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
 
@@ -527,7 +527,7 @@ def all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=Tr
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
 
@@ -618,6 +618,6 @@ def fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, gri
             raise ValueError("Please provide the 'img_name' parameter to save the image.")
         
         # Save the image as a PNG file with 600 DPI
-        plt.savefig(img_name, dpi=600,bbox_layout='tight')
+        plt.savefig(img_name, dpi=600,bbox_inches='tight')
     plt.show()
 
