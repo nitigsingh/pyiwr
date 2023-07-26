@@ -1,0 +1,36 @@
+/* Layout styles */
+body {
+  display: flex;
+}
+
+#sidebar-toc, #sidebar-contributors {
+  flex: 0 0 20%;
+  padding: 20px;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Sidebar styles */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin-bottom: 10px;
+}
+
+/* Contributors styles */
+#sidebar-contributors ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#sidebar-contributors ul li {
+  margin-bottom: 5px;
+}
