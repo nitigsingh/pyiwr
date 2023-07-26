@@ -422,8 +422,6 @@ def mosdac_correctednc(file_path, save_file=True):
 
     # Extract the start time from the dataset and convert it to datetime object
     start_time_str = "".join(raw.time_coverage_start.astype(str).values)
-    # Manually append the 'Z' to the end of the time string
-    start_time_str += 'Z'
     
     start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
 
