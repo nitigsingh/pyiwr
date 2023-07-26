@@ -307,8 +307,7 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
 
         # Show the datetime
         plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
-        plt.text(0.02, 0.15, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B, %Y UTC'), size=9)
-        
+        plt.text(0.1, 0.05, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B\n%Y UTC'), size=9)
 
      # Save the image if save_image is True and file_name is provided
     if save_image:
