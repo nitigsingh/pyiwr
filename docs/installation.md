@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-<div style="text-align: center; font-size: 24px; padding: 10px;">
+<div style="text-align: left; font-size: 10px; padding: 10px;">
 <h1>Table of Contents</h1>
 <ul>
     <li><a href="installation.md">Installation</a></li>
