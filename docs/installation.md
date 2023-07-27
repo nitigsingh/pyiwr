@@ -1,7 +1,3 @@
-<html>
-<head>
-</head>
-<body>
 ## Table of Contents
 
 - [Installation](installation.md)
@@ -9,6 +5,12 @@
 - [Reference](Reference.md)
 - [Contribution Guidelines](contribution.md)
 - [Citation](citation.md)
+
+
+<html>
+<head>
+</head>
+<body>
 
 <h1>Install pyiwr</h1>
 
