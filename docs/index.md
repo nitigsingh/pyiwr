@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="../pyiwr.png" alt="pyiwr" width="50%">
+  <img src="../pyiwr.png" alt="pyiwr" width="30%">
 </p>
 
 
