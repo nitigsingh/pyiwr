@@ -2,16 +2,14 @@
 <head>
 </head>
 <body>
-<div style="text-align: left; font-size: 10px; padding: 10px;">
-<h1>Table of Contents</h1>
-<ul>
-    <li><a href="installation.md">Installation</a></li>
-    <li><a href="usage.md">Usage</a></li>
-    <li><a href="Reference.md">Reference</a></li>
-    <li><a href="contribution.md">Contribution Guidelines</a></li>
-    <li><a href="citation.md">Citation</a></li>
-</ul>
-</div>
+## Table of Contents
+
+- [Installation](installation.md)
+- [Usage](usage.md)
+- [Reference](Reference.md)
+- [Contribution Guidelines](contribution.md)
+- [Citation](citation.md)
+
 <h1>Install pyiwr</h1>
 
 <p>To install pyiwr, follow these steps:</p>
