@@ -4,7 +4,9 @@
 
 </head>
 <body>
-
+<div style="text-align: center; font-size: 24px; padding: 10px;">
+  My Custom Header
+</div>
 <h1>Install pyiwr</h1>
 
 <p>To install pyiwr, follow these steps:</p>
