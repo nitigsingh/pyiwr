@@ -1,11 +1,16 @@
-
 <html>
 <head>
-
 </head>
 <body>
 <div style="text-align: center; font-size: 24px; padding: 10px;">
-  My Custom Header
+<h1>Table of Contents</h1>
+<ul>
+    <li><a href="installation.md">Installation</a></li>
+    <li><a href="usage.md">Usage</a></li>
+    <li><a href="Reference.md">Reference</a></li>
+    <li><a href="contribution.md">Contribution Guidelines</a></li>
+    <li><a href="citation.md">Citation</a></li>
+</ul>
 </div>
 <h1>Install pyiwr</h1>
 
@@ -27,4 +32,5 @@
 
 </body>
 </html>
+
 
