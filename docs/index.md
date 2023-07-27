@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-   
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-
-<!-- Sidebar for Table of Contents -->
-<aside id="sidebar-toc">
-  <iframe src="sidebar.html"></iframe>
-</aside>
-
-
-<!-- Main content -->
-<main>
 # pyiwr Package Documentation
 
 Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and correct MOSDAC radar NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful tools and visualization functions to facilitate working with and analyzing weather radar data.
@@ -25,19 +9,4 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an
 - [Configuration](configuration.md)
 - [Troubleshooting](troubleshooting.md)
 - [Contribution Guidelines](contribution.md)
-
-</main>
-
-<!-- Contributors -->
-<aside id="sidebar-contributors">
-  # Contributors
-  - Contributor 1
-  - Contributor 2
-  <!-- Add more contributors as needed -->
-</aside>
-
-</body>
-</html>
-
-
 
