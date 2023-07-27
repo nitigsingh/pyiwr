@@ -3,6 +3,10 @@
 
 Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and correct MOSDAC radar NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful tools and visualization functions to facilitate working with and analyzing weather radar data.
 
+## Developers
+1. Nitig Singh, MS Research, SIGMA Research Lab, IIT Indore
+2. Vaibhav Tyagi, Ph.D. Research Scholare, SIGMA Research Lab, IIT Indore
+
 ## Features
 
 - Converts raw ISRO Doppler Weather Radar (DWR) data files into Py-ART compatible NetCDF files.
