@@ -692,7 +692,7 @@ def elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
     
     # Plot radar data for the specified elevation
     plt.contourf(xs0, ys0, ele_data, levels=range(*levels), cmap=cmap)
-    plt.colorbar(label=field_name)
+    plt.colorbar(label=radar.fields[field_name]['units'])
     
     if range_in_km:
         plt.xlabel('Range (in km) of Radar (at Center) in Cartesian')
