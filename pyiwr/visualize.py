@@ -443,7 +443,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
     if radar_location=='SHAR':
 
         # Site locations
-        site = (80.2274, 13.6645, 27)
+        site = (80.2274, 13.6645, 29)
         site1 = (80.237617, 13.6067439, 6.7)
 
         # Plot site locations
@@ -471,7 +471,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
     else:
 
         # Site locations
-        site = (76.8657, 8.5374, 29)
+        site = (76.8657, 8.5374, 27)
         site1 = (76.94924, 8.4855, 10)
 
         # Plot site locations
