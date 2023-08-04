@@ -255,7 +255,7 @@ def dwr2nc(dwr_path, save_file=False):
 
         radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
         radar.metadata = {
-            'instrument_name': 'Sohra S-band Dual-pol DWR',
+            'instrument_name': 'Cherrapunji S-band Dual-pol DWR',
             'Created using': 'pyiwr (Indian Weather Radar) Module developed at SIGMA Research Lab, IIT Indore',
             'version': 'Version 1.0.0',
             'title': 'S Band DWR data',
@@ -396,7 +396,7 @@ def mosdac_correctednc(file_path, save_file=False):
 
     Station = os.path.basename(file_path)[2:5]
     if Station == 'CHR':
-        a = 'Sohra S-band Dual-pol DWR'
+        a = 'Cherrapunji S-band Dual-pol DWR'
     elif Station == 'SHR':
         a = 'SHAR S-band Dual-pol DWR'
     else: 
@@ -503,7 +503,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
 
     Station = os.path.basename(file_path)[2:5]
     if Station == 'CHR':
-        a = 'Sohra S-band Dual-pol DWR'
+        a = 'Cherrapunji S-band Dual-pol DWR'
     elif Station == 'SHR':
         a = 'SHAR S-band Dual-pol DWR'
     else: 
