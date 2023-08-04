@@ -26,7 +26,7 @@ from datetime import datetime
 
 
 
-def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
+def cappi(xg, altitude_level, field_name='DBZ', radar_location='CHERRAPUNJI', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
     """
     Plot CAPPI at the specified altitude level.
 
@@ -34,7 +34,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
         xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
         altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
-        radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
+        radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI', other options are SHAR and TERLS.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
         ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
@@ -43,7 +43,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
 
         Example usage:
-        pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='cappi_image.png')
+        pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='CHERRAPUNJI', grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='cappi_image.png')
     """
     alt_index = int(altitude_level * 2)  # Calculate the index corresponding to the altitude level
 
@@ -75,8 +75,8 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
     plt.colorbar(label=field_name)
 
-    if radar_location == 'SOHRA':
-        k = 'Sohra S-band Dual-Pol DWR'
+    if radar_location == '':
+        k = ' S-band Dual-Pol DWR'
     elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
@@ -117,13 +117,13 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='SOHRA', grid=Fal
 
 
 
-def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
+def cappi_max(xg, field_name='DBZ', radar_location='', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
     """
     Plot MAX Z CAPPI.
 
     Parameters:
         xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
-        radar_location (str, optional): Radar location name. Default is 'SOHRA', other options are SHAR and TERLS.
+        radar_location (str, optional): Radar location name. Default is '', other options are SHAR and TERLS.
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         grid (bool, optional): If True, display gridlines. Default is True.
         rings (bool, optional): If True, display range rings. Default is True.
@@ -133,10 +133,10 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
         
         Example usage:
-         pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name='cappi_max_image.png')
+         pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name='cappi_max_image.png')
     """
-    if radar_location == 'SOHRA':
-        k = 'Sohra S-band Dual-Pol DWR'
+    if radar_location == 'CHERRAPUNJI':
+        k = 'CHERRAPUNJI S-band Dual-Pol DWR'
     elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
@@ -203,13 +203,13 @@ def cappi_max(xg, field_name='DBZ', radar_location='SOHRA', grid=False, rings=Fa
 
 
 
-def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True, save_image=False, img_name=None):
+def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True, save_image=False, img_name=None):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
     Parameters:
         xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
-        radar_location (str, optional): Radar location name. Default is 'SOHRA'.
+        radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI'.
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         show_rings (bool, optional): If True, display range rings. Default is False.
         show_grid (bool, optional): If True, display gridlines. Default is False.
@@ -254,8 +254,8 @@ def marginal_max(xg, radar_location='SOHRA', field_name='DBZ', show_rings=False,
     cappi = xg[field_name][0].max("z")
     cappi.plot.contourf(cmap=cmap, levels=range(cmap_levels[0], cmap_levels[1]+1), cbar_kwargs={'pad': 0.02, 'shrink': 0.8}, ax=ax)
 
-    if radar_location == 'SOHRA':
-        k = 'Sohra S-band Dual-Pol DWR'
+    if radar_location == 'CHERRAPUNJI':
+        k = 'CHERRAPUNJI S-band Dual-Pol DWR'
     elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
@@ -355,11 +355,11 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
         ax.set_xticks(np.arange(78, 82.52043879663267, 1), crs=ccrs.PlateCarree())
         ax.set_yticks(np.arange(11.5, 15.901390588443753, 1), crs=ccrs.PlateCarree())
         k = 'SHAR S-band Dual-Pol DWR'
-    elif radar_location=='SOHRA':
+    elif radar_location=='CHERRAPUNJI':
         ax.set_extent([89, 94.5, 22.5, 28], crs=ccrs.Geodetic())
         ax.set_xticks(np.arange(89, 94.5, 1), crs=ccrs.PlateCarree())
         ax.set_yticks(np.arange(22.5, 28, 1), crs=ccrs.PlateCarree())       
-        k = 'SOHRA S-band Dual-pol DWR'
+        k = 'CHERRAPUNJI S-band Dual-pol DWR'
     else:
         ax.set_extent([74.5, 79.12701779571718, 6.0,10.77846057031159], crs=ccrs.Geodetic())
         ax.set_xticks(np.arange(74.5, 79.12701779571718, 1), crs=ccrs.PlateCarree())
@@ -454,7 +454,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
         ax.text(site[0] + 0.3, site[1] + 0.05, 'SHAR DWR', ha='center', va='bottom', fontsize=15)
         ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Chennai', ha='center', va='bottom', fontsize=15)    
 
-    elif radar_location=='SOHRA':
+    elif radar_location=='CHERRAPUNJI':
 
         # Site locations
         site = (91.73, 25.26, 1313)
@@ -465,7 +465,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
         ax.plot(site1[0], site1[1], 'bo', markersize=8)
 
         # Add text labels for site locations
-        ax.text(site[0] + 0.3, site[1] + 0.05, 'SOHRA DWR', ha='center', va='bottom', fontsize=15)
+        ax.text(site[0] + 0.3, site[1] + 0.05, 'CHERRAPUNJI DWR', ha='center', va='bottom', fontsize=15)
         ax.text(site1[0] + 0.4, site1[1] - 0.1, 'Shillong', ha='center', va='bottom', fontsize=15)    
 
     else:
@@ -529,7 +529,7 @@ def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='te
             plt.text(0.02, 0.3, str(xg.time['time'].values[0])[11:19], weight='bold', size=17)
             plt.text(0.1, 0.2, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%d %B'), size=10, ha='left', va='center')
             plt.text(0.2, 0.08, datetime.strptime(str(xg.time['time'].values[0])[:10], '%Y-%m-%d').strftime('%Y UTC'), size=10, ha='left', va='center')        
-        elif radar_location=='SOHRA':
+        elif radar_location=='CHERRAPUNJI':
             
             # Create inset axes for shared contourf on top and right
             ax_x = inset_axes(ax, width="100%", height="25%", loc='upper center', bbox_to_anchor=(0, 0.41, 1, 0.8), bbox_transform=ax.transAxes, borderpad=0)
