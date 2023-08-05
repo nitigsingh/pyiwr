@@ -203,7 +203,7 @@ def cappi_max(xg, field_name='DBZ', radar_location='', grid=False, rings=False, 
 
 
 
-def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', show_rings=False, show_grid=False, show_cross_sections=True, save_image=False, img_name=None):
+def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', rings=False, grid=False, cross_sections=True, save_image=False, img_name=None):
     """
     Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
 
@@ -211,15 +211,15 @@ def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', show_rings=
         xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
         radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI'.
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
-        show_rings (bool, optional): If True, display range rings. Default is False.
-        show_grid (bool, optional): If True, display gridlines. Default is False.
-        show_cross_sections (bool, optional): If True, display cross-sections. Default is True.
+        rings (bool, optional): If True, display range rings. Default is False.
+        grid (bool, optional): If True, display gridlines. Default is False.
+        cross_sections (bool, optional): If True, display cross-sections. Default is True.
         save_image (bool, optional): If True, save the image as a PNG file. Default is False.
         img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
 
 
         Example usage:
-        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', show_rings=True, show_grid=True, show_cross_sections=True, save_image=True, img_name='marg_max_image.png')
+        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', rings=True, grid=True, cross_sections=True, save_image=True, img_name='marg_max_image.png')
     """
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_aspect(1.)
@@ -264,23 +264,23 @@ def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', show_rings=
     # Title
     title_str = f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
 
-    if show_cross_sections:
+    if cross_sections:
         plt.title(title_str, pad=100)
     else:
         plt.title(title_str)
     plt.xlabel('X distance (in m) from Radar (at Center) in Cartesian')
     plt.ylabel('Y distance (in m) from Radar (at Center) in Cartesian')
-    if show_grid:
+    if grid:
         plt.grid()
 
 
-    if show_rings:
+    if rings:
         # Range rings
         t = np.linspace(0, 2 * np.pi)
         for r in [50000, 150000, 250000]:
             a, = plt.plot(r * np.cos(t), r * np.sin(t), color='0.5')  # Use '0.5' for medium grey color
     
-    if show_cross_sections:
+    if cross_sections:
 
         # Create new axes for displaying cross-sections
         divider = make_axes_locatable(ax)
