@@ -31,7 +31,7 @@ def fread(fid, nelements, dtype):
     data_array.shape = (nelements, 1)
     return data_array
 
-def dwr2nc(dwr_path, save_file=False):
+def raw2nc(dwr_path, save_file=False):
     with open(dwr_path, 'rb') as fid:
         print('Processing file:',os.path.basename(dwr_path))
         m5 = np.fromfile(fid, dtype='uint8')
@@ -371,7 +371,7 @@ def dwr2nc(dwr_path, save_file=False):
 
 
 
-def mosdac_correctednc(file_path, save_file=False):
+def correctednc(file_path, save_file=False):
     # Open the dataset
     
     print('Processing file: ', os.path.basename(file_path))
