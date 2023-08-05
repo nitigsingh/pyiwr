@@ -16,6 +16,8 @@ pyiwr is an advanced open-source library developed by researchers at the SIGMA R
 ## Features
 
 - Converts raw ISRO Doppler Weather Radar (DWR) data files into Py-ART compatible NetCDF files.
+- Restructures dual-pol dwr NetCDF files with missing data moments and attributes into Py-ART compatible NetCDF files.
+- Converts radial sweeps format data into cartesian gridded data NetCDF files.
 - Provides convenient tools for data processing and analysis.
 - Offers visualization functions for better understanding and interpretation of radar data.
 
