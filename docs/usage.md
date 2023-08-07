@@ -22,10 +22,6 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
   
 ![pyiwr_module](images/pyiwr_module.png)
 
-<img src="images/pyiwr_module.png" alt="pyiwr_module" width="700">
-
-
-
 
 ## A. Format transform and reading data as radar object/xarray grid
 ```python
@@ -37,7 +33,6 @@ radar = pyiwr.format_transform.mosdac_correctednc(filename, save_file=True)
 
 # For xarray grids for mosdac nc files
 xarray_grids = pyiwr.format_transform.sweeps2gridnc(filename, grid_shape=(81, 501, 501), height=20, length=250, save_file=True)
-
 ```
 ## B. Visualization CAPPI
 ```python
@@ -56,7 +51,6 @@ pyiwr.visualize.marginal_max(xarray_grids, radar_location='SHAR', field_name='DB
 # For MAX CAPPI (with marginal cross-sections) with map
 pyiwr.visualize.marginal_max_map(xarray_grids, radar_location='TERLS', field_name='DBZ',
                        background='terrain-background', cross_sections=True, save_image=True, img_name='img.png')
-
 ```
 ## C. Visualization PPI
 ```python
@@ -69,5 +63,4 @@ pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, ra
 #For PPI of all fields
 pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=True,
                           img_name='img.png')
-
 ```
