@@ -207,9 +207,29 @@ def raw2nc(dwr_path, save_file=False):
             RDP1t
         ] 
         
-
-        radar = pyart.testing.make_empty_ppi_radar(1600, 360, 10)
-        data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+        
+        radar = pyart.testing.make_empty_ppi_radar(dats[10], 360, dats[9])
+        
+        # Add the condition to determine the 'source' attribute
+        # Add the condition to determine the 'source' attribute
+        Station = dats[0]
+        if Station == 'CHERRAPUNJEE':
+            if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+                data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+            else:
+                data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
+        elif Station == 'SHAR':
+            if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+                data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+            else:
+                data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
+        else: 
+            if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+                data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+            else:
+                data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
+            
+            
         tstart = dats[1][:-1]+'T'+dats[2][1:]+'Z'
 
         radar.time = {
@@ -222,19 +242,32 @@ def raw2nc(dwr_path, save_file=False):
 
         radar.latitude["data"] = np.array([dats[5]])
         radar.longitude["data"] = np.array([dats[4]])
-        radar.range["data"] = np.linspace(75.0, 150.0 * (1600 - 1), 1600)
-        radar.fixed_angle["data"] = np.array(dats[8][:10], dtype=np.float32).flatten()
-        radar.sweep_number["data"] = np.array(range(10))
+        radar.range["data"] = np.linspace(75.0, dats[11] * (dats[10] - 1), dats[10])
+        radar.fixed_angle["data"] = np.array(dats[8][:dats[9]], dtype=np.float32).flatten()
+        radar.sweep_number["data"] = np.array(range(dats[9]))
 
-        radar.sweep_start_ray_index['data'] = np.arange(0, radar.nrays, radar.nrays/10, dtype='int64')
-        radar.sweep_end_ray_index['data'] = radar.sweep_start_ray_index['data'] + int((radar.nrays/10)-1)
+        radar.sweep_start_ray_index['data'] = np.arange(0, radar.nrays, radar.nrays/dats[9], dtype='int64')
+        radar.sweep_end_ray_index['data'] = radar.sweep_start_ray_index['data'] + int((radar.nrays/dats[9])-1)
         radar.init_gate_longitude_latitude()
         radar.init_gate_altitude()
         radar.init_gate_x_y_z()
 
+        #radar.sweep_start_ray_index["data"] = np.array(np.arange(0, 3600, 360), dtype=np.int64)
+        #radar.sweep_end_ray_index["data"] = np.array(np.arange(359, 3600, 360), dtype=np.int64)
         radar.altitude['data'] = np.array(dats[6], dtype=np.int32).flatten()
-        radar.azimuth["data"] = np.repeat(np.arange(360, dtype=np.float32), 10)
-        radar.sweep_mode['data'] = np.array([
+        radar.azimuth["data"] = np.repeat(np.arange(360, dtype=np.float32), dats[9])
+
+
+        #Add the condition to determine the 'source' attribute
+        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+            a = 'DWR Short Volume Scan File (250km)'
+        else:
+            a = 'DWR Long Volume Scan File (500km)'
+
+
+        # Add the condition to determine the 'source' attribute
+        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
+            radar.sweep_mode['data'] = np.array([
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
@@ -246,19 +279,26 @@ def raw2nc(dwr_path, save_file=False):
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
             [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'']
         ], dtype='|S1')
-
-        # Add the condition to determine the 'source' attribute
-        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-            a = 'DWR Short Volume Scan File (250km)'
         else:
-            a = 'DWR Long Volume Scan File (500km)'
-
+            radar.sweep_mode['data'] = np.array([
+                [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
+                [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'']
+            ], dtype='|S1')            
+            
+        # Add the condition to determine the 'source' attribute
+        if Station == 'CHERRAPUNJEE':
+            b = 'Cherrapunji S-band Dual-pol DWR'
+        elif Station == 'SHAR':
+            b = 'SHAR S-band Dual-pol DWR'
+        else: 
+            b = 'TERLS C-band Dual-pol DWR'           
+            
         radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
         radar.metadata = {
-            'instrument_name': 'Cherrapunji S-band Dual-pol DWR',
+            'instrument_name': b,
             'Created using': 'pyiwr (Indian Weather Radar) Module developed at SIGMA Research Lab, IIT Indore',
             'version': 'Version 1.0.0',
-            'title': 'S Band DWR data',
+            'title': b[0:13] + 'DWR data',
             'institution': 'ISRO',
             'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html',
             'source': a,  # 'a' determines the 'source' attribute based on the condition
@@ -367,7 +407,6 @@ def raw2nc(dwr_path, save_file=False):
             os.remove(tmp_file.name)
             print('File', os.path.basename(dwr_path), 'converted successfully')
             return radar
-
 
 
 
