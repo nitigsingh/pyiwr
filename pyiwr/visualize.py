@@ -75,8 +75,8 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='CHERRAPUNJI', gr
 
     plt.colorbar(label=field_name)
 
-    if radar_location == '':
-        k = ' S-band Dual-Pol DWR'
+    if radar_location == 'CHERRAPUNJI':
+        k = 'CHERRAPUNJI S-band Dual-Pol DWR'
     elif radar_location == 'SHAR':
         k = 'SHAR S-band Dual-pol DWR'
     else:
@@ -117,7 +117,7 @@ def cappi(xg, altitude_level, field_name='DBZ', radar_location='CHERRAPUNJI', gr
 
 
 
-def cappi_max(xg, field_name='DBZ', radar_location='', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
+def cappi_max(xg, field_name='DBZ', radar_location='CHERRAPUNJI', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name=None):
     """
     Plot MAX Z CAPPI.
 
@@ -331,13 +331,13 @@ def marginal_max(xg, radar_location='CHERRAPUNJI', field_name='DBZ', rings=False
 
 
 
-def marginal_max_map(xg, radar_location='SHAR', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None):
+def marginal_max_map(xg, radar_location='CHERRAPUNJI', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None):
     """
     Plot the MAX-Z CAPPI on a base map using cartopy.
 
     Parameters:      
         xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
-        radar_location (str, optional): Radar location name. Default is 'SHAR'.
+        radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI'.
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         background (str, optional): Type of background map to use. Options are 'watercolor', 'terrain', 'toner', or 'terrain-background'. Default is 'terrain-background'.
         cross_sections (bool, optional): If True, display cross-sections. Default is True.
