@@ -528,11 +528,20 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     raw.attrs['primary_axis'] = 'axis_z'
 
     
-    # Extract the start time from the dataset and convert it to datetime object
-    start_time_str = raw.time_coverage_start.item().decode('utf-8')  # Convert bytes to a regular string
-    start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+    # for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
+    def extract_start_time(raw):
+        try:
+            # Try to extract the start time using the first method
+            start_time_str = "".join(raw.time_coverage_start.astype(str).values)
+            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+        except TypeError: 
+            # If the first method fails, use the second method
+            start_time_str = raw.time_coverage_start.item().decode('utf-8')
+            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+        return start_time
+    start_time = extract_start_time(raw)
 
-
+    
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
     raw["time_coverage_start"] = start_time
 
