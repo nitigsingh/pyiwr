@@ -17,7 +17,10 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
-    pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure dual-pol radar MOSDAC/corrected NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful tools and visualization functions to facilitate working with and analyzing weather radar data.
+    pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. 
+    This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure 
+    dual-pol radar MOSDAC/corrected NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful 
+    tools and visualization functions to facilitate working with and analyzing weather radar data.
     
     ## You are using the Python ARM Radar Toolkit (Py-ART), an open source
     ## library for working with weather radar data. Py-ART is partly
@@ -29,12 +32,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
     ##
     ##     JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119
     
-    
 
-    C:\Users\dell\AppData\Roaming\Python\Python39\site-packages\mpl_toolkits\basemap\__init__.py:33: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
-      _matplotlib_version = LooseVersion(_matplotlib_version)
-    C:\Users\dell\AppData\Roaming\Python\Python39\site-packages\mpl_toolkits\basemap\__init__.py:34: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
-      _mpl_required_version = LooseVersion('0.98')
     
 
 # MOSDAC FILES
@@ -218,7 +216,8 @@ radar.info()
 
 
 ```python
-pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbz0.png')
+pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True,
+                                                  range_in_km=True, save_image=False, img_name='terls_dbz0.png')
 ```
 
 
@@ -231,7 +230,8 @@ pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True
 
 
 ```python
-pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbzall.png')
+pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True,
+                                                   save_image=False, img_name='terls_dbzall.png')
 ```
 
 
@@ -244,7 +244,8 @@ pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, ra
 
 
 ```python
-pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=False, img_name='terls_fieldall.png')
+pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True,
+                                                  save_image=False, img_name='terls_fieldall.png')
 ```
 
 
@@ -257,7 +258,8 @@ pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rin
 
 
 ```python
-xg = pyiwr.format_transform.sweeps2gridnc(filenamel4, grid_shape=(81, 501, 501), height=20, length=250, save_file=False)
+xg = pyiwr.format_transform.sweeps2gridnc(filenamel4, grid_shape=(81, 501, 501), height=20, length=250,
+                                                    save_file=False)
 xg
 ```
 
@@ -1049,7 +1051,8 @@ Data variables:
 
 
 ```python
-pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='TERLS', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name='terlsdbz_cappi3.png')
+pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='TERLS', grid=False, rings=False,
+                                                           ticks_in_km=True, save_image=False, img_name='terlsdbz_cappi3.png')
 ```
 
 
@@ -1062,7 +1065,8 @@ pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='TE
 
 
 ```python
-pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='TERLS', grid=True, rings=True, ticks_in_km=True, save_image=False, img_name='terlsdbz_maxcappi.png')
+pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='TERLS', grid=True, rings=True, ticks_in_km=True,
+                                                          save_image=False, img_name='terlsdbz_maxcappi.png')
 ```
 
 
@@ -1075,7 +1079,8 @@ pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='TERLS', grid=Tru
 
 
 ```python
-pyiwr.visualize.marginal_max(xg, radar_location='TERLS', field_name='DBZ', rings=True, grid=True, cross_sections=True, save_image=False, img_name='terlsdbz_margmax.png')
+pyiwr.visualize.marginal_max(xg, radar_location='TERLS', field_name='DBZ', rings=True, grid=True, cross_sections=True,
+                                                           save_image=False, img_name='terlsdbz_margmax.png')
 ```
 
 
@@ -1088,7 +1093,8 @@ pyiwr.visualize.marginal_max(xg, radar_location='TERLS', field_name='DBZ', rings
 
 
 ```python
-pyiwr.visualize.marginal_max_map(xg, radar_location='TERLS', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None)
+pyiwr.visualize.marginal_max_map(xg, radar_location='TERLS', field_name='DBZ', background='terrain-background',
+                                                           cross_sections=True, save_image=False, img_name=None)
 ```
 
 
@@ -1240,7 +1246,8 @@ radar1.info()
 
 
 ```python
-pyiwr.visualize.elevation(radar1, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbz0.png')
+pyiwr.visualize.elevation(radar1, field_name='DBZ', elevation_index=0, rings=True, grid=True,
+                                                 range_in_km=True, save_image=False, img_name='terls_dbz0.png')
 ```
 
 
@@ -1253,7 +1260,8 @@ pyiwr.visualize.elevation(radar1, field_name='DBZ', elevation_index=0, rings=Tru
 
 
 ```python
-pyiwr.visualize.all_elevation(radar1, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbzall.png')
+pyiwr.visualize.all_elevation(radar1, field_name='DBZ', rings=True, grid=True, range_in_km=True,
+                                                               save_image=False, img_name='terls_dbzall.png')
 ```
 
 
@@ -1266,7 +1274,8 @@ pyiwr.visualize.all_elevation(radar1, field_name='DBZ', rings=True, grid=True, r
 
 
 ```python
-pyiwr.visualize.fields_elevation(radar1, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=False, img_name='terls_fieldall.png')
+pyiwr.visualize.fields_elevation(radar1, elevation_index=0, range_in_km=True, rings=True, grid=True,
+                                                                 save_image=False, img_name='terls_fieldall.png')
 ```
 
 
@@ -2084,7 +2093,8 @@ pyiwr.visualize.cappi(xg1, altitude_level=3, field_name='DBZ', radar_location='C
 
 
 ```python
-pyiwr.visualize.cappi_max(xg1, field_name='DBZ', radar_location='CHERRAPUNJI', grid=True, rings=True, ticks_in_km=True, save_image=False, img_name='terlsdbz_maxcappi.png')
+pyiwr.visualize.cappi_max(xg1, field_name='DBZ', radar_location='CHERRAPUNJI', grid=True, rings=True,
+                                              ticks_in_km=True, save_image=False, img_name='terlsdbz_maxcappi.png')
 ```
 
 
@@ -2097,7 +2107,8 @@ pyiwr.visualize.cappi_max(xg1, field_name='DBZ', radar_location='CHERRAPUNJI', g
 
 
 ```python
-pyiwr.visualize.marginal_max(xg1, radar_location='CHERRAPUNJI', field_name='DBZ', rings=True, grid=True, cross_sections=True, save_image=False, img_name='terlsdbz_margmax.png')
+pyiwr.visualize.marginal_max(xg1, radar_location='CHERRAPUNJI', field_name='DBZ', rings=True, grid=True,
+                                               cross_sections=True, save_image=False, img_name='terlsdbz_margmax.png')
 ```
 
 
@@ -2110,7 +2121,8 @@ pyiwr.visualize.marginal_max(xg1, radar_location='CHERRAPUNJI', field_name='DBZ'
 
 
 ```python
-pyiwr.visualize.marginal_max_map(xg1, radar_location='CHERRAPUNJI', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None)
+pyiwr.visualize.marginal_max_map(xg1, radar_location='CHERRAPUNJI', field_name='DBZ', background='terrain-background',
+                                                                    cross_sections=True, save_image=False, img_name=None)
 ```
 
 
@@ -2262,7 +2274,8 @@ radar2.info()
 
 
 ```python
-pyiwr.visualize.elevation(radar2, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbz0.png')
+pyiwr.visualize.elevation(radar2, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True,
+                                                                         save_image=False, img_name='terls_dbz0.png')
 ```
 
 
@@ -2275,7 +2288,8 @@ pyiwr.visualize.elevation(radar2, field_name='DBZ', elevation_index=0, rings=Tru
 
 
 ```python
-pyiwr.visualize.all_elevation(radar2, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=False, img_name='terls_dbzall.png')
+pyiwr.visualize.all_elevation(radar2, field_name='DBZ', rings=True, grid=True, range_in_km=True,
+                                                                      save_image=False, img_name='terls_dbzall.png')
 ```
 
 
@@ -2288,7 +2302,8 @@ pyiwr.visualize.all_elevation(radar2, field_name='DBZ', rings=True, grid=True, r
 
 
 ```python
-pyiwr.visualize.fields_elevation(radar2, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=False, img_name='terls_fieldall.png')
+pyiwr.visualize.fields_elevation(radar2, elevation_index=0, range_in_km=True, rings=True, grid=True,
+                                                                     save_image=False, img_name='terls_fieldall.png')
 ```
 
 
@@ -3093,7 +3108,8 @@ Data variables:
 
 
 ```python
-pyiwr.visualize.cappi(xg2, altitude_level=3, field_name='DBZ', radar_location='SHAR', grid=False, rings=False, ticks_in_km=True, save_image=False, img_name='terlsdbz_cappi3.png')
+pyiwr.visualize.cappi(xg2, altitude_level=3, field_name='DBZ', radar_location='SHAR', grid=False, rings=False,
+                                                                         ticks_in_km=True, save_image=False, img_name='terlsdbz_cappi3.png')
 ```
 
 
@@ -3106,7 +3122,8 @@ pyiwr.visualize.cappi(xg2, altitude_level=3, field_name='DBZ', radar_location='S
 
 
 ```python
-pyiwr.visualize.cappi_max(xg2, field_name='DBZ', radar_location='SHAR', grid=True, rings=True, ticks_in_km=True, save_image=False, img_name='terlsdbz_maxcappi.png')
+pyiwr.visualize.cappi_max(xg2, field_name='DBZ', radar_location='SHAR', grid=True, rings=True, ticks_in_km=True,
+                                                                           save_image=False, img_name='terlsdbz_maxcappi.png')
 ```
 
 
@@ -3119,7 +3136,8 @@ pyiwr.visualize.cappi_max(xg2, field_name='DBZ', radar_location='SHAR', grid=Tru
 
 
 ```python
-pyiwr.visualize.marginal_max(xg2, radar_location='SHAR', field_name='DBZ', rings=True, grid=True, cross_sections=True, save_image=False, img_name='terlsdbz_margmax.png')
+pyiwr.visualize.marginal_max(xg2, radar_location='SHAR', field_name='DBZ', rings=True, grid=True, cross_sections=True,
+                                                                                 save_image=False, img_name='terlsdbz_margmax.png')
 ```
 
 
@@ -3132,7 +3150,8 @@ pyiwr.visualize.marginal_max(xg2, radar_location='SHAR', field_name='DBZ', rings
 
 
 ```python
-pyiwr.visualize.marginal_max_map(xg2, radar_location='SHAR', field_name='DBZ', background='terrain-background', cross_sections=True, save_image=False, img_name=None)
+pyiwr.visualize.marginal_max_map(xg2, radar_location='SHAR', field_name='DBZ', background='terrain-background',
+                                                                                  cross_sections=True, save_image=False, img_name=None)
 ```
 
 
