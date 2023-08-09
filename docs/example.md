@@ -243,7 +243,7 @@ pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True
 
 
     
-![png](output_13_0.png)
+![png](images/output_13_0.png)
     
 
 
@@ -257,7 +257,7 @@ pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, ra
 
 
     
-![png](output_15_0.png)
+![png](images/output_15_0.png)
     
 
 
@@ -271,7 +271,7 @@ pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rin
 
 
     
-![png](output_17_0.png)
+![png](images/output_17_0.png)
     
 
 
@@ -1078,7 +1078,7 @@ pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='TE
 
 
     
-![png](output_22_0.png)
+![png](images/output_22_0.png)
     
 
 
@@ -1092,7 +1092,7 @@ pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='TERLS', grid=Tru
 
 
     
-![png](output_24_0.png)
+![png](images/output_24_0.png)
     
 
 
@@ -1106,7 +1106,7 @@ pyiwr.visualize.marginal_max(xg, radar_location='TERLS', field_name='DBZ', rings
 
 
     
-![png](output_26_0.png)
+![png](images/output_26_0.png)
     
 
 
@@ -1120,7 +1120,7 @@ pyiwr.visualize.marginal_max_map(xg, radar_location='TERLS', field_name='DBZ', b
 
 
     
-![png](output_28_0.png)
+![png](images/output_28_0.png)
     
 
 
@@ -1273,7 +1273,7 @@ pyiwr.visualize.elevation(radar1, field_name='DBZ', elevation_index=0, rings=Tru
 
 
     
-![png](output_34_0.png)
+![png](images/output_34_0.png)
     
 
 
@@ -1287,7 +1287,7 @@ pyiwr.visualize.all_elevation(radar1, field_name='DBZ', rings=True, grid=True, r
 
 
     
-![png](output_36_0.png)
+![png](images/output_36_0.png)
     
 
 
@@ -1301,7 +1301,7 @@ pyiwr.visualize.fields_elevation(radar1, elevation_index=0, range_in_km=True, ri
 
 
     
-![png](output_38_0.png)
+![png](images/output_38_0.png)
     
 
 
@@ -2106,7 +2106,7 @@ pyiwr.visualize.cappi(xg1, altitude_level=3, field_name='DBZ', radar_location='C
 
 
     
-![png](output_43_0.png)
+![png](images/output_43_0.png)
     
 
 
@@ -2120,7 +2120,7 @@ pyiwr.visualize.cappi_max(xg1, field_name='DBZ', radar_location='CHERRAPUNJI', g
 
 
     
-![png](output_45_0.png)
+![png](images/output_45_0.png)
     
 
 
@@ -2134,7 +2134,7 @@ pyiwr.visualize.marginal_max(xg1, radar_location='CHERRAPUNJI', field_name='DBZ'
 
 
     
-![png](output_47_0.png)
+![png](images/output_47_0.png)
     
 
 
@@ -2148,7 +2148,7 @@ pyiwr.visualize.marginal_max_map(xg1, radar_location='CHERRAPUNJI', field_name='
 
 
     
-![png](output_49_0.png)
+![png](images/output_49_0.png)
     
 
 
@@ -2329,7 +2329,7 @@ pyiwr.visualize.fields_elevation(radar2, elevation_index=0, range_in_km=True, ri
 
 
     
-![png](output_59_0.png)
+![png](images/output_59_0.png)
     
 
 
@@ -3135,7 +3135,7 @@ pyiwr.visualize.cappi(xg2, altitude_level=3, field_name='DBZ', radar_location='S
 
 
     
-![png](output_64_0.png)
+![png](images/output_64_0.png)
     
 
 
@@ -3149,7 +3149,7 @@ pyiwr.visualize.cappi_max(xg2, field_name='DBZ', radar_location='SHAR', grid=Tru
 
 
     
-![png](output_66_0.png)
+![png](images/output_66_0.png)
     
 
 
@@ -3163,7 +3163,7 @@ pyiwr.visualize.marginal_max(xg2, radar_location='SHAR', field_name='DBZ', rings
 
 
     
-![png](output_68_0.png)
+![png](images/output_68_0.png)
     
 
 
@@ -3177,7 +3177,7 @@ pyiwr.visualize.marginal_max_map(xg2, radar_location='SHAR', field_name='DBZ', b
 
 
     
-![png](output_70_0.png)
+![png](images/output_70_0.png)
     
 
 
