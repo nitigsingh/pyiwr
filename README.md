@@ -28,5 +28,8 @@ pyiwr can be installed as:
 conda create -n pyiwr python=3.9 jupyter arm_pyart git -c conda-forge
 conda activate pyiwr
 pip install git+https://github.com/nitigsingh/pyiwr.git
+```
 
+## Note:
+As an active project, pyiwr seeks contributions from the research community, making it a dynamic and collaborative toolkit for weather radar research and applications. Future work includes implementing advanced data processing algorithms like quality control, precipitation type classifications and radar Quantitative Precipitation Estimation (QPE) etc.
 
