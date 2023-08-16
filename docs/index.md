@@ -8,6 +8,7 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an
 1. Nitig Singh, MS Research, SIGMA Research Lab, IIT Indore
 2. Vaibhav Tyagi, Ph.D. Research Scholare, SIGMA Research Lab, IIT Indore
 
+
 ## Features
 
 - Converts raw ISRO Doppler Weather Radar (DWR) data files into Py-ART compatible NetCDF files.
@@ -16,7 +17,9 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an
 - Provides convenient tools for data processing and analysis.
 - Offers visualization functions for better understanding and interpretation of radar data.
 
+
 ## Table of Contents
+- [Home](index.md)
 - [Installation](installation.md)
 - [Implementation](usage.md)
 - [Example Usage](example.md)
