@@ -472,11 +472,12 @@ def correctednc(file_path, save_file=False):
         return start_time
     start_time = extract_start_time(raw)
 
+    start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # Format the start time as string
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
-    raw["time_coverage_start"] = start_time
-
+    raw["time_coverage_start"] = start_time_str
+    
     # Update the "units" attribute of the "time" variable to match the correct format
-    time_units = f"seconds since {start_time}"
+    time_units = f"seconds since {start_time_str}"
     raw["time"].attrs["units"] = time_units
 
     # Decode the CF conventions of the dataset
