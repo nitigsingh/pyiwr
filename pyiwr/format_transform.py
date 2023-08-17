@@ -481,7 +481,7 @@ def correctednc(file_path, save_file=False):
     raw["time"].attrs["units"] = time_units
 
     # Decode the CF conventions of the dataset
-    radar_pol = xr.decode_cf(raw)
+    radar_pol = raw
 
     # Save the updated dataset to a new netCDF file if specified
     if save_file:
