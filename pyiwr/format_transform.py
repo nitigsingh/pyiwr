@@ -19,6 +19,7 @@ import datetime as dt
 import xarray as xr
 import tempfile
 import numpy as np
+import re
 
 
 def fread(fid, nelements, dtype):
@@ -458,7 +459,10 @@ def correctednc(file_path, save_file=False):
     raw.attrs['platform_type'] = 'fixed'
     raw.attrs['instrument_type'] = 'radar'
     raw.attrs['primary_axis'] = 'axis_z'
-   
+
+    
+    # Define the desired format pattern using a regular expression
+    desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'
     # for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
     def extract_start_time(raw):
         try:
@@ -467,12 +471,33 @@ def correctednc(file_path, save_file=False):
             start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
         except TypeError: 
             # If the first method fails, use the second method
-            start_time_str = raw.time_coverage_start.item().decode('utf-8')
-            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+            try:
+                start_time_str = raw.time_coverage_start.item().decode('utf-8')
+                start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+            except AttributeError:
+                # Extract the start time from raw.time_coverage_start.data
+                start_time_from_data = raw.time_coverage_start.data
+
+                # Convert the ndarray to a string
+                start_time_from_data_str = str(start_time_from_data)
+
+                # Check if the extracted start time matches the desired format pattern
+                if re.match(desired_format_pattern, start_time_from_data_str):
+                    start_time = start_time_from_data_str
+
         return start_time
     start_time = extract_start_time(raw)
 
-    start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # Format the start time as string
+    try:
+        # Check if the extracted start time matches the desired format pattern
+        if re.match(desired_format_pattern, start_time):
+            start_time_str = start_time
+        else:
+            raise TypeError  # Trigger the except block to handle the exception
+    except TypeError:
+        start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # Format the start time as string
+
+    
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
     raw["time_coverage_start"] = start_time_str
     
@@ -508,7 +533,6 @@ def correctednc(file_path, save_file=False):
         os.remove(tmp_file.name)
         print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully')
         return radar
-
 
 def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
     print('Processing file: ', os.path.basename(file_path))
