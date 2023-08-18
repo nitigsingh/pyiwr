@@ -411,81 +411,53 @@ def raw2nc(dwr_path, save_file=False):
 
 
 
-def correctednc(file_path, save_file=False):
-    # Open the dataset
-    
-    print('Processing file: ', os.path.basename(file_path))
+# for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
+def extract_start_time(raw):
+    try:
+        # Try to extract the start time using the first method
+        start_time_str = "".join(raw.time_coverage_start.astype(str).values)
+        start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+    except TypeError: 
+        # If the first method fails, use the second method
+        try:
+            start_time_str = raw.time_coverage_start.item().decode('utf-8')
+            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
+        except AttributeError:
+            # Extract the start time from raw.time_coverage_start.data
+            start_time_from_data = raw.time_coverage_start.data
 
-    raw = xr.open_dataset(file_path, decode_times=False)
+            # Convert the ndarray to a string
+            start_time_from_data_str = str(start_time_from_data)
+            # Define the desired format pattern using a regular expression
+            desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'            
+            # Check if the extracted start time matches the desired format pattern
+            if re.match(desired_format_pattern, start_time_from_data_str):
+                start_time = start_time_from_data_str
+
+    return start_time
+
+
+
+def update_xarray_dataset(file_path, raw, xg):
+    xg.attrs.clear()
     raw.attrs.clear()
-    
+
     # Create a new DataArray with the added data for 'sweep_start_ray_index'
     sweep_start_ray_index_data = np.arange(0, raw.time.size, raw.time.size//raw.sweep.size, dtype='int64')
     sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=['sweep'])
 
     # Include the new DataArray as a new variable in the Dataset
-    raw['sweep_start_ray_index'] = sweep_start_ray_index_da
+    xg['sweep_start_ray_index'] = sweep_start_ray_index_da
 
     # Create a new DataArray with the added data for 'sweep_end_ray_index'
     sweep_end_ray_index_data = sweep_start_ray_index_data + int((raw.time.size//raw.sweep.size) - 1)
     sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=['sweep'])
 
     # Include the new DataArray as a new variable in the Dataset
-    raw['sweep_end_ray_index'] = sweep_end_ray_index_da
+    xg['sweep_end_ray_index'] = sweep_end_ray_index_da
 
-
-    Station = os.path.basename(file_path)[2:5]
-    if Station == 'CHR':
-        a = 'Cherrapunji S-band Dual-pol DWR'
-    elif Station == 'SHR':
-        a = 'SHAR S-band Dual-pol DWR'
-    else: 
-        a = 'TERLS C-band Dual-pol DWR'  
-        
-        
-    # Add attributes to the dataset in the given order
-    raw.attrs['instrument_name'] = a
-    raw.attrs['Created using'] = 'pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
-    raw.attrs['version'] = 'Version 1.0'
-    raw.attrs['title'] = a[0:13] + 'DWR data'
-    raw.attrs['institution'] = 'ISRO'
-    raw.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
-    raw.attrs['source'] = 'DWR volume scan data'
-    raw.attrs['comment'] = ''
-    raw.attrs['Conventions'] = 'CF/Radial'
-    raw.attrs['field_names'] = 'DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV'
-    raw.attrs['history'] = 'DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file'
-    raw.attrs['volume_number'] = 0
-    raw.attrs['platform_type'] = 'fixed'
-    raw.attrs['instrument_type'] = 'radar'
-    raw.attrs['primary_axis'] = 'axis_z'
-
-    
     # Define the desired format pattern using a regular expression
     desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'
-    # for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
-    def extract_start_time(raw):
-        try:
-            # Try to extract the start time using the first method
-            start_time_str = "".join(raw.time_coverage_start.astype(str).values)
-            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
-        except TypeError: 
-            # If the first method fails, use the second method
-            try:
-                start_time_str = raw.time_coverage_start.item().decode('utf-8')
-                start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
-            except AttributeError:
-                # Extract the start time from raw.time_coverage_start.data
-                start_time_from_data = raw.time_coverage_start.data
-
-                # Convert the ndarray to a string
-                start_time_from_data_str = str(start_time_from_data)
-
-                # Check if the extracted start time matches the desired format pattern
-                if re.match(desired_format_pattern, start_time_from_data_str):
-                    start_time = start_time_from_data_str
-
-        return start_time
     start_time = extract_start_time(raw)
 
     try:
@@ -497,16 +469,56 @@ def correctednc(file_path, save_file=False):
     except TypeError:
         start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # Format the start time as string
 
-    
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
-    raw["time_coverage_start"] = start_time_str
+    xg["time_coverage_start"] = start_time_str
     
     # Update the "units" attribute of the "time" variable to match the correct format
     time_units = f"seconds since {start_time_str}"
-    raw["time"].attrs["units"] = time_units
+    xg["time"].attrs["units"] = time_units
+    
+    
+    Station = os.path.basename(file_path)[2:5]
+    if Station == 'CHR':
+        a = 'Cherrapunji S-band Dual-pol DWR'
+    elif Station == 'SHR':
+        a = 'SHAR S-band Dual-pol DWR'
+    else: 
+        a = 'TERLS C-band Dual-pol DWR'  
 
+    # Add attributes to the dataset in the given order
+    xg.attrs['instrument_name'] = a
+    xg.attrs['Created using'] = 'pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
+    xg.attrs['version'] = 'Version 1.0'
+    xg.attrs['title'] = a[0:13] + 'DWR data'
+    xg.attrs['institution'] = 'ISRO'
+    xg.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
+    xg.attrs['source'] = 'DWR volume scan data'
+    xg.attrs['comment'] = ''
+    xg.attrs['Conventions'] = 'CF/Radial'
+    xg.attrs['field_names'] = 'DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV'
+    xg.attrs['history'] = 'DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file'
+    xg.attrs['volume_number'] = 0
+    xg.attrs['platform_type'] = 'fixed'
+    xg.attrs['instrument_type'] = 'radar'
+    xg.attrs['primary_axis'] = 'axis_z'
+   
+    return xg    
+
+
+def correctednc(file_path, save_file=False):
+    # Open the dataset
+    
+    print('Processing file: ', os.path.basename(file_path))
+    raw = xr.open_dataset(file_path, decode_times=False) 
+    raw = update_xarray_dataset(file_path, raw, xg=raw)
     # Decode the CF conventions of the dataset
     radar_pol = raw
+    # Save the corrected xarray.Dataset to a temporary in-memory file
+    with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
+        radar_pol.to_netcdf(tmp_file.name)
+
+    # Read the data from the in-memory file and return the Py-ART radar object
+    radar = pyart.io.read_cfradial(tmp_file.name)
 
     # Save the updated dataset to a new netCDF file if specified
     if save_file:
@@ -519,7 +531,7 @@ def correctednc(file_path, save_file=False):
         new_file_path = os.path.join(corrected_dir, new_file_name)
 
         radar_pol.to_netcdf(new_file_path)
-        print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully and saved in the newly added "corrected" folder in your file path')
+        print('File', os.path.basename(file_path), 'corrected successfully and saved in the newly added "corrected" folder in your file path')
         return pyart.io.read_cfradial(new_file_path)
     else:
         # Save the corrected xarray.Dataset to a temporary in-memory file
@@ -531,110 +543,48 @@ def correctednc(file_path, save_file=False):
 
         # Delete the temporary in-memory file
         os.remove(tmp_file.name)
-        print('Date Time of Mosdac File', os.path.basename(file_path), 'corrected successfully')
+        print('File', os.path.basename(file_path), 'corrected successfully')
         return radar
+
 
 def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
     print('Processing file: ', os.path.basename(file_path))
 
-    """
-    Returns grid object from radar object.
-    grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
+    if "gridded" in os.path.basename(file_path):
+        xg0 = xr.open_dataset(file_path)
+    else:
+        raw = xr.open_dataset(file_path, decode_times=False, engine='netcdf4')
+        raw = update_xarray_dataset(file_path, raw, xg=raw)
+        # Decode the CF conventions of the dataset
+        radar_pol = xr.decode_cf(raw)
+        # Save the corrected xarray.Dataset to a temporary in-memory file
+        with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
+            radar_pol.to_netcdf(tmp_file.name)
 
-    height:(int) = 15, height in km
-    length:(int) = 250, Range of radar in km
-
-    # 0.5 km vertical resolution
-    # 1 km resolution horizontally
-    # radar installed at 1.313 km height
-    """
-    raw = xr.open_dataset(file_path, decode_times=False, engine='netcdf4')
-    raw.attrs.clear()
-    
-    # Create a new DataArray with the added data for 'sweep_start_ray_index'
-    sweep_start_ray_index_data = np.arange(0, raw.time.size, raw.time.size//raw.sweep.size, dtype='int64')
-    sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=['sweep'])
-
-    # Include the new DataArray as a new variable in the Dataset
-    raw['sweep_start_ray_index'] = sweep_start_ray_index_da
-
-    # Create a new DataArray with the added data for 'sweep_end_ray_index'
-    sweep_end_ray_index_data = sweep_start_ray_index_data + int((raw.time.size//raw.sweep.size) - 1)
-    sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=['sweep'])
-
-    # Include the new DataArray as a new variable in the Dataset
-    raw['sweep_end_ray_index'] = sweep_end_ray_index_da
-
-    Station = os.path.basename(file_path)[2:5]
-    if Station == 'CHR':
-        a = 'Cherrapunji S-band Dual-pol DWR'
-    elif Station == 'SHR':
-        a = 'SHAR S-band Dual-pol DWR'
-    else: 
-        a = 'TERLS C-band Dual-pol DWR'  
-      
+        # Read the data from the in-memory file and return the Py-ART radar object
+        radar = pyart.io.read_cfradial(tmp_file.name)
+        grid = pyart.map.grid_from_radars(
+            radar, grid_shape=grid_shape,
+            grid_limits=((0, height * 1e3),
+                         (-length * 1e3, length * 1e3),
+                         (-length * 1e3, length * 1e3)),
+            fields=radar.fields.keys(),
+            weighting_function='Barnes2',
+            min_radius=length)
+        xg = grid.to_xarray()
+        xg0 = update_xarray_dataset(file_path, raw, xg)
         
-    # Add attributes to the dataset in the given order
-    raw.attrs['instrument_name'] = a
-    raw.attrs['Created using'] = 'pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
-    raw.attrs['version'] = 'Version 1.0'
-    raw.attrs['title'] = a[0:13] + 'DWR data'
-    raw.attrs['institution'] = 'ISRO'
-    raw.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
-    raw.attrs['source'] = 'DWR volume scan data'
-    raw.attrs['comment'] = ''
-    raw.attrs['Conventions'] = 'CF/Radial'
-    raw.attrs['field_names'] = 'DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV'
-    raw.attrs['history'] = 'DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file'
-    raw.attrs['volume_number'] = 0
-    raw.attrs['platform_type'] = 'fixed'
-    raw.attrs['instrument_type'] = 'radar'
-    raw.attrs['primary_axis'] = 'axis_z'
+        # Remove variables 'sweep_start_ray_index' and 'sweep_end_ray_index'
+        xg0 = xg0.drop_vars(['sweep_start_ray_index', 'sweep_end_ray_index', 'time_coverage_start'])
 
-    
-    # for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
-    def extract_start_time(raw):
-        try:
-            # Try to extract the start time using the first method
-            start_time_str = "".join(raw.time_coverage_start.astype(str).values)
-            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
-        except TypeError: 
-            # If the first method fails, use the second method
-            start_time_str = raw.time_coverage_start.item().decode('utf-8')
-            start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
-        return start_time
-    start_time = extract_start_time(raw)
+        # Remove attributes 'time_coverage_start' and 'units' from the 'time' variable
+        if 'time_coverage_start' in xg0.attrs:
+            del xg0.attrs['time_coverage_start']  
+        
+        if 'units' in xg0['time'].attrs:
+            del xg0['time'].attrs['units']
 
-    
-    # Update the "time_coverage_start" variable in the dataset with the correct datetime object
-    raw["time_coverage_start"] = start_time
-
-    # Update the "units" attribute of the "time" variable to match the correct format
-    time_units = f"seconds since {start_time}"
-    raw["time"].attrs["units"] = time_units
-
-    # Decode the CF conventions of the dataset
-    radar_pol = xr.decode_cf(raw)
-
-    # Save the corrected xarray.Dataset to a temporary in-memory file
-    with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
-        radar_pol.to_netcdf(tmp_file.name)
-
-    # Read the data from the in-memory file and return the Py-ART radar object
-    radar = pyart.io.read_cfradial(tmp_file.name)
-
-    grid = pyart.map.grid_from_radars(
-        radar, grid_shape=grid_shape,
-        grid_limits=((0, height * 1e3),               #(radar.altitude['data'][0]
-                     (-length * 1e3, length * 1e3),
-                     (-length * 1e3, length * 1e3)),
-        fields=radar.fields.keys(),
-        weighting_function='Barnes2',
-        min_radius=length)
-
-    xg = grid.to_xarray()
-
-    if save_file:
+    if save_file and "gridded" not in os.path.basename(file_path):
         # Create the "updated" subdirectory if it doesn't exist
         updated_dir = os.path.join(os.path.dirname(file_path), "gridded_radar_ncfiles")
         os.makedirs(updated_dir, exist_ok=True)
@@ -644,9 +594,10 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
         new_file_name = f"gridded_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
         new_file_path = os.path.join(updated_dir, new_file_name)
 
-        xg.to_netcdf(new_file_path)
+        xg0.to_netcdf(new_file_path)
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully and saved in', new_file_name,'in the newly added "gridded_radar_ncfiles" folder in your file path')
-        return xg
+        return xg0
     else:
         print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully')
-        return xg
+        return xg0
+
