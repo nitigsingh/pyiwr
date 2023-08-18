@@ -411,52 +411,54 @@ def raw2nc(dwr_path, save_file=False):
 
 
 
-# for files that are read from mosdac or if manually corrected/added fields files a try and except block is used
+# for files that are read from mosdac or if manually corrected/restructured/added fields files, the function helps in extracting start time using Try and Except block
 def extract_start_time(raw):
     try:
-        # Try to extract the start time using the first method
+        # Try : extracting the start time using the first method
         start_time_str = "".join(raw.time_coverage_start.astype(str).values)
         start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
     except TypeError: 
-        # If the first method fails, use the second method
+        # If the first method fails with a Type Error, the second method is used
         try:
             start_time_str = raw.time_coverage_start.item().decode('utf-8')
             start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
         except AttributeError:
-            # Extract the start time from raw.time_coverage_start.data
+            # For Attribute error extracting the start time from raw.time_coverage_start.data
             start_time_from_data = raw.time_coverage_start.data
 
-            # Convert the ndarray to a string
+            # Converting the ndarray to a string
             start_time_from_data_str = str(start_time_from_data)
-            # Define the desired format pattern using a regular expression
+            # Defining the desired format pattern using a regular expression to be compared
             desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'            
-            # Check if the extracted start time matches the desired format pattern
+            # Checking, if the extracted start time matches the desired format pattern
             if re.match(desired_format_pattern, start_time_from_data_str):
                 start_time = start_time_from_data_str
 
     return start_time
 
 
+# for files that are read from mosdac or if manually corrected/restructured/added fields files, the function helps in updating xarray radar/grid objects with attributes/fields/metadata
+# The function makes an Xarray and checks/corrects/adds any missing radar parameters and attributes like sweep start and end ray indices, metadata, and date-time corrections
 
 def update_xarray_dataset(file_path, raw, xg):
     xg.attrs.clear()
     raw.attrs.clear()
 
-    # Create a new DataArray with the added data for 'sweep_start_ray_index'
+    # Creating a new DataArray with the added data for 'sweep_start_ray_index'
     sweep_start_ray_index_data = np.arange(0, raw.time.size, raw.time.size//raw.sweep.size, dtype='int64')
     sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=['sweep'])
 
-    # Include the new DataArray as a new variable in the Dataset
+    # Including the new DataArray as a new variable in the Dataset
     xg['sweep_start_ray_index'] = sweep_start_ray_index_da
 
-    # Create a new DataArray with the added data for 'sweep_end_ray_index'
+    # Creating a new DataArray with the added data for 'sweep_end_ray_index'
     sweep_end_ray_index_data = sweep_start_ray_index_data + int((raw.time.size//raw.sweep.size) - 1)
     sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=['sweep'])
 
-    # Include the new DataArray as a new variable in the Dataset
+    # Including the new DataArray as a new variable in the Dataset
     xg['sweep_end_ray_index'] = sweep_end_ray_index_da
 
-    # Define the desired format pattern using a regular expression
+    # Defining the desired format pattern using a regular expression to be compared
     desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'
     start_time = extract_start_time(raw)
 
@@ -504,14 +506,14 @@ def update_xarray_dataset(file_path, raw, xg):
    
     return xg    
 
+# "correctednc" function takes in any dual-pol NetCDF file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
+# The user is provided with the advantage of choosing whether to save the file
 
 def correctednc(file_path, save_file=False):
     # Open the dataset
-    
     print('Processing file: ', os.path.basename(file_path))
     raw = xr.open_dataset(file_path, decode_times=False) 
     raw = update_xarray_dataset(file_path, raw, xg=raw)
-    # Decode the CF conventions of the dataset
     radar_pol = raw
     # Save the corrected xarray.Dataset to a temporary in-memory file
     with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
@@ -531,7 +533,7 @@ def correctednc(file_path, save_file=False):
         new_file_path = os.path.join(corrected_dir, new_file_name)
 
         radar_pol.to_netcdf(new_file_path)
-        print('File', os.path.basename(file_path), 'corrected successfully and saved in the newly added "corrected" folder in your file path')
+        print('File', os.path.basename(file_path), 'corrected and restructured successfully and saved in the newly added "corrected" folder in your file path')
         return pyart.io.read_cfradial(new_file_path)
     else:
         # Save the corrected xarray.Dataset to a temporary in-memory file
@@ -543,16 +545,31 @@ def correctednc(file_path, save_file=False):
 
         # Delete the temporary in-memory file
         os.remove(tmp_file.name)
-        print('File', os.path.basename(file_path), 'corrected successfully')
+        print('File', os.path.basename(file_path), 'corrected and restructured successfully')
         return radar
 
+# "sweeps2gridnc" function before making a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
+# The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids), 
+# and height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
 
 def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
-    print('Processing file: ', os.path.basename(file_path))
+    """
+    Returns grid object from radar object.
+    grid_shape=(61, 500, 500), no. of bins of z,y,x respectively.
 
+    height:(int) = 15, height in km
+    length:(int) = 250, Range of radar in km
+
+    # 0.5 km vertical resolution
+    # 1 km resolution horizontally
+    # radar installed at 1.313 km height
+    """    
+      
+    print('Processing file: ', os.path.basename(file_path))
+    # for files which are already gridded and needed to be just read
     if "gridded" in os.path.basename(file_path):
         xg0 = xr.open_dataset(file_path)
-    else:
+    else:   # for gridding the CF/radial format
         raw = xr.open_dataset(file_path, decode_times=False, engine='netcdf4')
         raw = update_xarray_dataset(file_path, raw, xg=raw)
         # Decode the CF conventions of the dataset
@@ -563,6 +580,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
 
         # Read the data from the in-memory file and return the Py-ART radar object
         radar = pyart.io.read_cfradial(tmp_file.name)
+        # Read the data from the in-memory file and return the Py-ART radar object
         grid = pyart.map.grid_from_radars(
             radar, grid_shape=grid_shape,
             grid_limits=((0, height * 1e3),
@@ -574,7 +592,7 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
         
-        # Remove variables 'sweep_start_ray_index' and 'sweep_end_ray_index'
+        # Remove variables 'sweep_start_ray_index', 'sweep_end_ray_index' and 'time_coverage_start'
         xg0 = xg0.drop_vars(['sweep_start_ray_index', 'sweep_end_ray_index', 'time_coverage_start'])
 
         # Remove attributes 'time_coverage_start' and 'units' from the 'time' variable
