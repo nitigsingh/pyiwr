@@ -20,16 +20,16 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 
   The pyiwr architecture is designed as an user-friendly toolkit, specifically tailored to address the distinctive requirements of dual-pol DWR data analysis. The architecture of the two primary modules format\_transform and visualize serves a vital role in streamlining the radar data processing workflow as shown in figure below.
   
-![pyiwr_module](images/pyiwr_module.png)
+![up_pyiwr](images/up_pyiwr.png)
 
 
 ## A. Format transform and reading data as radar object/xarray grid
 ```python
 # For dwr raw files
-radar = pyiwr.format_transform.dwr2nc(filename, save_file=True)
+radar = pyiwr.format_transform.raw2nc(filename, save_file=True)
 
 # For mosdac nc files
-radar = pyiwr.format_transform.mosdac_correctednc(filename, save_file=True)
+radar = pyiwr.format_transform.correctednc(filename, save_file=True)
 
 # For xarray grids for mosdac nc files
 xarray_grids = pyiwr.format_transform.sweeps2gridnc(filename, grid_shape=(81, 501, 501), height=20, length=250, save_file=True)
