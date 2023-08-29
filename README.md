@@ -25,7 +25,7 @@ pyiwr is an advanced open-source library developed by researchers at the SIGMA R
 
 pyiwr can be installed as:
 ```shell
-conda create -n pyiwr python=3.9 jupyter arm_pyart git -c conda-forge
+conda create -n pyiwr python=3.9 jupyter git -c conda-forge
 conda activate pyiwr
 pip install git+https://github.com/nitigsingh/pyiwr.git
 ```
