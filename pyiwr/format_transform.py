@@ -18,7 +18,12 @@ import xarray as xr
 import tempfile
 import numpy as np
 import re
-
+from .utilities import fread
+from .utilities import raw_product_list
+from .utilities import raw_reshape_stack
+from .utilities import raw2object
+from .utilities import extract_start_time
+from .utilities import update_xarray_dataset
 
 # "raw2nc" function takes in any raw dual-pol .dwr file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
 # The user is provided with the advantage of choosing whether to save the file
