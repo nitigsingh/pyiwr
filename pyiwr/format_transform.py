@@ -29,41 +29,63 @@ from .utilities import update_xarray_dataset
 # The user is provided with the advantage of choosing whether to save the file
 
 def raw2nc(dwr_path, save_file=False):
-    
-    dat = raw_product_list(dwr_path)
-    radar = raw2object(dwr_path, dat)
-    
-    # Save the radar object to a NetCDF file if specified
-    if save_file:
-        # Create the "radar_ncfiles" subdirectory if it doesn't exist
-        nc_directory = os.path.join(os.path.dirname(dwr_path), "radar_ncfiles")
-        os.makedirs(nc_directory, exist_ok=True)
 
-        # Specify the new file path
-        filepath = os.path.basename(dwr_path)
-        new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
-        new_file_path = os.path.join(nc_directory, new_file_name)
-        print('File', os.path.basename(dwr_path), 'converted successfully and saved in the "radar_ncfiles" folder')
-        pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
-        return pyart.io.read_cfradial(new_file_path)
+    """
+    "raw2nc" function takes in any raw dual-pol .dwr file
+    restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
+    The user is provided with the advantage of choosing whether to save the file
+    """    
+    
+    if dwr_path[-3:] == 'dwr':
+          
+        dat = raw_product_list(dwr_path)
+        radar = raw2object(dwr_path, dat)
+
+        # Save the radar object to a NetCDF file if specified
+        if save_file:
+            # Create the "radar_ncfiles" subdirectory if it doesn't exist
+            nc_directory = os.path.join(os.path.dirname(dwr_path), "radar_ncfiles")
+            os.makedirs(nc_directory, exist_ok=True)
+
+            # Specify the new file path
+            filepath = os.path.basename(dwr_path)
+            new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+            new_file_path = os.path.join(nc_directory, new_file_name)
+            print('File', os.path.basename(dwr_path), 'converted successfully and saved in the "radar_ncfiles" folder')
+            pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
+            return pyart.io.read_cfradial(new_file_path)
+
+        else:
+            # Save the radar object to a temporary in-memory file
+            with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
+                pyart.io.write_cfradial(tmp_file.name, radar, format='NETCDF4')
+
+            # Read the data from the in-memory file and return the Py-ART radar object
+            radar = pyart.io.read_cfradial(tmp_file.name)
+
+            # Delete the temporary in-memory file
+            os.remove(tmp_file.name)
+            print('File', os.path.basename(dwr_path), 'converted successfully')
+            return radar
 
     else:
-        # Save the radar object to a temporary in-memory file
-        with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
-            pyart.io.write_cfradial(tmp_file.name, radar, format='NETCDF4')
-
-        # Read the data from the in-memory file and return the Py-ART radar object
-        radar = pyart.io.read_cfradial(tmp_file.name)
-
-        # Delete the temporary in-memory file
-        os.remove(tmp_file.name)
-        print('File', os.path.basename(dwr_path), 'converted successfully')
-        return radar
+        read = pyart.io.read(dwr_path)
+        return read
 
 # "correctednc" function takes in any dual-pol NetCDF file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
 # The user is provided with the advantage of choosing whether to save the file
 
 def correctednc(file_path, save_file=False):
+    """
+    "correctednc" function takes in any dual-pol NetCDF file.
+    restructures it into a radar object to be visualized by pyiwr.
+    makes it compatible with Py-ART.
+    The user is provided with the advantage of choosing whether to save the file.
+    Returns all corrected radar objects from any Cf/Radial object file.
+    corrects all date and Time issues.
+    resolves missing sweep ray index and updates metadata
+    """    
+    
     # Open the dataset
     print('Processing file: ', os.path.basename(file_path))
     raw = xr.open_dataset(file_path, decode_times=False) 
@@ -102,21 +124,26 @@ def correctednc(file_path, save_file=False):
         print('File', os.path.basename(file_path), 'corrected and restructured successfully')
         return radar
 
-# "sweeps2gridnc" function before making a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
+# "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
 # The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids), 
 # and height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
 
 def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
     """
+    The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids), 
+    height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
     Returns grid object from radar object.
+    "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
+    
+    
     grid_shape=(61, 500, 500), no. of bins of z,y,x respectively.
 
     height:(int) = 15, height in km
     length:(int) = 250, Range of radar in km
 
-    # 0.5 km vertical resolution
-    # 1 km resolution horizontally
-    # radar installed at 1.313 km height
+    0.5 km vertical resolution
+    1 km resolution horizontally
+    radar installed at 1.313 km height
     """    
       
     print('Processing file: ', os.path.basename(file_path))
