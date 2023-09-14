@@ -17,7 +17,7 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 - [Citation](Citation.md)
 
 
-# Example Usage
+# Example Usage 
 
 ## Multiple output for single cell 
 
@@ -52,28 +52,29 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
     ## If you use this software to prepare a publication, please cite:
     ##
     ##     JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119
+
+    “Data Source : MOSDAC/SAC/ISRO. https://mosdac.gov.in”
     
 
     
 
-# MOSDAC FILES
+# Dual - Polarized DWR FILES 
+“Data Source : MOSDAC/SAC/ISRO. https://mosdac.gov.in”
 
 ## Defining File Path
 
 
 ```python
 import os
-file_path_long = 'C:\\Users\\dell\\codes\\test_data\\mosdac\\long'
-file_list_long = os.listdir(file_path_long)
-file_list_long
+file_path = 'D:\\test_data\\dwr'
+file_list = os.listdir(file_path)
+file_list
 ```
 
 
 
 
-    ['corrected',
-     'gridded_radar_ncfiles',
-     'RCTLS_30NOV2017_025502_L2B_STD.nc',
+    ['RCTLS_30NOV2017_025502_L2B_STD.nc',
      'RCTLS_30NOV2017_061521_L2B_STD.nc',
      'RSCHR_11JUL2019_023140_L2B_STD.nc',
      'RSCHR_24MAR2022_004350_L2B_STD.nc',
@@ -86,12 +87,12 @@ file_list_long
 ```python
 # Access files by indexing the list
 # For example, to access the file in the list:
-filenamel1 = os.path.join(file_path_long, file_list_long[6])
-filenamel2 = os.path.join(file_path_long, file_list_long[7])
-filenamel3 = os.path.join(file_path_long, file_list_long[2])
-filenamel4 = os.path.join(file_path_long, file_list_long[3])
-filenamel5 = os.path.join(file_path_long, file_list_long[4])
-filenamel6 = os.path.join(file_path_long, file_list_long[5])
+filenamel1 = os.path.join(file_path, file_list[6])
+filenamel2 = os.path.join(file_path, file_list[7])
+filenamel3 = os.path.join(file_path, file_list[2])
+filenamel4 = os.path.join(file_path, file_list[3])
+filenamel5 = os.path.join(file_path, file_list[4])
+filenamel6 = os.path.join(file_path, file_list[5])
 ```
 
 ## TERLS RADAR
