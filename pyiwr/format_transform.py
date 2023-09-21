@@ -146,7 +146,8 @@ def correctednc(file_path, save_file=False):
         return radar
 
 
-# "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object.
+# "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF
+# file using Py-ART, which is then saved as a gridded Xarray object.
 # The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids),
 # and height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
 
