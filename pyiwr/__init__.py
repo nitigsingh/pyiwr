@@ -1,6 +1,6 @@
 """Top-level package for pyiwr."""
 
-__version__ = '1.0.1'
+__version__ = "1.0.1"
 
 from .utilities import fread  # noqa
 from .utilities import raw_product_list  # noqa

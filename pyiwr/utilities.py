@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# coding: utf-8
-'''
+"""
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
 @reference for raw dwr data reading function: Shahla KP/Sci-Eng -SC/RDA-ISTRAC ISRO
@@ -8,21 +7,21 @@
 
 @email: nitig14rdfsma[at]gmail[dot]com
 @email: vaibhavtyagi7191[at]gmail[dot]com
-'''
+"""
 
+import datetime as dt
 import os
+import re
+
+import numpy as np
 import pyart
 import pyart.map
-import datetime as dt
 import xarray as xr
-import tempfile
-import numpy as np
-import re
 
 
 def fread(fid, nelements, dtype):
     if dtype is np.str_:
-        dt = np.uint8  
+        dt = np.uint8
     else:
         dt = dtype
 
@@ -30,54 +29,67 @@ def fread(fid, nelements, dtype):
     data_array.shape = (nelements, 1)
     return data_array
 
+
 def raw_product_list(dwr_path):
-    with open(dwr_path, 'rb') as fid:
-        print('Processing file:',os.path.basename(dwr_path))
-        m5 = np.fromfile(fid, dtype='uint8')
+    with open(dwr_path, "rb") as fid:
+        print("Processing file:", os.path.basename(dwr_path))
+        m5 = np.fromfile(fid, dtype="uint8")
         m5 = m5.astype(float)
 
-        status = fid.seek(0, 0)
+        fid.seek(0, 0)
         mode = fread(fid, 1, np.uint16)
-        site_num = mode[0, 0]
+        mode[0, 0]
 
-        status = fid.seek(2, 0)
-        s1 = np.fromfile(fid, dtype=np.uint8, count=20, sep='')
+        fid.seek(2, 0)
+        s1 = np.fromfile(fid, dtype=np.uint8, count=20, sep="")
         st = str(s1.tobytes())
-        Station = (st.split(sep='\\x')[0]).split(sep="'")[1]
+        Station = (st.split(sep="\\x")[0]).split(sep="'")[1]
 
-        status = fid.seek(32, 0)
-        s2 = np.fromfile(fid, dtype=np.uint8, count=10, sep='')
+        fid.seek(32, 0)
+        s2 = np.fromfile(fid, dtype=np.uint8, count=10, sep="")
         rd = str(s2.tobytes())
-        Radar = (rd.split(sep='\\x')[0]).split(sep="'")[1]
+        Radar = (rd.split(sep="\\x")[0]).split(sep="'")[1]
 
-        St_Year = hex(((m5[42:44:2] + 256 * m5[43])[0].astype(int))).split(sep='x')[1]
-        St_Month = hex((m5[44]).astype(int)).split(sep='x')[1]
-        St_Day = hex((m5[45]).astype(int)).split(sep='x')[1]
-        St_Hour = hex((m5[46]).astype(int)).split(sep='x')[1]
-        St_Minute = hex((m5[47]).astype(int)).split(sep='x')[1]
-        St_Sec = hex((m5[48]).astype(int)).split(sep='x')[1]
+        St_Year = hex((m5[42:44:2] + 256 * m5[43])[0].astype(int)).split(sep="x")[1]
+        St_Month = hex((m5[44]).astype(int)).split(sep="x")[1]
+        St_Day = hex((m5[45]).astype(int)).split(sep="x")[1]
+        St_Hour = hex((m5[46]).astype(int)).split(sep="x")[1]
+        St_Minute = hex((m5[47]).astype(int)).split(sep="x")[1]
+        St_Sec = hex((m5[48]).astype(int)).split(sep="x")[1]
 
-        Start_Time = St_Year + '-' + St_Month.zfill(2) + '-' + St_Day.zfill(2) + ' , ' + St_Hour.zfill(2) + ':' + St_Minute.zfill(2) + ':' + St_Sec.zfill(2)
+        Start_Time = (
+            St_Year
+            + "-"
+            + St_Month.zfill(2)
+            + "-"
+            + St_Day.zfill(2)
+            + " , "
+            + St_Hour.zfill(2)
+            + ":"
+            + St_Minute.zfill(2)
+            + ":"
+            + St_Sec.zfill(2)
+        )
         date = Start_Time[0:-10]
         time = Start_Time[12:]
 
         PRFH = m5[573:632:2] + 256 * m5[574:633:2]
         PRFL = m5[633:692:2] + 256 * m5[634:693:2]
-        Pulse_width = (m5[693:752:2] + 256 * m5[694:753:2]) / 100
+        (m5[693:752:2] + 256 * m5[694:753:2]) / 100
 
-        status = fid.seek(26, 0)
+        fid.seek(26, 0)
         lat_temp = fread(fid, 1, np.uint32)
         lat = lat_temp[0, 0] / 10000
 
-        status = fid.seek(22, 0)
+        fid.seek(22, 0)
         lon_temp = fread(fid, 1, np.uint32)
         lon = lon_temp[0, 0] / 10000
 
-        status = fid.seek(30, 0)
+        fid.seek(30, 0)
         h = fread(fid, 1, np.uint16)
         h = h[0, 0]
 
-        status = fid.seek(394, 0)
+        fid.seek(394, 0)
         mod = fread(fid, 1, np.uint32)
         freq = mod[0, 0] * 1000
 
@@ -86,7 +98,7 @@ def raw_product_list(dwr_path):
         num_el = len(elevation)
 
         rang_res = m5[754:813:2] + 256 * m5[755:814:2]
-        range_val = rang_res[0]
+        rang_res[0]
         no_bin_ele = m5[12038:12217:2] + 256 * m5[12039:12218:2]
         no_bin = no_bin_ele[0].astype(int)
         azval = np.arange(0, 361, 1).astype(int)
@@ -107,9 +119,9 @@ def raw_product_list(dwr_path):
             if fn1 == 1:
                 m7 = m6[0:s2]  # 1st elevation data
             else:
-                m7 = m6[s2 * (fn1 - 1):s2 * fn1]  # 2nd elevation data
+                m7 = m6[s2 * (fn1 - 1) : s2 * fn1]  # 2nd elevation data
 
-            m8 = np.reshape(m7, (int(no_bin_ele[0]) * 7 + 4, 360 * 1), order='F')
+            m8 = np.reshape(m7, (int(no_bin_ele[0]) * 7 + 4, 360 * 1), order="F")
 
             m9 = m8[:][4:]
             z = m9[0::7][:]
@@ -117,7 +129,7 @@ def raw_product_list(dwr_path):
             z1 = np.copy(z)
 
             zf = z1[:, 359]
-            zf = np.reshape(zf, (len(zf), 1), order='F')
+            zf = np.reshape(zf, (len(zf), 1), order="F")
             Z1 = np.hstack((z1, zf))
 
             prf = m5[573:582:2] + 256 * m5[574:583:2]
@@ -127,7 +139,7 @@ def raw_product_list(dwr_path):
             if prfl[0] == 0:
                 v = m9[1::7][:]
                 v = np.where((v == 0), np.nan, v)
-                v = (((v - 128) / 128) * (lamd * prf[0] / (4)))
+                v = ((v - 128) / 128) * (lamd * prf[0] / (4))
             else:
                 prt_dul = (1 / prfl[0]) - (1 / prf[0])
                 v = m9[1::7][:]
@@ -136,7 +148,7 @@ def raw_product_list(dwr_path):
 
             v1 = np.copy(v)
             vf = v1[:, 359]
-            vf = np.reshape(vf, (len(vf), 1), order='F')
+            vf = np.reshape(vf, (len(vf), 1), order="F")
             V1 = np.hstack((v1, vf))
 
             sw = m9[2::7][:]
@@ -145,28 +157,28 @@ def raw_product_list(dwr_path):
             sw[sw > 16] = 16
             sw1 = np.copy(sw)
             swf = sw1[:, 359]
-            swf = np.reshape(swf, (len(swf), 1), order='F')
+            swf = np.reshape(swf, (len(swf), 1), order="F")
             SW1 = np.hstack((sw1, swf))
 
             zdr = m9[3::7][:]
             zdr = zdr / 20 - 4
             zdr1 = np.copy(zdr)
             zdrf = zdr1[:, 359]
-            zdrf = np.reshape(zdrf, (len(zdrf), 1), order='F')
+            zdrf = np.reshape(zdrf, (len(zdrf), 1), order="F")
             ZDR1 = np.hstack((zdr1, zdrf))
 
             phidp = m9[4::7][:] + 256 * m9[5::7][:]
             phidp = phidp * 0.088
             phidp1 = phidp - 180
             phidpf = phidp1[:, 359]
-            phidpf = np.reshape(phidpf, (len(phidpf), 1), order='F')
+            phidpf = np.reshape(phidpf, (len(phidpf), 1), order="F")
             PHIDP1 = np.hstack((phidp1, phidpf))
 
             rdp = m9[6::7][:]
             rdp = rdp / 256
             rdp1 = np.copy(rdp)
             rdpf = rdp1[:, 359]
-            rdpf = np.reshape(rdpf, (len(rdpf), 1), order='F')
+            rdpf = np.reshape(rdpf, (len(rdpf), 1), order="F")
             RDP1 = np.hstack((rdp1, rdpf))
 
             Z1t[:, :, i] = np.copy(Z1)
@@ -183,8 +195,28 @@ def raw_product_list(dwr_path):
         RDP1t[RDP1t == 0] = np.nan
         V1t[V1t == -1] = np.nan
 
-    return [Station,date,time,Radar,lon,lat,h,freq,elev_ang1,num_el,no_bin,rang_res[0],PRFH,PRFL,Z1t,V1t,SW1t,ZDR1t,PHIDP1t,RDP1t]
-
+    return [
+        Station,
+        date,
+        time,
+        Radar,
+        lon,
+        lat,
+        h,
+        freq,
+        elev_ang1,
+        num_el,
+        no_bin,
+        rang_res[0],
+        PRFH,
+        PRFL,
+        Z1t,
+        V1t,
+        SW1t,
+        ZDR1t,
+        PHIDP1t,
+        RDP1t,
+    ]
 
 
 def raw_reshape_stack(radar_products, num_sweeps):
@@ -199,7 +231,7 @@ def raw_reshape_stack(radar_products, num_sweeps):
     Returns:
     - ndarray: Resulting array with shape (sweeps * rays, gates).
     """
-    
+
     # Get the shape of the input array
     rows, cols = radar_products.shape[1:]
 
@@ -218,178 +250,594 @@ def raw_reshape_stack(radar_products, num_sweeps):
 
 
 def raw2object(dwr_path, dats):
-    
     radar = pyart.testing.make_empty_ppi_radar(dats[10], 360, dats[9])
 
     # Add the condition to determine the 'source' attribute
     Station = dats[0]
-    if Station == 'CHERRAPUNJEE':
-        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-            data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+    if Station == "CHERRAPUNJEE":
+        if os.path.basename(dwr_path)[-6:] == "6n.dwr":
+            data = np.array(
+                np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64
+            )
         else:
-            data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
-    elif Station == 'SHAR':
-        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-            data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+            data = np.array(
+                np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64
+            )
+    elif Station == "SHAR":
+        if os.path.basename(dwr_path)[-6:] == "6n.dwr":
+            data = np.array(
+                np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64
+            )
         else:
-            data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
-    else: 
-        if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-            data = np.array(np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64)
+            data = np.array(
+                np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64
+            )
+    else:
+        if os.path.basename(dwr_path)[-6:] == "6n.dwr":
+            data = np.array(
+                np.linspace(0.0555555556, 399.944444444, 3600), dtype=np.float64
+            )
         else:
-            data = np.array(np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64)
+            data = np.array(
+                np.linspace(0.0555555556, 79.944444444, 720), dtype=np.float64
+            )
 
-    tstart = dats[1][:-1]+'T'+dats[2][1:]+'Z'
+    tstart = dats[1][:-1] + "T" + dats[2][1:] + "Z"
 
     radar.time = {
-    'data': data.astype(np.float64),
-    'standard_name': 'time',
-    'long_name': 'time_in_seconds_since_volume_start',
-    'units': 'seconds since ' + tstart,
-    'calendar': 'gregorian'
+        "data": data.astype(np.float64),
+        "standard_name": "time",
+        "long_name": "time_in_seconds_since_volume_start",
+        "units": "seconds since " + tstart,
+        "calendar": "gregorian",
     }
-
 
     radar.latitude["data"] = np.array([dats[5]])
     radar.longitude["data"] = np.array([dats[4]])
     radar.range["data"] = np.linspace(75.0, dats[11] * (dats[10] - 1), dats[10])
-    radar.fixed_angle["data"] = np.array(dats[8][:dats[9]], dtype=np.float32).flatten()
+    radar.fixed_angle["data"] = np.array(dats[8][: dats[9]], dtype=np.float32).flatten()
     radar.sweep_number["data"] = np.array(range(dats[9]))
 
-    radar.sweep_start_ray_index['data'] = np.arange(0, radar.nrays, radar.nrays/dats[9], dtype='int64')
-    radar.sweep_end_ray_index['data'] = radar.sweep_start_ray_index['data'] + int((radar.nrays/dats[9])-1)
+    radar.sweep_start_ray_index["data"] = np.arange(
+        0, radar.nrays, radar.nrays / dats[9], dtype="int64"
+    )
+    radar.sweep_end_ray_index["data"] = radar.sweep_start_ray_index["data"] + int(
+        (radar.nrays / dats[9]) - 1
+    )
     radar.init_gate_longitude_latitude()
     radar.init_gate_altitude()
     radar.init_gate_x_y_z()
 
-    radar.altitude['data'] = np.array(dats[6], dtype=np.int32).flatten()
-    radar.azimuth["data"] = np.tile(np.arange(radar.nrays/dats[9], dtype=np.float32), dats[9])
-
-    #Add the condition to determine the 'source' attribute
-    if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-        a = 'DWR Short Volume Scan File (250km)'
-    else:
-        a = 'DWR Long Volume Scan File (500km)'
+    radar.altitude["data"] = np.array(dats[6], dtype=np.int32).flatten()
+    radar.azimuth["data"] = np.tile(
+        np.arange(radar.nrays / dats[9], dtype=np.float32), dats[9]
+    )
 
     # Add the condition to determine the 'source' attribute
-    if os.path.basename(dwr_path)[-6:] == '6n.dwr':
-        radar.sweep_mode['data'] = np.array([
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-        [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'']
-    ], dtype='|S1')
+    if os.path.basename(dwr_path)[-6:] == "6n.dwr":
+        a = "DWR Short Volume Scan File (250km)"
     else:
-        radar.sweep_mode['data'] = np.array([
-            [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b''],
-            [b'a', b'z', b'i', b'm', b'u', b't', b'h', b' ', b's', b'u', b'r', b'v', b'e', b'i', b'l', b'l', b'a', b'n', b'c', b'e', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'', b'']
-        ], dtype='|S1') 
-
+        a = "DWR Long Volume Scan File (500km)"
 
     # Add the condition to determine the 'source' attribute
-    if Station == 'CHERRAPUNJEE':
-        b = 'Cherrapunji S-band Dual-pol DWR'
-    elif Station == 'SHAR':
-        b = 'SHAR S-band Dual-pol DWR'
-    else: 
-        b = 'TERLS C-band Dual-pol DWR'    
+    if os.path.basename(dwr_path)[-6:] == "6n.dwr":
+        radar.sweep_mode["data"] = np.array(
+            [
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+            ],
+            dtype="|S1",
+        )
+    else:
+        radar.sweep_mode["data"] = np.array(
+            [
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+                [
+                    b"a",
+                    b"z",
+                    b"i",
+                    b"m",
+                    b"u",
+                    b"t",
+                    b"h",
+                    b" ",
+                    b"s",
+                    b"u",
+                    b"r",
+                    b"v",
+                    b"e",
+                    b"i",
+                    b"l",
+                    b"l",
+                    b"a",
+                    b"n",
+                    b"c",
+                    b"e",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                    b"",
+                ],
+            ],
+            dtype="|S1",
+        )
+
+    # Add the condition to determine the 'source' attribute
+    if Station == "CHERRAPUNJEE":
+        b = "Cherrapunji S-band Dual-pol DWR"
+    elif Station == "SHAR":
+        b = "SHAR S-band Dual-pol DWR"
+    else:
+        b = "TERLS C-band Dual-pol DWR"
 
     radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
     radar.metadata = {
-        'instrument_name': b,
-        'Created using': 'pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore',
-        'version': 'Version 1.0.0',
-        'title': b[:-3] + 'DWR data',
-        'institution': 'ISRO',
-        'references': 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html',
-        'source': a,  # 'a' determines the 'source' attribute based on the condition
-        'history': f'DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into Py-ART compatible NetCDF file',
-        'comment': '',
-        'platform_type': 'fixed',
-        'instrument_type': 'radar',
-        'primary_axis': 'axis_z'
-    }
-    
-    ref = np.array(dats[14][:,:360,:].T)
-    ref = raw_reshape_stack(ref,dats[9])
-    fill_value = ref[0,0]
-
-    vel = np.array(dats[15][:,:360,:].T)
-    fill_value = ref[0,0]
-    vel = raw_reshape_stack(vel,dats[9])
-
-    sw = np.array(dats[16][:,:360,:].T)
-    fill_value = ref[0,0]
-    sw = raw_reshape_stack(sw,dats[9])
-
-    zdr = np.array(dats[17][:,:360,:].T)
-    fill_value = ref[0,0]
-    zdr = raw_reshape_stack(zdr,dats[9])
-
-    phidp = np.array(dats[18][:,:360,:].T)
-    fill_value = ref[0,0]
-    phidp = raw_reshape_stack(phidp,dats[9])
-
-    rdp = np.array(dats[19][:,:360,:].T)
-    fill_value = ref[0,0]
-    rdp = raw_reshape_stack(rdp,dats[9])
-
-    radar.fields['DBZ'] = {
-        'data': ref.astype(np.float32),
-        'units': 'dBZ',
-        'standard_name': 'equivalent_reflectivity_factor',
-        'Polarization': 'Horizontal',
-        '_FillValue': fill_value
+        "instrument_name": b,
+        "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
+        "version": "Version 1.0.0",
+        "title": b[:-3] + "DWR data",
+        "institution": "ISRO",
+        "references": "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html",
+        "source": a,  # 'a' determines the 'source' attribute based on the condition
+        "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into Py-ART compatible NetCDF file",
+        "comment": "",
+        "platform_type": "fixed",
+        "instrument_type": "radar",
+        "primary_axis": "axis_z",
     }
 
-    radar.fields['VEL'] = {
-        'data': vel.astype(np.float32),
-        'units': 'm/s',
-        'standard_name': 'radial_velocity_of_scatterers_away_from_instrument',
-        'Polarization': 'Horizontal',
-        '_FillValue': fill_value
+    ref = np.array(dats[14][:, :360, :].T)
+    ref = raw_reshape_stack(ref, dats[9])
+    fill_value = ref[0, 0]
+
+    vel = np.array(dats[15][:, :360, :].T)
+    fill_value = ref[0, 0]
+    vel = raw_reshape_stack(vel, dats[9])
+
+    sw = np.array(dats[16][:, :360, :].T)
+    fill_value = ref[0, 0]
+    sw = raw_reshape_stack(sw, dats[9])
+
+    zdr = np.array(dats[17][:, :360, :].T)
+    fill_value = ref[0, 0]
+    zdr = raw_reshape_stack(zdr, dats[9])
+
+    phidp = np.array(dats[18][:, :360, :].T)
+    fill_value = ref[0, 0]
+    phidp = raw_reshape_stack(phidp, dats[9])
+
+    rdp = np.array(dats[19][:, :360, :].T)
+    fill_value = ref[0, 0]
+    rdp = raw_reshape_stack(rdp, dats[9])
+
+    radar.fields["DBZ"] = {
+        "data": ref.astype(np.float32),
+        "units": "dBZ",
+        "standard_name": "equivalent_reflectivity_factor",
+        "Polarization": "Horizontal",
+        "_FillValue": fill_value,
     }
 
-    radar.fields['WIDTH'] = {
-        'data': sw.astype(np.float32),
-        'units': 'm/s',
-        'standard_name': 'doppler_spectrum_width',
-        'Polarization': 'Horizontal',
-        '_FillValue': fill_value
+    radar.fields["VEL"] = {
+        "data": vel.astype(np.float32),
+        "units": "m/s",
+        "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+        "Polarization": "Horizontal",
+        "_FillValue": fill_value,
     }
 
-    radar.fields['ZDR'] = {
-        'data': zdr.astype(np.float32),
-        'units': 'dB',
-        'standard_name': 'log_differential_reflectivity_hv',
-        'Polarization': 'Horizontal and Vertical',
-        '_FillValue': fill_value
+    radar.fields["WIDTH"] = {
+        "data": sw.astype(np.float32),
+        "units": "m/s",
+        "standard_name": "doppler_spectrum_width",
+        "Polarization": "Horizontal",
+        "_FillValue": fill_value,
     }
 
-    radar.fields['PHIDP'] = {
-        'data': phidp.astype(np.float32),
-        'units': 'degrees',
-        'standard_name': 'differential_phase_hv',
-        'Polarization': 'Horizontal and Vertical',
-        '_FillValue': fill_value
+    radar.fields["ZDR"] = {
+        "data": zdr.astype(np.float32),
+        "units": "dB",
+        "standard_name": "log_differential_reflectivity_hv",
+        "Polarization": "Horizontal and Vertical",
+        "_FillValue": fill_value,
     }
 
-    radar.fields['RHOHV'] = {
-        'data': rdp.astype(np.float32),
-        'units': 'unitless',
-        'standard_name': 'cross_correlation_ratio_hv',
-        'Polarization': 'Horizontal and Vertical',
-        '_FillValue': fill_value
+    radar.fields["PHIDP"] = {
+        "data": phidp.astype(np.float32),
+        "units": "degrees",
+        "standard_name": "differential_phase_hv",
+        "Polarization": "Horizontal and Vertical",
+        "_FillValue": fill_value,
     }
-    
+
+    radar.fields["RHOHV"] = {
+        "data": rdp.astype(np.float32),
+        "units": "unitless",
+        "standard_name": "cross_correlation_ratio_hv",
+        "Polarization": "Horizontal and Vertical",
+        "_FillValue": fill_value,
+    }
+
     return radar
-
 
 
 # for files that are read from mosdac or if manually corrected/restructured/added fields files, the function helps in extracting start time using Try and Except block
@@ -398,10 +846,10 @@ def extract_start_time(raw):
         # Try : extracting the start time using the first method
         start_time_str = "".join(raw.time_coverage_start.astype(str).values)
         start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
-    except TypeError: 
+    except TypeError:
         # If the first method fails with a Type Error, the second method is used
         try:
-            start_time_str = raw.time_coverage_start.item().decode('utf-8')
+            start_time_str = raw.time_coverage_start.item().decode("utf-8")
             start_time = dt.datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ")
         except AttributeError:
             # For Attribute error extracting the start time from raw.time_coverage_start.data
@@ -410,7 +858,7 @@ def extract_start_time(raw):
             # Converting the ndarray to a string
             start_time_from_data_str = str(start_time_from_data)
             # Defining the desired format pattern using a regular expression to be compared
-            desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'            
+            desired_format_pattern = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"
             # Checking, if the extracted start time matches the desired format pattern
             if re.match(desired_format_pattern, start_time_from_data_str):
                 start_time = start_time_from_data_str
@@ -423,21 +871,25 @@ def update_xarray_dataset(file_path, raw, xg):
     raw.attrs.clear()
 
     # Creating a new DataArray with the added data for 'sweep_start_ray_index'
-    sweep_start_ray_index_data = np.arange(0, raw.time.size, raw.time.size//raw.sweep.size, dtype='int64')
-    sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=['sweep'])
+    sweep_start_ray_index_data = np.arange(
+        0, raw.time.size, raw.time.size // raw.sweep.size, dtype="int64"
+    )
+    sweep_start_ray_index_da = xr.DataArray(sweep_start_ray_index_data, dims=["sweep"])
 
     # Including the new DataArray as a new variable in the Dataset
-    xg['sweep_start_ray_index'] = sweep_start_ray_index_da
+    xg["sweep_start_ray_index"] = sweep_start_ray_index_da
 
     # Creating a new DataArray with the added data for 'sweep_end_ray_index'
-    sweep_end_ray_index_data = sweep_start_ray_index_data + int((raw.time.size//raw.sweep.size) - 1)
-    sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=['sweep'])
+    sweep_end_ray_index_data = sweep_start_ray_index_data + int(
+        (raw.time.size // raw.sweep.size) - 1
+    )
+    sweep_end_ray_index_da = xr.DataArray(sweep_end_ray_index_data, dims=["sweep"])
 
     # Including the new DataArray as a new variable in the Dataset
-    xg['sweep_end_ray_index'] = sweep_end_ray_index_da
+    xg["sweep_end_ray_index"] = sweep_end_ray_index_da
 
     # Defining the desired format pattern using a regular expression to be compared
-    desired_format_pattern = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'
+    desired_format_pattern = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"
     start_time = extract_start_time(raw)
 
     try:
@@ -447,39 +899,46 @@ def update_xarray_dataset(file_path, raw, xg):
         else:
             raise TypeError  # Trigger the except block to handle the exception
     except TypeError:
-        start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # Format the start time as string
+        start_time_str = start_time.strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )  # Format the start time as string
 
     # Update the "time_coverage_start" variable in the dataset with the correct datetime object
     xg["time_coverage_start"] = start_time_str
-    
+
     # Update the "units" attribute of the "time" variable to match the correct format
     time_units = f"seconds since {start_time_str}"
     xg["time"].attrs["units"] = time_units
-    
-    
+
     Station = os.path.basename(file_path)[2:5]
-    if Station == 'CHR':
-        a = 'Cherrapunji S-band Dual-pol DWR'
-    elif Station == 'SHR':
-        a = 'SHAR S-band Dual-pol DWR'
-    else: 
-        a = 'TERLS C-band Dual-pol DWR'  
+    if Station == "CHR":
+        a = "Cherrapunji S-band Dual-pol DWR"
+    elif Station == "SHR":
+        a = "SHAR S-band Dual-pol DWR"
+    else:
+        a = "TERLS C-band Dual-pol DWR"
 
     # Add attributes to the dataset in the given order
-    xg.attrs['instrument_name'] = a
-    xg.attrs['Created using'] = 'pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore'
-    xg.attrs['version'] = 'Version 1.0.0'
-    xg.attrs['title'] = a[0:-3] + 'DWR data'
-    xg.attrs['institution'] = 'ISRO'
-    xg.attrs['references'] = 'Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html'
-    xg.attrs['source'] = 'DWR volume scan data'
-    xg.attrs['comment'] = ''
-    xg.attrs['Conventions'] = 'CF/Radial'
-    xg.attrs['field_names'] = 'DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV'
-    xg.attrs['history'] = 'DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file'
-    xg.attrs['volume_number'] = 0
-    xg.attrs['platform_type'] = 'fixed'
-    xg.attrs['instrument_type'] = 'radar'
-    xg.attrs['primary_axis'] = 'axis_z'
-   
-    return xg    
+    xg.attrs["instrument_name"] = a
+    xg.attrs[
+        "Created using"
+    ] = "pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore"
+    xg.attrs["version"] = "Version 1.0.0"
+    xg.attrs["title"] = a[0:-3] + "DWR data"
+    xg.attrs["institution"] = "ISRO"
+    xg.attrs[
+        "references"
+    ] = "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html"
+    xg.attrs["source"] = "DWR volume scan data"
+    xg.attrs["comment"] = ""
+    xg.attrs["Conventions"] = "CF/Radial"
+    xg.attrs["field_names"] = "DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV"
+    xg.attrs[
+        "history"
+    ] = "DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file"
+    xg.attrs["volume_number"] = 0
+    xg.attrs["platform_type"] = "fixed"
+    xg.attrs["instrument_type"] = "radar"
+    xg.attrs["primary_axis"] = "axis_z"
+
+    return xg

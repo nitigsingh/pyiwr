@@ -17,18 +17,18 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 - [Citation](Citation.md)
 
 
-# Example Usage 
+# Example Usage
 
-## Multiple output for single cell 
+## Multiple output for single cell
 
 
 ```python
 #Displaying multiple output of a single cell
-from IPython.core.interactiveshell import InteractiveShell 
+from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
 ```
 
-## Importing Essential Libraries 
+## Importing Essential Libraries
 
 
 ```python
@@ -38,11 +38,11 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
-    pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. 
-    This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure 
-    dual-pol radar MOSDAC/corrected NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful 
+    pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore.
+    This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure
+    dual-pol radar MOSDAC/corrected NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful
     tools and visualization functions to facilitate working with and analyzing weather radar data.
-    
+
     ## You are using the Python ARM Radar Toolkit (Py-ART), an open source
     ## library for working with weather radar data. Py-ART is partly
     ## supported by the U.S. Department of Energy as part of the Atmospheric
@@ -54,11 +54,11 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
     ##     JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119
 
     “Data Source : MOSDAC/SAC/ISRO. https://mosdac.gov.in”
-    
 
-    
 
-# Dual - Polarized DWR FILES 
+
+
+# Dual - Polarized DWR FILES
 “Data Source : MOSDAC/SAC/ISRO. https://mosdac.gov.in”
 
 ## Defining File Path
@@ -166,7 +166,7 @@ radar.info()
     	RHOHV:
     		data: <ndarray of type: float32 and shape: (3960, 1600)>
     		_FillValue: 0.0
-    		units: 
+    		units:
     		standard_name: cross_correlation_ratio_hv
     		Polarization: Horizontal and Vertical
     		coordinates: time range
@@ -222,7 +222,7 @@ radar.info()
     	institution: ISRO
     	references: Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
     	source: DWR volume scan data
-    	comment: 
+    	comment:
     	Conventions: CF/Radial
     	field_names: DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
     	history: DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
@@ -230,7 +230,7 @@ radar.info()
     	platform_type: fixed
     	instrument_type: radar
     	primary_axis: axis_z
-    
+
 
 ## Visualization in Cartesian Plane
 
@@ -243,9 +243,9 @@ pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True
 ```
 
 
-    
+
 ![png](images/output_13_0.png)
-    
+
 
 
 ## PPI Plots at all elevation angle of any Radar Field
@@ -257,9 +257,9 @@ pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, ra
 ```
 
 
-    
+
 ![png](images/output_15_0.png)
-    
+
 
 
 ## PPI Plots of all Radar Fields at any given elevation angle
@@ -271,9 +271,9 @@ pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rin
 ```
 
 
-    
+
 ![png](images/output_17_0.png)
-    
+
 
 
 ## Reading content of file and making grid object
@@ -287,7 +287,7 @@ xg
 
     Processing file:  RCTLS_30NOV2017_061521_L2B_STD.nc
     Xarray gridding of volumetric sweeps of radar PPI scan file: RCTLS_30NOV2017_061521_L2B_STD.nc done successfully
-    
+
 
 
 
@@ -1078,9 +1078,9 @@ pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', radar_location='TE
 ```
 
 
-    
+
 ![png](images/output_22_0.png)
-    
+
 
 
 ### MAXZ CAPPI
@@ -1092,9 +1092,9 @@ pyiwr.visualize.cappi_max(xg, field_name='DBZ', radar_location='TERLS', grid=Tru
 ```
 
 
-    
+
 ![png](images/output_24_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI
@@ -1106,9 +1106,9 @@ pyiwr.visualize.marginal_max(xg, radar_location='TERLS', field_name='DBZ', rings
 ```
 
 
-    
+
 ![png](images/output_26_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI with background map
@@ -1120,9 +1120,9 @@ pyiwr.visualize.marginal_max_map(xg, radar_location='TERLS', field_name='DBZ', b
 ```
 
 
-    
+
 ![png](images/output_28_0.png)
-    
+
 
 
 ## Reading content of file and making radar object
@@ -1196,7 +1196,7 @@ radar1.info()
     	RHOHV:
     		data: <ndarray of type: float32 and shape: (3600, 1600)>
     		_FillValue: 0.0
-    		units: 
+    		units:
     		standard_name: cross_correlation_ratio_hv
     		Polarization: Horizontal and Vertical
     		coordinates: time range
@@ -1252,7 +1252,7 @@ radar1.info()
     	institution: ISRO
     	references: Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
     	source: DWR volume scan data
-    	comment: 
+    	comment:
     	Conventions: CF/Radial
     	field_names: DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
     	history: DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
@@ -1260,7 +1260,7 @@ radar1.info()
     	platform_type: fixed
     	instrument_type: radar
     	primary_axis: axis_z
-    
+
 
 ## Visualization in Cartesian Plane
 
@@ -1273,9 +1273,9 @@ pyiwr.visualize.elevation(radar1, field_name='DBZ', elevation_index=0, rings=Tru
 ```
 
 
-    
+
 ![png](images/output_34_0.png)
-    
+
 
 
 ## PPI Plots at all elevation angle of any Radar Field
@@ -1287,9 +1287,9 @@ pyiwr.visualize.all_elevation(radar1, field_name='DBZ', rings=True, grid=True, r
 ```
 
 
-    
+
 ![png](images/output_36_0.png)
-    
+
 
 
 ## PPI Plots of all Radar Fields at any given elevation angle
@@ -1301,9 +1301,9 @@ pyiwr.visualize.fields_elevation(radar1, elevation_index=0, range_in_km=True, ri
 ```
 
 
-    
+
 ![png](images/output_38_0.png)
-    
+
 
 
 ## Reading content of file and making grid object
@@ -1316,7 +1316,7 @@ xg1
 
     Processing file:  RSCHR_11JUL2019_023140_L2B_STD.nc
     Xarray gridding of volumetric sweeps of radar PPI scan file: RSCHR_11JUL2019_023140_L2B_STD.nc done successfully
-    
+
 
 
 
@@ -2106,9 +2106,9 @@ pyiwr.visualize.cappi(xg1, altitude_level=3, field_name='DBZ', radar_location='C
 ```
 
 
-    
+
 ![png](images/output_43_0.png)
-    
+
 
 
 ### MAXZ CAPPI
@@ -2120,9 +2120,9 @@ pyiwr.visualize.cappi_max(xg1, field_name='DBZ', radar_location='CHERRAPUNJI', g
 ```
 
 
-    
+
 ![png](images/output_45_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI
@@ -2134,9 +2134,9 @@ pyiwr.visualize.marginal_max(xg1, radar_location='CHERRAPUNJI', field_name='DBZ'
 ```
 
 
-    
+
 ![png](images/output_47_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI with background map
@@ -2148,9 +2148,9 @@ pyiwr.visualize.marginal_max_map(xg1, radar_location='CHERRAPUNJI', field_name='
 ```
 
 
-    
+
 ![png](images/output_49_0.png)
-    
+
 
 
 ## SHAR RADAR
@@ -2224,7 +2224,7 @@ radar2.info()
     	RHOHV:
     		data: <ndarray of type: float32 and shape: (3960, 1600)>
     		_FillValue: 0.0
-    		units: 
+    		units:
     		standard_name: cross_correlation_ratio_hv
     		Polarization: Horizontal and Vertical
     		coordinates: time range
@@ -2280,7 +2280,7 @@ radar2.info()
     	institution: ISRO
     	references: Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
     	source: DWR volume scan data
-    	comment: 
+    	comment:
     	Conventions: CF/Radial
     	field_names: DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
     	history: DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
@@ -2288,7 +2288,7 @@ radar2.info()
     	platform_type: fixed
     	instrument_type: radar
     	primary_axis: axis_z
-    
+
 
 ## Visualization in Cartesian Plane
 
@@ -2301,9 +2301,9 @@ pyiwr.visualize.elevation(radar2, field_name='DBZ', elevation_index=0, rings=Tru
 ```
 
 
-    
+
 ![png](output_55_0.png)
-    
+
 
 
 ## PPI Plots at all elevation angle of any Radar Field
@@ -2315,9 +2315,9 @@ pyiwr.visualize.all_elevation(radar2, field_name='DBZ', rings=True, grid=True, r
 ```
 
 
-    
+
 ![png](output_57_0.png)
-    
+
 
 
 ## PPI Plots of all Radar Fields at any given elevation angle
@@ -2329,9 +2329,9 @@ pyiwr.visualize.fields_elevation(radar2, elevation_index=0, range_in_km=True, ri
 ```
 
 
-    
+
 ![png](images/output_59_0.png)
-    
+
 
 
 ## Reading content of file and making grid object
@@ -2344,7 +2344,7 @@ xg2
 
     Processing file:  RSSHR_11JUL2019_193241_L2B_STD.nc
     Xarray gridding of volumetric sweeps of radar PPI scan file: RSSHR_11JUL2019_193241_L2B_STD.nc done successfully
-    
+
 
 
 
@@ -3135,9 +3135,9 @@ pyiwr.visualize.cappi(xg2, altitude_level=3, field_name='DBZ', radar_location='S
 ```
 
 
-    
+
 ![png](images/output_64_0.png)
-    
+
 
 
 ### MAXZ CAPPI
@@ -3149,9 +3149,9 @@ pyiwr.visualize.cappi_max(xg2, field_name='DBZ', radar_location='SHAR', grid=Tru
 ```
 
 
-    
+
 ![png](images/output_66_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI
@@ -3163,9 +3163,9 @@ pyiwr.visualize.marginal_max(xg2, radar_location='SHAR', field_name='DBZ', rings
 ```
 
 
-    
+
 ![png](images/output_68_0.png)
-    
+
 
 
 ### Marginal Distribution of MAXZ CAPPI with background map
@@ -3177,9 +3177,9 @@ pyiwr.visualize.marginal_max_map(xg2, radar_location='SHAR', field_name='DBZ', b
 ```
 
 
-    
+
 ![png](images/output_70_0.png)
-    
+
 
 
 # THANK YOU
@@ -3190,4 +3190,3 @@ pyiwr.visualize.marginal_max_map(xg2, radar_location='SHAR', field_name='DBZ', b
 ```python
 
 ```
-

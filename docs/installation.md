@@ -44,5 +44,3 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 
 </body>
 </html>
-
-

@@ -5,9 +5,6 @@
 import pytest
 
 
-from pyiwr import pyiwr
-
-
 @pytest.fixture
 def response():
     """Sample pytest fixture.
