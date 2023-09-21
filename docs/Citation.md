@@ -15,6 +15,7 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 - [Reference](Reference.md)
 - [Contribution Guidelines](contribution.md)
 - [Citation](Citation.md)
+- [Acknowledgments](acknowledgments.md)
 
 ## Citing pyiwr
 
