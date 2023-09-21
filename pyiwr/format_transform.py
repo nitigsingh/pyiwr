@@ -1,10 +1,16 @@
-print(
-    """pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure dual-pol radar ISRO DWR NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful tools and visualization functions to facilitate working with and analyzing weather radar data."""
-)
-
 #!/usr/bin/env python
-# coding: utf-8
-"""
+
+"""pyiwr is an advanced open-source library
+developed by researchers at the SIGMA Research
+Lab at IIT Indore. This powerful tool is
+designed to effortlessly convert raw ISRO
+Doppler Weather Radar (DWR) data files and
+Restructure dual-pol radar ISRO DWR NetCDF files
+into Py-ART compatible NetCDF files. pyiwr also
+provides a range of useful tools and visualization
+functions to facilitate working with and
+analyzing weather radar data.
+
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
 
@@ -31,7 +37,7 @@ from .utilities import (
 
 def raw2nc(dwr_path, save_file=False):
     """
-    "raw2nc" function takes in any raw dual-pol .dwr file
+    `raw2nc` function takes in any raw dual-pol .dwr file
     restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
     The user is provided with the advantage of choosing whether to save the file
     """
@@ -84,7 +90,7 @@ def raw2nc(dwr_path, save_file=False):
 
 def correctednc(file_path, save_file=False):
     """
-    "correctednc" function takes in any dual-pol NetCDF file.
+    `correctednc` function takes in any dual-pol NetCDF file.
     restructures it into a radar object to be visualized by pyiwr.
     makes it compatible with Py-ART.
     The user is provided with the advantage of choosing whether to save the file.
