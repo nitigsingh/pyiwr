@@ -5,7 +5,7 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
 
 ## Developers
 1. Nitig Singh, MS Research, SIGMA Research Lab, IIT Indore
-2. Vaibhav Tyagi, Ph.D. Research Scholare, SIGMA Research Lab, IIT Indore
+2. Vaibhav Tyagi, Ph.D. Research Scholar, SIGMA Research Lab, IIT Indore
 
 ## Table of Contents
 - [Home](index.md)
