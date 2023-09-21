@@ -9,7 +9,7 @@ Development Lead
 
 Contributors
 ------------
-Vaibhav Tyagi
-Hamid Ali Syed
+* Vaibhav Tyagi
+* Hamid Ali Syed
 
 None yet. Why not be the first?
