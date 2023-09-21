@@ -3,9 +3,11 @@
 '''
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
+@author3: Hamid Ali Syed
 
-@email: nitig14rdfsma[at]gmail[dot]com
-@email: vaibhavtyagi7191[at]gmail[dot]com
+@email1: nitig14rdfsma[at]gmail[dot]com
+@email2: vaibhavtyagi7191[at]gmail[dot]com
+
 '''
 
 import os
