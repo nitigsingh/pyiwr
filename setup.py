@@ -18,8 +18,8 @@ test_requirements = [
 
 setup(
     author="Nitig Singh, Vaibhav Tyagi, Hamid Ali Syed",
-    author_email="nitig14rdfsma@gmail.com, phd2201121012@iiti.ac.in and vaibhavtyagi7191@gmail.com",
-    python_requires=">=3.6",
+    author_email="nitig14rdfsma@gmail.com",
+    python_requires=">=3.9",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
