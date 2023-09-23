@@ -5,8 +5,8 @@ requires-python = ">=3.9"
 license = {file = "LICENSE"}
 keywords = ["pyiwr"]
 authors = [
-    {name = "Nitig Singh", email = " "},
-    {name = "Vaibhav Tyagi", email = " "},
+    {name = "Nitig Singh", email = "nitig14rdfsma@gmail.com"},
+    {name = "Vaibhav Tyagi", email = "vaibhavtyagi7191@gmail.com"},
     {name = "Hamid Ali Syed", email = "syed44@purdue.edu"}
 ]
 classifiers=[
