@@ -1,5 +1,0 @@
-pyart
-numpy
-xarray
-datetime
-matplotlib

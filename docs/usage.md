@@ -20,7 +20,7 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit)!!
   # Implementation
 
   The pyiwr architecture is designed as an user-friendly toolkit, specifically tailored to address the distinctive requirements of dual-pol DWR data analysis. The architecture of the two primary modules format\_transform and visualize serves a vital role in streamlining the radar data processing workflow as shown in figure below.
-  
+
 ![up_pyiwr](images/up_pyiwr.png)
 
 

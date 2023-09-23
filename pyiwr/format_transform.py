@@ -1,43 +1,48 @@
-print('''pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and Restructure dual-pol radar ISRO DWR NetCDF files into Py-ART compatible NetCDF files. pyiwr also provides a range of useful tools and visualization functions to facilitate working with and analyzing weather radar data.''')
-
 #!/usr/bin/env python
-# coding: utf-8
-'''
+
+"""pyiwr is an advanced open-source library
+developed by researchers at the SIGMA Research
+Lab at IIT Indore. This powerful tool is
+designed to effortlessly convert raw ISRO
+Doppler Weather Radar (DWR) data files and
+Restructure dual-pol radar ISRO DWR NetCDF files
+into Py-ART compatible NetCDF files. pyiwr also
+provides a range of useful tools and visualization
+functions to facilitate working with and
+analyzing weather radar data.
+
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
 
 @email: nitig14rdfsma[at]gmail[dot]com
 @email: vaibhavtyagi7191[at]gmail[dot]com
-'''
+"""
 
 import os
+import tempfile
+
 import pyart
 import pyart.map
-import datetime as dt
 import xarray as xr
-import tempfile
-import numpy as np
-import re
-from .utilities import fread
-from .utilities import raw_product_list
-from .utilities import raw_reshape_stack
-from .utilities import raw2object
-from .utilities import extract_start_time
-from .utilities import update_xarray_dataset
+
+from .utilities import (
+    raw2object,
+    raw_product_list,
+    update_xarray_dataset,
+)
 
 # "raw2nc" function takes in any raw dual-pol .dwr file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
 # The user is provided with the advantage of choosing whether to save the file
 
-def raw2nc(dwr_path, save_file=False):
 
+def raw2nc(dwr_path, save_file=False):
     """
-    "raw2nc" function takes in any raw dual-pol .dwr file
+    `raw2nc` function takes in any raw dual-pol .dwr file
     restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
     The user is provided with the advantage of choosing whether to save the file
-    """    
-    
-    if dwr_path[-3:] == 'dwr':
-          
+    """
+
+    if dwr_path[-3:] == "dwr":
         dat = raw_product_list(dwr_path)
         radar = raw2object(dwr_path, dat)
 
@@ -49,46 +54,54 @@ def raw2nc(dwr_path, save_file=False):
 
             # Specify the new file path
             filepath = os.path.basename(dwr_path)
-            new_file_name = f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+            new_file_name = (
+                f"new_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+            )
             new_file_path = os.path.join(nc_directory, new_file_name)
-            print('File', os.path.basename(dwr_path), 'converted successfully and saved in the "radar_ncfiles" folder')
-            pyart.io.write_cfradial(new_file_path, radar, format='NETCDF4')
+            print(
+                "File",
+                os.path.basename(dwr_path),
+                'converted successfully and saved in the "radar_ncfiles" folder',
+            )
+            pyart.io.write_cfradial(new_file_path, radar, format="NETCDF4")
             return pyart.io.read_cfradial(new_file_path)
 
         else:
             # Save the radar object to a temporary in-memory file
             with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
-                pyart.io.write_cfradial(tmp_file.name, radar, format='NETCDF4')
+                pyart.io.write_cfradial(tmp_file.name, radar, format="NETCDF4")
 
             # Read the data from the in-memory file and return the Py-ART radar object
             radar = pyart.io.read_cfradial(tmp_file.name)
 
             # Delete the temporary in-memory file
             os.remove(tmp_file.name)
-            print('File', os.path.basename(dwr_path), 'converted successfully')
+            print("File", os.path.basename(dwr_path), "converted successfully")
             return radar
 
     else:
         read = pyart.io.read(dwr_path)
         return read
 
+
 # "correctednc" function takes in any dual-pol NetCDF file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
 # The user is provided with the advantage of choosing whether to save the file
 
+
 def correctednc(file_path, save_file=False):
     """
-    "correctednc" function takes in any dual-pol NetCDF file.
+    `correctednc` function takes in any dual-pol NetCDF file.
     restructures it into a radar object to be visualized by pyiwr.
     makes it compatible with Py-ART.
     The user is provided with the advantage of choosing whether to save the file.
     Returns all corrected radar objects from any Cf/Radial object file.
     corrects all date and Time issues.
     resolves missing sweep ray index and updates metadata
-    """    
-    
+    """
+
     # Open the dataset
-    print('Processing file: ', os.path.basename(file_path))
-    raw = xr.open_dataset(file_path, decode_times=False) 
+    print("Processing file: ", os.path.basename(file_path))
+    raw = xr.open_dataset(file_path, decode_times=False)
     raw = update_xarray_dataset(file_path, raw, xg=raw)
     radar_pol = raw
     # Save the corrected xarray.Dataset to a temporary in-memory file
@@ -109,7 +122,11 @@ def correctednc(file_path, save_file=False):
         new_file_path = os.path.join(corrected_dir, new_file_name)
 
         radar_pol.to_netcdf(new_file_path)
-        print('File', os.path.basename(file_path), 'corrected and restructured successfully and saved in the newly added "corrected" folder in your file path')
+        print(
+            "File",
+            os.path.basename(file_path),
+            'corrected and restructured successfully and saved in the newly added "corrected" folder in your file path',
+        )
         return pyart.io.read_cfradial(new_file_path)
     else:
         # Save the corrected xarray.Dataset to a temporary in-memory file
@@ -121,21 +138,30 @@ def correctednc(file_path, save_file=False):
 
         # Delete the temporary in-memory file
         os.remove(tmp_file.name)
-        print('File', os.path.basename(file_path), 'corrected and restructured successfully')
+        print(
+            "File",
+            os.path.basename(file_path),
+            "corrected and restructured successfully",
+        )
         return radar
 
-# "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
-# The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids), 
+
+# "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF
+# file using Py-ART, which is then saved as a gridded Xarray object.
+# The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids),
 # and height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
 
-def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False):
+
+def sweeps2gridnc(
+    file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False
+):
     """
-    The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids), 
+    The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids),
     height in km to be considered for making grid levels for altitude and length of radar range with an option of saving this gridded data into NetCDF file format.
     Returns grid object from radar object.
-    "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object. 
-    
-    
+    "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object.
+
+
     grid_shape=(61, 500, 500), no. of bins of z,y,x respectively.
 
     height:(int) = 15, height in km
@@ -144,14 +170,14 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
     0.5 km vertical resolution
     1 km resolution horizontally
     radar installed at 1.313 km height
-    """    
-      
-    print('Processing file: ', os.path.basename(file_path))
+    """
+
+    print("Processing file: ", os.path.basename(file_path))
     # for files which are already gridded and needed to be just read
     if "gridded" in os.path.basename(file_path):
         xg0 = xr.open_dataset(file_path)
-    else:   # for gridding the CF/radial format
-        raw = xr.open_dataset(file_path, decode_times=False, engine='netcdf4')
+    else:  # for gridding the CF/radial format
+        raw = xr.open_dataset(file_path, decode_times=False, engine="netcdf4")
         raw = update_xarray_dataset(file_path, raw, xg=raw)
         # Decode the CF conventions of the dataset
         radar_pol = xr.decode_cf(raw)
@@ -163,25 +189,31 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
         radar = pyart.io.read_cfradial(tmp_file.name)
         # Read the data from the in-memory file and return the Py-ART radar object
         grid = pyart.map.grid_from_radars(
-            radar, grid_shape=grid_shape,
-            grid_limits=((0, height * 1e3),
-                         (-length * 1e3, length * 1e3),
-                         (-length * 1e3, length * 1e3)),
+            radar,
+            grid_shape=grid_shape,
+            grid_limits=(
+                (0, height * 1e3),
+                (-length * 1e3, length * 1e3),
+                (-length * 1e3, length * 1e3),
+            ),
             fields=radar.fields.keys(),
-            weighting_function='Barnes2',
-            min_radius=length)
+            weighting_function="Barnes2",
+            min_radius=length,
+        )
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
-        
+
         # Remove variables 'sweep_start_ray_index', 'sweep_end_ray_index' and 'time_coverage_start'
-        xg0 = xg0.drop_vars(['sweep_start_ray_index', 'sweep_end_ray_index', 'time_coverage_start'])
+        xg0 = xg0.drop_vars(
+            ["sweep_start_ray_index", "sweep_end_ray_index", "time_coverage_start"]
+        )
 
         # Remove attributes 'time_coverage_start' and 'units' from the 'time' variable
-        if 'time_coverage_start' in xg0.attrs:
-            del xg0.attrs['time_coverage_start']  
-        
-        if 'units' in xg0['time'].attrs:
-            del xg0['time'].attrs['units']
+        if "time_coverage_start" in xg0.attrs:
+            del xg0.attrs["time_coverage_start"]
+
+        if "units" in xg0["time"].attrs:
+            del xg0["time"].attrs["units"]
 
     if save_file and "gridded" not in os.path.basename(file_path):
         # Create the "updated" subdirectory if it doesn't exist
@@ -190,13 +222,24 @@ def sweeps2gridnc(file_path, grid_shape=(31, 501, 501), height=15, length=250, s
 
         # Specify the new file path
         filepath = os.path.basename(file_path)
-        new_file_name = f"gridded_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+        new_file_name = (
+            f"gridded_{filepath[:-4]}.nc"  # Remove the last 4 characters (.dwr)
+        )
         new_file_path = os.path.join(updated_dir, new_file_name)
 
         xg0.to_netcdf(new_file_path)
-        print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully and saved in', new_file_name,'in the newly added "gridded_radar_ncfiles" folder in your file path')
+        print(
+            "Xarray gridding of volumetric sweeps of radar PPI scan file:",
+            os.path.basename(file_path),
+            "done successfully and saved in",
+            new_file_name,
+            'in the newly added "gridded_radar_ncfiles" folder in your file path',
+        )
         return xg0
     else:
-        print('Xarray gridding of volumetric sweeps of radar PPI scan file:', os.path.basename(file_path), 'done successfully')
+        print(
+            "Xarray gridding of volumetric sweeps of radar PPI scan file:",
+            os.path.basename(file_path),
+            "done successfully",
+        )
         return xg0
-

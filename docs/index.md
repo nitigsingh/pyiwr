@@ -28,4 +28,3 @@ Welcome to the documentation for pyiwr (Python Indian Weather Radar Toolkit), an
 - [Citation](Citation.md)
 - [Acknowledgments](acknowledgments.md)
 
-
