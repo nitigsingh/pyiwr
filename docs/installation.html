@@ -397,9 +397,13 @@ document.write(`
 <p>Create a new Conda environment (named pyiwr in this example) with the required dependencies:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda create -n pyiwr python=3.9 jupyter git -c conda-forge<span class="w"> </span></div>
 </div>
-<p>Once you have a copy of the source, you can install it with:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>setup.py<span class="w"> </span>install
-</pre></div>
+<p>Activate the newly created Conda environment:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda activate pyiwr
+<span class="w"> </span></div>
+</div>
+  <p>Install pyiwr using pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install git+https://github.com/nitigsingh/pyiwr.git<span class="w"> </span></div>
+</div>
 </div>
 </section>
 </section>
