@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pyiwr &#8212; pyiwr</title>
+    <title>Cookbook &#8212; Cookbook</title>
        <style>
         body {
             text-align: center;
@@ -407,43 +407,33 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="pyiwr">
-<h1>pyiwr<a class="headerlink" href="#Cookbook1" title="Link to this heading">#</a></h1>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/pyiwr"><img alt="https://img.shields.io/pypi/v/pyiwr.svg" src="https://img.shields.io/pypi/v/pyiwr.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.com/nitigsingh/pyiwr"><img alt="https://img.shields.io/travis/nitigsingh/pyiwr.svg" src="https://img.shields.io/travis/nitigsingh/pyiwr.svg" /></a>
-<a class="reference external image-reference" href="https://pyiwr.readthedocs.io/en/latest/?version=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/pyiwr/badge/?version=latest" /></a>
-<p align="center"></p><section id="id1">
-<h2>pyiwr<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>pyiwr is an advanced open-source library developed by researchers at the
-SIGMA Research Lab at IIT Indore. This powerful tool is designed to
-effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and
-Restructure dual-pol radar ISRO-DWR NetCDF files into Py-ART compatible
-NetCDF files. pyiwr also provides a range of useful tools and
-visualization functions to facilitate working with and analyzing weather
-radar data. In addition, for further information, please consult the
-documentation available at <a class="reference external" href="https://nitigsingh.github.io/pyiwr">https://nitigsingh.github.io/pyiwr</a>.</p>
-<section id="features">
-<h3>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Converts raw ISRO Doppler Weather Radar (DWR) data files into Py-ART
-compatible NetCDF files.</p></li>
-<li><p>Restructures dual-pol dwr NetCDF files with missing data moments and
-attributes into Py-ART compatible NetCDF files.</p></li>
-<li><p>Converts radial sweeps format data into cartesian gridded data NetCDF
-files.</p></li>
-<li><p>Provides convenient tools for data processing and analysis.</p></li>
-<li><p>Offers visualization functions for better understanding and
-interpretation of radar data.</p></li>
-</ul>
+
+<p>This cookbook provides information about how to work with pyiwr using Python.</p> 
 </section>
-<section id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h3>
-<p>pyiwr can be installed as:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>pyiwr<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span>jupyter<span class="w"> </span>git<span class="w"> </span>-c<span class="w"> </span>conda-forge
+
+<section id="installation1">
+    <h3>Multiple output for single cell<a class="headerlink" href="#installation1" title="Link to this heading">#</a></h3>
+    <div class="highlight-shell notranslate">
+        <div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>pyiwr<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span>jupyter<span class="w"> </span>git<span class="w"> </span>-c<span class="w"> </span>conda-forge
 conda<span class="w"> </span>activate<span class="w"> </span>pyiwr
 pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/nitigsingh/pyiwr.git
 </pre></div>
-</div>
+    </div>
+
+    <div class="highlight-shell notranslate">
+        <div class="highlight"><pre><span></span># Displaying multiple output of a single cell
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity = "all"
+</pre></div>
+    </div>
 </section>
+
+
+			
+			
+			
+
+			
 <section id="note">
 <h3>Note:<a class="headerlink" href="#note" title="Link to this heading">#</a></h3>
 <p>As an active project, pyiwr seeks contributions from the research
