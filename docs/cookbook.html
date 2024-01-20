@@ -1,1 +1,836 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>f349dfacbb924e0bb5901d443784fff8</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div id="63176b4e-71e2-4366-bf86-8d8525a9f15e" class="cell markdown">
+<h1 id="pyiwr">PYIWR</h1>
+</div>
+<div id="df084c9f-b40f-4391-81a7-aeef64e47cac" class="cell markdown">
+<h2 id="importing-the-pyiwr-library">Importing the pyiwr Library</h2>
+</div>
+<div id="569e7e72-42db-44bc-8a8a-f61e020a84bb" class="cell code"
+data-execution_count="1" data-scrolled="true">
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyiwr</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>
+## You are using the Python ARM Radar Toolkit (Py-ART), an open source
+## library for working with weather radar data. Py-ART is partly
+## supported by the U.S. Department of Energy as part of the Atmospheric
+## Radiation Measurement (ARM) Climate Research Facility, an Office of
+## Science user facility.
+##
+## If you use this software to prepare a publication, please cite:
+##
+##     JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119
+
+</code></pre>
+</div>
+</div>
+<div id="b2564bc0-8689-46be-9902-4854ca5b624f" class="cell markdown">
+<h1 id="radar-object-formating-for-dual-pol-raw-dwr-file">Radar object
+formating for dual-pol raw dwr file</h1>
+</div>
+<div id="1e992d5e-e99f-4e74-b935-2fcb49bc185d" class="cell markdown">
+<h2 id="file-location">File location</h2>
+</div>
+<div id="60ed8334-3a32-4d70-aeb6-924b8f6a70a2" class="cell code">
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">&#39;/media/sigma/Backup Plus/Nitig/radar/Nitig_data/rawdwr/Files/cherrapunjee_weather_2021_08_06_00_37_26_dsfisro6n.dwr&#39;</span></span></code></pre></div>
+</div>
+<div id="30b4347d-002b-4ae7-8fcd-d63354b6e296" class="cell code"
+data-execution_count="2">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">&#39;cherrapunjee_weather_2021_08_06_00_37_26_dsfisro6n.dwr&#39;</span></span></code></pre></div>
+</div>
+<div id="ac0a7abe-652f-4b46-bde6-766522623043" class="cell code"
+data-execution_count="13">
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>radar <span class="op">=</span> pyiwr.format_transform.raw2nc (filename, save_file <span class="op">=</span> <span class="va">True</span>)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Processing file: cherrapunjee_weather_2021_08_06_00_37_26_dsfisro6n.dwr
+File cherrapunjee_weather_2021_08_06_00_37_26_dsfisro6n.dwr converted successfully and saved in the &quot;radar_ncfiles&quot; folder
+</code></pre>
+</div>
+</div>
+<div id="32f57846-92ad-4e49-b217-8406eb364f8e" class="cell code"
+data-execution_count="6">
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>radar.info()</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>altitude:
+	data: &lt;ndarray of type: int32 and shape: (1,)&gt;
+	long_name: Altitude
+	units: meters
+	standard_name: Altitude
+	positive: up
+altitude_agl: None
+antenna_transition:
+	data: &lt;ndarray of type: float64 and shape: (3600,)&gt;
+azimuth:
+	data: &lt;ndarray of type: float32 and shape: (3600,)&gt;
+	long_name: azimuth_angle_from_true_north
+	units: degrees
+	standard_name: beam_azimuth_angle
+	axis: radial_azimuth_coordinate
+	comment: Azimuth of antenna relative to true north
+elevation:
+	data: &lt;ndarray of type: float64 and shape: (3600,)&gt;
+	long_name: elevation_angle_from_horizontal_plane
+	units: degrees
+	standard_name: beam_elevation_angle
+	axis: radial_elevation_coordinate
+	comment: Elevation of antenna relative to the horizontal plane
+fields:
+	DBZ:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: dBZ
+		standard_name: equivalent_reflectivity_factor
+		Polarization: Horizontal
+	VEL:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: m/s
+		standard_name: radial_velocity_of_scatterers_away_from_instrument
+		Polarization: Horizontal
+	WIDTH:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: m/s
+		standard_name: doppler_spectrum_width
+		Polarization: Horizontal
+	ZDR:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: dB
+		standard_name: log_differential_reflectivity_hv
+		Polarization: Horizontal and Vertical
+	PHIDP:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: degrees
+		standard_name: differential_phase_hv
+		Polarization: Horizontal and Vertical
+	RHOHV:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: nan
+		units: unitless
+		standard_name: cross_correlation_ratio_hv
+		Polarization: Horizontal and Vertical
+fixed_angle:
+	data: &lt;ndarray of type: float32 and shape: (10,)&gt;
+	long_name: Target angle for sweep
+	units: degrees
+	standard_name: target_fixed_angle
+instrument_parameters: None
+latitude:
+	data: &lt;ndarray of type: float64 and shape: (1,)&gt;
+	long_name: Latitude
+	units: degrees_north
+	standard_name: Latitude
+longitude:
+	data: &lt;ndarray of type: float64 and shape: (1,)&gt;
+	long_name: Longitude
+	units: degrees_east
+	standard_name: Longitude
+nsweeps: 10
+ngates: 1600
+nrays: 3600
+radar_calibration: None
+range:
+	data: &lt;ndarray of type: float64 and shape: (1600,)&gt;
+	long_name: range_to_measurement_volume
+	units: meters
+	standard_name: projection_range_coordinate
+	axis: radial_range_coordinate
+	spacing_is_constant: true
+	comment: Coordinate variable for range. Range to center of each bin.
+scan_rate: None
+scan_type: ppi
+sweep_end_ray_index:
+	data: &lt;ndarray of type: int64 and shape: (10,)&gt;
+	long_name: Index of last ray in sweep, 0-based
+	units: count
+sweep_mode:
+	data: &lt;ndarray of type: |S1 and shape: (10, 32)&gt;
+	long_name: Sweep mode
+	units: unitless
+	standard_name: sweep_mode
+	comment: Options are: &quot;sector&quot;, &quot;coplane&quot;, &quot;rhi&quot;, &quot;vertical_pointing&quot;, &quot;idle&quot;, &quot;azimuth_surveillance&quot;, &quot;elevation_surveillance&quot;, &quot;sunscan&quot;, &quot;pointing&quot;, &quot;manual_ppi&quot;, &quot;manual_rhi&quot;
+sweep_number:
+	data: &lt;ndarray of type: int64 and shape: (10,)&gt;
+	long_name: Sweep number
+	units: count
+	standard_name: sweep_number
+sweep_start_ray_index:
+	data: &lt;ndarray of type: int64 and shape: (10,)&gt;
+	long_name: Index of first ray in sweep, 0-based
+	units: count
+target_scan_rate: None
+time:
+	data: &lt;ndarray of type: float64 and shape: (3600,)&gt;
+	long_name: time_in_seconds_since_volume_start
+	units: seconds since 2021-08-06T00:37:26Z
+	standard_name: time
+	calendar: gregorian
+metadata:
+	instrument_name: Cherrapunji S-band Dual-pol DWR
+	Created using: pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore
+	version: Version 1.0.0
+	title: Cherrapunji S-band Dual-pol DWR data
+	institution: ISRO
+	references: Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
+	source: DWR Short Volume Scan File (250km)
+	comment: 
+	Conventions: CF/Radial
+	history: DWR raw (6n.dwr) data file encoded into Py-ART compatible NetCDF file
+	field_names: DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
+	volume_number: 0
+	platform_type: fixed
+	instrument_type: radar
+	primary_axis: axis_z
+</code></pre>
+</div>
+</div>
+<div id="0436ea59-558d-46da-8f56-d0b0eda3a491" class="cell markdown">
+<h1 id="visualizations">Visualizations</h1>
+</div>
+<div id="e46e84b9-7af9-4ffd-9eea-00f82b37bd73" class="cell markdown">
+<h2 id="for-ppi-at-specific-elevation">For PPI at specific
+elevation</h2>
+</div>
+<div id="9925b6c5-7fba-46ad-b65c-3fc48de55c04" class="cell code"
+data-execution_count="7" data-scrolled="true">
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.elevation(radar, field_name<span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, elevation_index<span class="op">=</span><span class="dv">0</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>range_in_km<span class="op">=</span> <span class="va">True</span>, save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/402dfcad6d1ffb0b2f237040bab501c7524a080d.png" /></p>
+</div>
+</div>
+<div id="78b40eec-f1cd-4eeb-8f3e-c3e3379ed7c6" class="cell markdown">
+<h2 id="for-ppi-of-any-field-at-all-elevation">For PPI of any field at
+all elevation</h2>
+</div>
+<div id="13c52f97-cc2e-471b-97c1-5001af07cb8e" class="cell code"
+data-execution_count="8">
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.all_elevation(radar, field_name<span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>, range_in_km<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/95466e8b53546887d769f7df31881415e8e58c89.png" /></p>
+</div>
+</div>
+<div id="3ac9fc46-9043-4292-841c-df1cccb2e5e8" class="cell markdown">
+<h2 id="for-ppi-of-all-fields">For PPI of all fields</h2>
+</div>
+<div id="ef15b41f-da32-42ad-b329-edc7f1d55fd6" class="cell code"
+data-execution_count="10">
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.fields_elevation(radar, elevation_index<span class="op">=</span><span class="dv">0</span>, range_in_km<span class="op">=</span><span class="va">True</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/8f7b54a28902f9bec0a840cb95f4d9234fee168c.png" /></p>
+</div>
+</div>
+<div id="8fc1cb10-03c3-4ad3-8868-88420099b62f" class="cell markdown">
+<h1
+id="for-open-source-nc-files-needing-correction-or-restructuring">For
+open source nc files needing correction or restructuring</h1>
+</div>
+<div id="bdf7f220-659a-4333-bc98-1105981c8c93" class="cell markdown">
+<h2 id="file-location">File location</h2>
+</div>
+<div id="9e808b1f-18ce-489d-867d-c5f5051a8d19" class="cell code"
+data-execution_count="21">
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">&#39;/media/sigma/Backup Plus/Nitig/radar/Nitig_data/NC FILES/sweep10/RSCHR_02APR2022_133109_L2B_STD.nc&#39;</span></span></code></pre></div>
+</div>
+<div id="cbac583b-0c9e-49f5-8612-e1082dc24c62" class="cell code">
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#For mosdac nc files</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>radar <span class="op">=</span> pyiwr.format_transform.correctednc (filename, save_file <span class="op">=</span> <span class="va">False</span>)</span></code></pre></div>
+</div>
+<div id="1efe0c15-1572-44fd-9966-bd9ccee56a19" class="cell code"
+data-execution_count="22">
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>radar.info()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>radar.info()</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Processing file:  RSCHR_02APR2022_133109_L2B_STD.nc
+File RSCHR_02APR2022_133109_L2B_STD.nc corrected and restructured successfully
+altitude:
+	data: &lt;ndarray of type: float64 and shape: (1,)&gt;
+	_FillValue: nan
+	units: meters
+altitude_agl: None
+antenna_transition: None
+azimuth:
+	data: &lt;ndarray of type: float32 and shape: (3600,)&gt;
+	_FillValue: nan
+	standard_name: ray_azimuth_angle
+	units: degrees
+	long_name: azimuth_angle_from_true_north
+	axis: radial_azimuth_coordinate
+elevation:
+	data: &lt;ndarray of type: float32 and shape: (3600,)&gt;
+	_FillValue: nan
+	standard_name: ray_elevation_angle
+	units: degrees
+	long_name: elevation_angle_from_horizontal_plane
+	axis: radial_azimuth_coordinate
+fields:
+	DBZ:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: dBZ
+		standard_name: equivalent_reflectivity_factor
+		Polarization: Horizontal
+		coordinates: time range
+	VEL:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: m/s
+		standard_name: radial_velocity_of_scatterers_ away_from_instrument
+		Polarization: Horizontal
+		coordinates: time range
+	WIDTH:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: m/s
+		standard_name: doppler_spectrum_width
+		Polarization: Horizontal
+		coordinates: time range
+	ZDR:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: dB
+		standard_name: log_differential_reflectivity_hv
+		Polarization: Horizontal and Vertical
+		coordinates: time range
+	PHIDP:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: degrees
+		standard_name: differential_phase_hv
+		Polarization: Horizontal and Vertical
+		coordinates: time range
+	RHOHV:
+		data: &lt;ndarray of type: float32 and shape: (3600, 1600)&gt;
+		_FillValue: 0.0
+		units: 
+		standard_name: cross_correlation_ratio_hv
+		Polarization: Horizontal and Vertical
+		coordinates: time range
+fixed_angle:
+	data: &lt;ndarray of type: float32 and shape: (10,)&gt;
+	_FillValue: nan
+	units: degrees
+instrument_parameters: None
+latitude:
+	data: &lt;ndarray of type: float64 and shape: (1,)&gt;
+	_FillValue: nan
+	units: degrees_north
+longitude:
+	data: &lt;ndarray of type: float64 and shape: (1,)&gt;
+	_FillValue: nan
+	units: degrees_east
+nsweeps: 10
+ngates: 1600
+nrays: 3600
+radar_calibration: None
+range:
+	data: &lt;ndarray of type: float64 and shape: (1600,)&gt;
+	_FillValue: nan
+	standard_name: projection_range_coordinate
+	long_name: range_to_measurement_volume
+	units: meters
+	spacing_is_constant: true
+	meters_to_center_of_first_gate: true
+	axis: radial_range_coordinate
+scan_rate: None
+scan_type: ppi
+sweep_end_ray_index:
+	data: &lt;ndarray of type: int64 and shape: (10,)&gt;
+sweep_mode:
+	data: &lt;ndarray of type: |S1 and shape: (10, 32)&gt;
+sweep_number:
+	data: &lt;ndarray of type: int32 and shape: (10,)&gt;
+sweep_start_ray_index:
+	data: &lt;ndarray of type: int64 and shape: (10,)&gt;
+target_scan_rate: None
+time:
+	data: &lt;ndarray of type: float64 and shape: (3600,)&gt;
+	_FillValue: nan
+	standard_name: time
+	long_name: time_in_seconds_since_volume_start
+	units: seconds since 2022-04-02T13:31:09Z
+	calendar: gregorian
+metadata:
+	instrument_name: Cherrapunji S-band Dual-pol DWR
+	Created using: pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore
+	version: Version 1.0.0
+	title: Cherrapunji S-band Dual-pol DWR data
+	institution: ISRO
+	references: Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
+	source: DWR volume scan data
+	comment: 
+	Conventions: CF/Radial
+	field_names: DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
+	history: DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
+	volume_number: 0
+	platform_type: fixed
+	instrument_type: radar
+	primary_axis: axis_z
+</code></pre>
+</div>
+</div>
+<div id="c22a547e-ffd2-4dff-9583-f2b942dd293b" class="cell markdown">
+<h1 id="visualizations">Visualizations</h1>
+</div>
+<div id="ca507b06-05f1-47ea-b7ca-ef28dc8259cf" class="cell markdown">
+<h2 id="for-ppi-at-specific-elevation">For PPI at specific
+elevation</h2>
+</div>
+<div id="9bae65c4-9ed2-4fda-a074-4446e2922519" class="cell code"
+data-execution_count="24" data-scrolled="true">
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.elevation(radar, field_name<span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, elevation_index<span class="op">=</span><span class="dv">0</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>range_in_km<span class="op">=</span> <span class="va">True</span>, save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/9c9c31c90ac40fb68ea0fa1200b5c86d35fd078d.png" /></p>
+</div>
+</div>
+<div id="59a8c3ad-373a-4eab-a5e4-e4165e9dea37" class="cell markdown">
+<h2 id="for-ppi-of-any-field-at-all-elevation">For PPI of any field at
+all elevation</h2>
+</div>
+<div id="9700315f-4b6b-4cb5-9d3a-8d9ab4779939" class="cell code"
+data-execution_count="25">
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.all_elevation(radar, field_name<span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>, range_in_km<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/90cc479f77a428a2b48d547e6e860db3ae559dda.png" /></p>
+</div>
+</div>
+<div id="cf444ba0-39c2-496f-8a0e-b97740ca1a82" class="cell markdown">
+<h2 id="for-ppi-of-all-fields">For PPI of all fields</h2>
+</div>
+<div id="c1bc0d71-74e9-4472-9ea8-33c07cc430ac" class="cell code"
+data-execution_count="26">
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.fields_elevation(radar, elevation_index<span class="op">=</span><span class="dv">0</span>, range_in_km<span class="op">=</span><span class="va">True</span>, rings<span class="op">=</span><span class="va">True</span>, grid<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>save_image<span class="op">=</span> <span class="va">False</span>, img_name<span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/584e9670924c810718d3b5dfec91bf98e58b8f28.png" /></p>
+</div>
+</div>
+<div id="28cb9292-8840-40a4-a811-94f88e88e27d" class="cell markdown">
+<h1
+id="for-gridded-objects-nc-file-from-a-radar-object-netcdf-files">For
+gridded objects NC file from a radar object NetCDF files</h1>
+</div>
+<div id="47a84ff5-164d-4c4d-b977-c76a4d5a5a2b" class="cell markdown">
+<h2 id="file-location">File location</h2>
+</div>
+<div id="d0106b3d-f07a-4b49-99a6-cd75829c574a" class="cell code"
+data-execution_count="27">
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>xarray_grids <span class="op">=</span> pyiwr.format_transform.sweeps2gridnc (filename, grid_shape <span class="op">=</span>(<span class="dv">81</span> , <span class="dv">501</span> , <span class="dv">501</span>) , height <span class="op">=</span><span class="dv">20</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>, length <span class="op">=</span><span class="dv">250</span> , save_file <span class="op">=</span> <span class="va">False</span>)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Processing file:  RSCHR_02APR2022_133109_L2B_STD.nc
+Xarray gridding of volumetric sweeps of radar PPI scan file: RSCHR_02APR2022_133109_L2B_STD.nc done successfully
+</code></pre>
+</div>
+</div>
+<div id="f4753ca6-aee1-4778-8a2e-612451c958a9" class="cell code"
+data-execution_count="28" data-scrolled="true">
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>xarray_grids.info()</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>xarray.Dataset {
+dimensions:
+	time = 1 ;
+	z = 81 ;
+	y = 501 ;
+	x = 501 ;
+
+variables:
+	object time(time) ;
+	float64 z(z) ;
+		z:standard_name = projection_z_coordinate ;
+		z:long_name = Z distance on the projection plane from the origin ;
+		z:axis = Z ;
+		z:units = m ;
+		z:positive = up ;
+	float64 lat(y, x) ;
+		lat:long_name = latitude of grid cell center ;
+		lat:units = degree_N ;
+		lat:standard_name = Latitude ;
+	float64 lon(y, x) ;
+		lon:long_name = longitude of grid cell center ;
+		lon:units = degree_E ;
+		lon:standard_name = Longitude ;
+	float64 y(y) ;
+		y:standard_name = projection_y_coordinate ;
+		y:long_name = Y distance on the projection plane from the origin ;
+		y:axis = Y ;
+		y:units = m ;
+	float64 x(x) ;
+		x:standard_name = projection_x_coordinate ;
+		x:long_name = X distance on the projection plane from the origin ;
+		x:axis = X ;
+		x:units = m ;
+	float32 DBZ(time, z, y, x) ;
+		DBZ:_FillValue = 0.0 ;
+		DBZ:units = dBZ ;
+		DBZ:standard_name = equivalent_reflectivity_factor ;
+		DBZ:Polarization = Horizontal ;
+		DBZ:coordinates = time range ;
+	float32 VEL(time, z, y, x) ;
+		VEL:_FillValue = 0.0 ;
+		VEL:units = m/s ;
+		VEL:standard_name = radial_velocity_of_scatterers_ away_from_instrument ;
+		VEL:Polarization = Horizontal ;
+		VEL:coordinates = time range ;
+	float32 WIDTH(time, z, y, x) ;
+		WIDTH:_FillValue = 0.0 ;
+		WIDTH:units = m/s ;
+		WIDTH:standard_name = doppler_spectrum_width ;
+		WIDTH:Polarization = Horizontal ;
+		WIDTH:coordinates = time range ;
+	float32 ZDR(time, z, y, x) ;
+		ZDR:_FillValue = 0.0 ;
+		ZDR:units = dB ;
+		ZDR:standard_name = log_differential_reflectivity_hv ;
+		ZDR:Polarization = Horizontal and Vertical ;
+		ZDR:coordinates = time range ;
+	float32 PHIDP(time, z, y, x) ;
+		PHIDP:_FillValue = 0.0 ;
+		PHIDP:units = degrees ;
+		PHIDP:standard_name = differential_phase_hv ;
+		PHIDP:Polarization = Horizontal and Vertical ;
+		PHIDP:coordinates = time range ;
+	float32 RHOHV(time, z, y, x) ;
+		RHOHV:_FillValue = 0.0 ;
+		RHOHV:units =  ;
+		RHOHV:standard_name = cross_correlation_ratio_hv ;
+		RHOHV:Polarization = Horizontal and Vertical ;
+		RHOHV:coordinates = time range ;
+	float32 ROI(time, z, y, x) ;
+		ROI:standard_name = radius_of_influence ;
+		ROI:long_name = Radius of influence for mapping ;
+		ROI:units = m ;
+		ROI:least_significant_digit = 1 ;
+		ROI:_FillValue = -9999.0 ;
+
+// global attributes:
+	:instrument_name = Cherrapunji S-band Dual-pol DWR ;
+	:Created using = pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore ;
+	:version = Version 1.0.0 ;
+	:title = Cherrapunji S-band Dual-pol DWR data ;
+	:institution = ISRO ;
+	:references = Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html ;
+	:source = DWR volume scan data ;
+	:comment =  ;
+	:Conventions = CF/Radial ;
+	:field_names = DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV ;
+	:history = DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file ;
+	:volume_number = 0 ;
+	:platform_type = fixed ;
+	:instrument_type = radar ;
+	:primary_axis = axis_z ;
+}</code></pre>
+</div>
+</div>
+<div id="ae914599-acf0-476a-b667-66a1dfdadf4d" class="cell markdown">
+<h2 id="for-cappi-in-cartesian-plane">For CAPPI in cartesian plane.</h2>
+</div>
+<div id="1dbf9d3d-5428-482b-bdf2-28a418ecadc5" class="cell code"
+data-execution_count="83">
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.cappi(xarray_grids, altitude_level <span class="op">=</span><span class="dv">3</span>, field_name <span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, radar_location <span class="op">=</span><span class="st">&#39;CHERRAPUNJI&#39;</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>grid<span class="op">=</span><span class="va">True</span>, rings <span class="op">=</span><span class="va">False</span>, ticks_in_km <span class="op">=</span><span class="va">True</span>, save_image <span class="op">=</span><span class="va">False</span>, img_name <span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/8205e5b3bdf25715a1ae149bfc6ca17c88f8b5a6.png" /></p>
+</div>
+</div>
+<div id="10a6d0f2-0793-4ac6-a4a4-c02f6a31f624" class="cell markdown">
+<h2 id="for-max-cappi-in-cartesian-plane">For MAX CAPPI in cartesian
+plane</h2>
+</div>
+<div id="d4b4d926-0a26-45ec-9466-20aed410f196" class="cell code"
+data-execution_count="82">
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.cappi_max(xarray_grids, field_name <span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, radar_location <span class="op">=</span><span class="st">&#39;CHERRAPUNJI&#39;</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>grid<span class="op">=</span><span class="va">True</span>, rings <span class="op">=</span><span class="va">False</span>, ticks_in_km <span class="op">=</span><span class="va">True</span>, save_image <span class="op">=</span><span class="va">False</span>, img_name <span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/c88db81bc2047d259772357add7da8226ccbdfe7.png" /></p>
+</div>
+</div>
+<div id="5d18aa83-9be0-4ffb-96cf-e4d3bc014a9a" class="cell markdown">
+<h2
+id="for-max-cappi-with-marginal-cross-sections-in-cartesian-plane">For
+MAX CAPPI (with marginal cross-sections) in cartesian plane</h2>
+</div>
+<div id="86e517fd-e35f-4961-ad6c-3c41658e491b" class="cell code"
+data-execution_count="38">
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.marginal_max(xarray_grids, field_name <span class="op">=</span><span class="st">&#39;DBZ&#39;</span>, radar_location <span class="op">=</span><span class="st">&#39;CHERRAPUNJI&#39;</span>, rings</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">=</span><span class="va">True</span>, grid <span class="op">=</span><span class="va">True</span>, cross_sections <span class="op">=</span><span class="va">True</span>, save_image <span class="op">=</span><span class="va">False</span>, img_name <span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_884c7a5bd0a241979cff64ba1bc48359/af362e9996dda0dc3d365f30f9b58d193e93c777.png" /></p>
+</div>
+</div>
+<div id="08488641-678e-4bd0-b062-963cfe6f24d2" class="cell markdown">
+<h2 id="for-max-cappi-with-marginal-cross-sections-with-map">For MAX
+CAPPI (with marginal cross-sections) with map</h2>
+</div>
+<div id="049f4b47-d058-423d-b51a-206e1176c42b" class="cell code">
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pyiwr.visualize.marginal_max_map(xarray_grids, radar_location <span class="op">=</span> <span class="st">&#39;CHERRAPUNJI&#39;</span>, field_name <span class="op">=</span><span class="st">&#39;DBZ&#39;</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>background <span class="op">=</span><span class="st">&#39;terrain-background&#39;</span>, cross_sections <span class="op">=</span> <span class="va">False</span>, save_image <span class="op">=</span> <span class="va">False</span>, img_name <span class="op">=</span><span class="st">&#39;img.png&#39;</span>)</span></code></pre></div>
+</div>
+<div id="1afa8695-88ac-4581-a287-2482ded08dc4" class="cell markdown">
+<h1 id="thank-you">Thank You</h1>
+</div>
+</body>
+</html>
 
