@@ -408,22 +408,62 @@ document.write(`
 
                 </article>
               
+<style>
+  .photo-container {
+    display: flex;
+    gap: 20px; /* Adjust the gap between photo and text */
+  }
+
+  .photo {
+    text-align: center;
+  }
+
+  .photo img {
+    width: 100px; /* Adjust the width of the photo as needed */
+    height: auto;
+  }
+
+  .biography {
+    max-width: 300px; /* Set a maximum width for the biography text */
+  }
+</style>
+
 <article class="bd-article" role="main">
-    <!-- Photo Gallery -->
+  <section id="credits">
+    <h1>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h1>
+    <section id="development-lead">
+      <h2>Developers<a class="headerlink" href="#development-lead" title="Link to this heading">#</a></h2>
+      <!-- Developers list here -->
+    </section>
+    <section id="contributors">
+      <h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+      <!-- Contributors list here -->
+    </section>
+
+    <!-- Photo Gallery with Biography -->
     <div class="photo-container">
       <div class="photo">
         <img src="images/111271607.jpg" alt="Person 1">
         <p>Name 1</p>
       </div>
+      <div class="biography">
+        <p>Biography for Person 1 goes here...</p>
+      </div>
+    </div>
+
+    <div class="photo-container">
       <div class="photo">
         <img src="images/111271607.jpg" alt="Person 2">
         <p>Name 2</p>
+      </div>
+      <div class="biography">
+        <p>Vaibhav Tyagi received the M.Sc. degree in Physics from Indian Institute of Technology Palakkad, India in 2022. During his Master's research thesis, he developed an interest in atmospheric sciences. He is currently working towards the Ph.D. degree in Radar Meteorology with Dr. Saurabh Das, Assistant Professor, Department of Astronomy Astrophysics and Space Engineering, Indian Institute of Technology Indore, India.</p>
       </div>
     </div>
     <!-- End of Photo Gallery -->
 
   </section>
-</article>              
+</article>           
               
               
               
