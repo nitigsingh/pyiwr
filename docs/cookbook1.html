@@ -458,7 +458,165 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 ##     JJ Helmus and SM Collis, JORS 2016, doi: 10.5334/jors.119</code></pre>
 
 
-			
+“Data Source : MOSDAC/SAC/ISRO. <span class="hljs-keyword">https</span>://mosdac.gov.<span class="hljs-keyword">in</span>”
+</code></pre><h1 id="dual-polarized-dwr-files">Dual - Polarized DWR FILES</h1>
+<p>“Data Source : MOSDAC/SAC/ISRO. <a href="https://mosdac.gov.in”">https://mosdac.gov.in”</a></p>
+<h2 id="defining-file-path">Defining File Path</h2>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> <span class="hljs-built_in">os</span>
+file_path = <span class="hljs-string">'D:\\test_data\\dwr'</span>
+file_list = <span class="hljs-built_in">os</span>.listdir(file_path)
+file_list
+</code></pre>
+<pre><code>[<span class="hljs-symbol">'RCTLS_30NOV2017_025502_L2B_STD.nc</span>',
+ <span class="hljs-symbol">'RCTLS_30NOV2017_061521_L2B_STD.nc</span>',
+ <span class="hljs-symbol">'RSCHR_11JUL2019_023140_L2B_STD.nc</span>',
+ <span class="hljs-symbol">'RSCHR_24MAR2022_004350_L2B_STD.nc</span>',
+ <span class="hljs-symbol">'RSSHR_11JUL2019_193241_L2B_STD.nc</span>',
+ <span class="hljs-symbol">'RSSHR_11JUL2019_195339_L2B_STD.nc</span>']
+</code></pre><pre><code class="lang-python"><span class="hljs-comment"># Access files by indexing the list</span>
+<span class="hljs-comment"># For example, to access the file in the list:</span>
+<span class="hljs-attr">filenamel1</span> = os.path.join(file_path, file_list[<span class="hljs-number">6</span>])
+<span class="hljs-attr">filenamel2</span> = os.path.join(file_path, file_list[<span class="hljs-number">7</span>])
+<span class="hljs-attr">filenamel3</span> = os.path.join(file_path, file_list[<span class="hljs-number">2</span>])
+<span class="hljs-attr">filenamel4</span> = os.path.join(file_path, file_list[<span class="hljs-number">3</span>])
+<span class="hljs-attr">filenamel5</span> = os.path.join(file_path, file_list[<span class="hljs-number">4</span>])
+<span class="hljs-attr">filenamel6</span> = os.path.join(file_path, file_list[<span class="hljs-number">5</span>])
+</code></pre>
+<h2 id="terls-radar">TERLS RADAR</h2>
+<h2 id="reading-content-of-file-and-making-radar-object">Reading content of file and making radar object</h2>
+<pre><code class="lang-python">radar = pyiwr<span class="hljs-selector-class">.format_transform</span><span class="hljs-selector-class">.correctednc</span>(filenamel4, save_file=False)
+radar.info()
+</code></pre>
+<pre><code>Processing file:  RCTLS_30NOV2017_061521_L2B_STD.nc
+Date Time of Mosdac File RCTLS_30NOV2017_061521_L2B_STD.nc corrected successfully
+<span class="hljs-attr">altitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">altitude_agl:</span> None
+<span class="hljs-attr">antenna_transition:</span> None
+<span class="hljs-attr">azimuth:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_azimuth_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> azimuth_angle_from_true_north
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">elevation:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_elevation_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> elevation_angle_from_horizontal_plane
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">fields:</span>
+<span class="hljs-attr">    DBZ:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dBZ
+<span class="hljs-attr">        standard_name:</span> equivalent_reflectivity_factor
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    VEL:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> radial_velocity_of_scatterers_ away_from_instrument
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    WIDTH:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> doppler_spectrum_width
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    ZDR:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dB
+<span class="hljs-attr">        standard_name:</span> log_differential_reflectivity_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    PHIDP:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> degrees
+<span class="hljs-attr">        standard_name:</span> differential_phase_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    RHOHV:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span>
+<span class="hljs-attr">        standard_name:</span> cross_correlation_ratio_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">fixed_angle:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">instrument_parameters:</span> None
+<span class="hljs-attr">latitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_north
+<span class="hljs-attr">longitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_east
+<span class="hljs-attr">nsweeps:</span> <span class="hljs-number">11</span>
+<span class="hljs-attr">ngates:</span> <span class="hljs-number">1600</span>
+<span class="hljs-attr">nrays:</span> <span class="hljs-number">3960</span>
+<span class="hljs-attr">radar_calibration:</span> None
+<span class="hljs-attr">range:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> projection_range_coordinate
+<span class="hljs-attr">    long_name:</span> range_to_measurement_volume
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">    spacing_is_constant:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    meters_to_center_of_first_gate:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    axis:</span> radial_range_coordinate
+<span class="hljs-attr">scan_rate:</span> None
+<span class="hljs-attr">scan_type:</span> ppi
+<span class="hljs-attr">sweep_end_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_mode:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: |S1 and shape: (<span class="hljs-number">11</span>, <span class="hljs-number">32</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_number:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int32 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_start_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">target_scan_rate:</span> None
+<span class="hljs-attr">time:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> time
+<span class="hljs-attr">    long_name:</span> time_in_seconds_since_volume_start
+<span class="hljs-attr">    units:</span> seconds since <span class="hljs-number">2017</span><span class="hljs-bullet">-11</span><span class="hljs-bullet">-30</span>T06:<span class="hljs-number">15</span>:<span class="hljs-number">21</span>
+<span class="hljs-attr">    calendar:</span> gregorian
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">    instrument_name:</span> TERLS C-band Dual-pol DWR
+    Created using: pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore
+<span class="hljs-attr">    version:</span> Version <span class="hljs-number">1.0</span>
+<span class="hljs-attr">    title:</span> TERLS C-band DWR data
+<span class="hljs-attr">    institution:</span> ISRO
+<span class="hljs-attr">    references:</span> Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
+<span class="hljs-attr">    source:</span> DWR volume scan data
+<span class="hljs-attr">    comment:</span>
+<span class="hljs-attr">    Conventions:</span> CF/Radial
+<span class="hljs-attr">    field_names:</span> DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
+<span class="hljs-attr">    history:</span> DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
+<span class="hljs-attr">    volume_number:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">    platform_type:</span> fixed
+<span class="hljs-attr">    instrument_type:</span> radar
+<span class="hljs-attr">    primary_axis:</span> axis_z
+</code></pre><h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h2 id="ppi-plot-of-any-radar-field-at-any-given-elevation-angle">PPI Plot of any Radar Field at any given elevation angle</h2>
+<pre><code class="lang-python">pyiwr.visualize.elevation(radar, <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">elevation_index=0,</span> <span class="hljs-attr">rings=True,</span> <span class="hljs-attr">grid=True,</span>
+                                                  <span class="hljs-attr">range_in_km=True,</span> <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terls_dbz0.png')</span>
+</code></pre>			
 
 
 
