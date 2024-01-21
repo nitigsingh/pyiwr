@@ -656,22 +656,418 @@ Data variables:
     RHOHV    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
     ROI      (time, z, y, x) float32 9.258e+03 9.24e+03 ... 1.024e+04 1.026e+04</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-868edd94-ea21-4d44-a83f-219a34c76200' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-868edd94-ea21-4d44-a83f-219a34c76200' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 1</li><li><span class='xr-has-index'>z</span>: 81</li><li><span class='xr-has-index'>y</span>: 501</li><li><span class='xr-has-index'>x</span>: 501</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-cb3af151-f448-4e0e-a582-5c1aba7cbb21' class='xr-section-summary-in' type='checkbox'  checked><label for='section-cb3af151-f448-4e0e-a582-5c1aba7cbb21' class='xr-section-summary' >Coordinates: <span>(6)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>2017-11-30 06:15:21.055556</div><input id='attrs-828ca7a2-08c7-4974-b2cd-2c6ce801b09a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-828ca7a2-08c7-4974-b2cd-2c6ce801b09a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-bbe3e4ab-77be-4e15-b0f8-93126a047fc7' class='xr-var-data-in' type='checkbox'><label for='data-bbe3e4ab-77be-4e15-b0f8-93126a047fc7' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([cftime.DatetimeGregorian(2017, 11, 30, 6, 15, 21, 55556, has_year_zero=False)],
 
-	
+<h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h3 id="cappi-3km">CAPPI@3km</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi(xg, <span class="hljs-attr">altitude_level=3,</span> <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">radar_location='TERLS',</span> <span class="hljs-attr">grid=False,</span> <span class="hljs-attr">rings=False,</span>
+                                                           <span class="hljs-attr">ticks_in_km=True,</span> <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terlsdbz_cappi3.png')</span>
+</code></pre>
+<p><img src="images/output_22_0.png" alt="png"></p>
+<h3 id="maxz-cappi">MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi_max(xg, field_name=<span class="hljs-symbol">'DBZ</span>', radar_location=<span class="hljs-symbol">'TERLS</span>', grid=<span class="hljs-literal">True</span>, rings=<span class="hljs-literal">True</span>, ticks_in_km=<span class="hljs-literal">True</span>,
+                                                          save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_maxcappi.png</span>')
+</code></pre>
+<p><img src="images/output_24_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi">Marginal Distribution of MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.marginal_max(xg, radar_location=<span class="hljs-symbol">'TERLS</span>', field_name=<span class="hljs-symbol">'DBZ</span>', rings=<span class="hljs-literal">True</span>, grid=<span class="hljs-literal">True</span>, cross_sections=<span class="hljs-literal">True</span>,
+                                                           save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_margmax.png</span>')
+</code></pre>
+<p><img src="images/output_26_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi-with-background-map">Marginal Distribution of MAXZ CAPPI with background map</h3>
+<pre><code class="lang-python">pyiwr<span class="hljs-selector-class">.visualize</span><span class="hljs-selector-class">.marginal_max_map</span>(xg, radar_location=<span class="hljs-string">'TERLS'</span>, field_name=<span class="hljs-string">'DBZ'</span>, <span class="hljs-attribute">background</span>=<span class="hljs-string">'terrain-background'</span>,
+                                                           cross_sections=True, save_image=False, img_name=None)
+</code></pre>
+<p><img src="images/output_28_0.png" alt="png"></p>
+<h2 id="reading-content-of-file-and-making-radar-object">Reading content of file and making radar object</h2>
+<h2 id="cherrapunjee-radar">CHERRAPUNJEE RADAR</h2>
+<pre><code class="lang-python">radar1 = pyiwr<span class="hljs-selector-class">.format_transform</span><span class="hljs-selector-class">.correctednc</span>(filenamel5, save_file=False)
+radar1.info()
+</code></pre>
+<pre><code>Processing file:  RSCHR_11JUL2019_023140_L2B_STD.nc
+Date Time of Mosdac File RSCHR_11JUL2019_023140_L2B_STD.nc corrected successfully
+<span class="hljs-attr">altitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">altitude_agl:</span> None
+<span class="hljs-attr">antenna_transition:</span> None
+<span class="hljs-attr">azimuth:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_azimuth_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> azimuth_angle_from_true_north
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">elevation:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_elevation_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> elevation_angle_from_horizontal_plane
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">fields:</span>
+<span class="hljs-attr">    DBZ:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dBZ
+<span class="hljs-attr">        standard_name:</span> equivalent_reflectivity_factor
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    VEL:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> radial_velocity_of_scatterers_ away_from_instrument
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    WIDTH:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> doppler_spectrum_width
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    ZDR:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dB
+<span class="hljs-attr">        standard_name:</span> log_differential_reflectivity_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    PHIDP:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> degrees
+<span class="hljs-attr">        standard_name:</span> differential_phase_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    RHOHV:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3600</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span>
+<span class="hljs-attr">        standard_name:</span> cross_correlation_ratio_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">fixed_angle:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">10</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">instrument_parameters:</span> None
+<span class="hljs-attr">latitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_north
+<span class="hljs-attr">longitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_east
+<span class="hljs-attr">nsweeps:</span> <span class="hljs-number">10</span>
+<span class="hljs-attr">ngates:</span> <span class="hljs-number">1600</span>
+<span class="hljs-attr">nrays:</span> <span class="hljs-number">3600</span>
+<span class="hljs-attr">radar_calibration:</span> None
+<span class="hljs-attr">range:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> projection_range_coordinate
+<span class="hljs-attr">    long_name:</span> range_to_measurement_volume
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">    spacing_is_constant:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    meters_to_center_of_first_gate:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    axis:</span> radial_range_coordinate
+<span class="hljs-attr">scan_rate:</span> None
+<span class="hljs-attr">scan_type:</span> ppi
+<span class="hljs-attr">sweep_end_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">10</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_mode:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: |S1 and shape: (<span class="hljs-number">10</span>, <span class="hljs-number">32</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_number:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int32 and shape: (<span class="hljs-number">10</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_start_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">10</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">target_scan_rate:</span> None
+<span class="hljs-attr">time:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">3600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> time
+<span class="hljs-attr">    long_name:</span> time_in_seconds_since_volume_start
+<span class="hljs-attr">    units:</span> seconds since <span class="hljs-number">2019</span><span class="hljs-bullet">-07</span><span class="hljs-bullet">-11</span>T02:<span class="hljs-number">31</span>:<span class="hljs-number">40</span>
+<span class="hljs-attr">    calendar:</span> gregorian
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">    instrument_name:</span> Cherrapunji S-band Dual-pol DWR
+    Created using: pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore
+<span class="hljs-attr">    version:</span> Version <span class="hljs-number">1.0</span>
+<span class="hljs-attr">    title:</span> Cherrapunji SDWR data
+<span class="hljs-attr">    institution:</span> ISRO
+<span class="hljs-attr">    references:</span> Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
+<span class="hljs-attr">    source:</span> DWR volume scan data
+<span class="hljs-attr">    comment:</span>
+<span class="hljs-attr">    Conventions:</span> CF/Radial
+<span class="hljs-attr">    field_names:</span> DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
+<span class="hljs-attr">    history:</span> DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
+<span class="hljs-attr">    volume_number:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">    platform_type:</span> fixed
+<span class="hljs-attr">    instrument_type:</span> radar
+<span class="hljs-attr">    primary_axis:</span> axis_z
+</code></pre><h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h2 id="ppi-plot-of-any-radar-field-at-any-given-elevation-angle">PPI Plot of any Radar Field at any given elevation angle</h2>
+<pre><code class="lang-python">pyiwr.visualize.elevation(radar1, <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">elevation_index=0,</span> <span class="hljs-attr">rings=True,</span> <span class="hljs-attr">grid=True,</span>
+                                                 <span class="hljs-attr">range_in_km=True,</span> <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terls_dbz0.png')</span>
+</code></pre>
+<p><img src="images/output_34_0.png" alt="png"></p>
+<h2 id="ppi-plots-at-all-elevation-angle-of-any-radar-field">PPI Plots at all elevation angle of any Radar Field</h2>
+<pre><code class="lang-python">pyiwr.visualize.all_elevation(radar1, field_name=<span class="hljs-symbol">'DBZ</span>', rings=<span class="hljs-literal">True</span>, grid=<span class="hljs-literal">True</span>, range_in_km=<span class="hljs-literal">True</span>,
+                                                               save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terls_dbzall.png</span>')
+</code></pre>
+<p><img src="images/output_36_0.png" alt="png"></p>
+<h2 id="ppi-plots-of-all-radar-fields-at-any-given-elevation-angle">PPI Plots of all Radar Fields at any given elevation angle</h2>
+<pre><code class="lang-python">pyiwr.visualize.fields_elevation(radar1, <span class="hljs-attr">elevation_index=0,</span> <span class="hljs-attr">range_in_km=True,</span> <span class="hljs-attr">rings=True,</span> <span class="hljs-attr">grid=True,</span>
+                                                                 <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terls_fieldall.png')</span>
+</code></pre>
+<p><img src="images/output_38_0.png" alt="png"></p>
+<h2 id="reading-content-of-file-and-making-grid-object">Reading content of file and making grid object</h2>
+<pre><code class="lang-python">xg1 = pyiwr.format_transform.sweeps2gridnc(filenamel5, grid_shape=(<span class="hljs-number">81</span>, <span class="hljs-number">501</span>, <span class="hljs-number">501</span>), height=<span class="hljs-number">20</span>, length=<span class="hljs-number">250</span>, save_file=False)
+xg1
+</code></pre>
+<pre><code>Processing <span class="hljs-built_in">file</span>:  RSCHR_11JUL2019_023140_L2B_STD.nc
+Xarray gridding <span class="hljs-keyword">of</span> volumetric sweeps <span class="hljs-keyword">of</span> radar PPI scan <span class="hljs-built_in">file</span>: RSCHR_11JUL2019_023140_L2B_STD.nc done successfully
+</code></pre><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
+Dimensions:  (time: 1, z: 81, y: 501, x: 501)
+Coordinates:
+  </em> time     (time) object 2019-07-11 02:31:40.055556
+  <em> z        (z) float64 0.0 250.0 500.0 750.0 ... 1.95e+04 1.975e+04 2e+04
+    lat      (y) float64 23.0 23.01 23.02 23.03 23.04 ... 27.47 27.48 27.49 27.5
+    lon      (x) float64 89.29 89.3 89.31 89.32 ... 94.15 94.16 94.17 94.18
+  </em> y        (y) float64 -2.5e+05 -2.49e+05 -2.48e+05 ... 2.49e+05 2.5e+05
+  * x        (x) float64 -2.5e+05 -2.49e+05 -2.48e+05 ... 2.49e+05 2.5e+05
+Data variables:
+    DBZ      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    VEL      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    WIDTH    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    ZDR      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    PHIDP    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    RHOHV    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    ROI      (time, z, y, x) float32 9.258e+03 9.24e+03 ... 1.024e+04 1.026e+04</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-54e2ead2-3eb7-46d6-b27c-af14977f5771' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-54e2ead2-3eb7-46d6-b27c-af14977f5771' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 1</li><li><span class='xr-has-index'>z</span>: 81</li><li><span class='xr-has-index'>y</span>: 501</li><li><span class='xr-has-index'>x</span>: 501</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-b5db01ec-1b51-47c8-9991-5991335579af' class='xr-section-summary-in' type='checkbox'  checked><label for='section-b5db01ec-1b51-47c8-9991-5991335579af' class='xr-section-summary' >Coordinates: <span>(6)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>2019-07-11 02:31:40.055556</div><input id='attrs-d933adf9-f9bd-41c2-bd86-1866e6d6542a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-d933adf9-f9bd-41c2-bd86-1866e6d6542a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b56a75d9-c1d0-432c-ad1a-58eec46e0b93' class='xr-var-data-in' type='checkbox'><label for='data-b56a75d9-c1d0-432c-ad1a-58eec46e0b93' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([cftime.DatetimeGregorian(2019, 7, 11, 2, 31, 40, 55556, has_year_zero=False)],
+
+<h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h3 id="cappi-3km">CAPPI@3km</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi(xg1, <span class="hljs-attr">altitude_level=3,</span> <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">radar_location='CHERRAPUNJI',</span> <span class="hljs-attr">grid=False,</span> <span class="hljs-attr">rings=False,</span> <span class="hljs-attr">ticks_in_km=True,</span> <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terlsdbz_cappi3.png')</span>
+</code></pre>
+<p><img src="images/output_43_0.png" alt="png"></p>
+<h3 id="maxz-cappi">MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi_max(xg1, field_name=<span class="hljs-symbol">'DBZ</span>', radar_location=<span class="hljs-symbol">'CHERRAPUNJI</span>', grid=<span class="hljs-literal">True</span>, rings=<span class="hljs-literal">True</span>,
+                                              ticks_in_km=<span class="hljs-literal">True</span>, save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_maxcappi.png</span>')
+</code></pre>
+<p><img src="images/output_45_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi">Marginal Distribution of MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.marginal_max(xg1, radar_location=<span class="hljs-symbol">'CHERRAPUNJI</span>', field_name=<span class="hljs-symbol">'DBZ</span>', rings=<span class="hljs-literal">True</span>, grid=<span class="hljs-literal">True</span>,
+                                               cross_sections=<span class="hljs-literal">True</span>, save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_margmax.png</span>')
+</code></pre>
+<p><img src="images/output_47_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi-with-background-map">Marginal Distribution of MAXZ CAPPI with background map</h3>
+<pre><code class="lang-python">pyiwr<span class="hljs-selector-class">.visualize</span><span class="hljs-selector-class">.marginal_max_map</span>(xg1, radar_location=<span class="hljs-string">'CHERRAPUNJI'</span>, field_name=<span class="hljs-string">'DBZ'</span>, <span class="hljs-attribute">background</span>=<span class="hljs-string">'terrain-background'</span>,
+                                                                    cross_sections=True, save_image=False, img_name=None)
+</code></pre>
+<p><img src="images/output_49_0.png" alt="png"></p>
+<h2 id="shar-radar">SHAR RADAR</h2>
+<h2 id="reading-content-of-file-and-making-radar-object">Reading content of file and making radar object</h2>
+<pre><code class="lang-python">radar2 = pyiwr<span class="hljs-selector-class">.format_transform</span><span class="hljs-selector-class">.correctednc</span>(filenamel1, save_file=False)
+radar2.info()
+</code></pre>
+<pre><code>Processing file:  RSSHR_11JUL2019_193241_L2B_STD.nc
+Date Time of Mosdac File RSSHR_11JUL2019_193241_L2B_STD.nc corrected successfully
+<span class="hljs-attr">altitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">altitude_agl:</span> None
+<span class="hljs-attr">antenna_transition:</span> None
+<span class="hljs-attr">azimuth:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_azimuth_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> azimuth_angle_from_true_north
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">elevation:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> ray_elevation_angle
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">    long_name:</span> elevation_angle_from_horizontal_plane
+<span class="hljs-attr">    axis:</span> radial_azimuth_coordinate
+<span class="hljs-attr">fields:</span>
+<span class="hljs-attr">    DBZ:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dBZ
+<span class="hljs-attr">        standard_name:</span> equivalent_reflectivity_factor
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    VEL:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> radial_velocity_of_scatterers_ away_from_instrument
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    WIDTH:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> m/s
+<span class="hljs-attr">        standard_name:</span> doppler_spectrum_width
+<span class="hljs-attr">        Polarization:</span> Horizontal
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    ZDR:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> dB
+<span class="hljs-attr">        standard_name:</span> log_differential_reflectivity_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    PHIDP:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span> degrees
+<span class="hljs-attr">        standard_name:</span> differential_phase_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">    RHOHV:</span>
+<span class="hljs-attr">        data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">3960</span>, <span class="hljs-number">1600</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">        _FillValue:</span> <span class="hljs-number">0.0</span>
+<span class="hljs-attr">        units:</span>
+<span class="hljs-attr">        standard_name:</span> cross_correlation_ratio_hv
+<span class="hljs-attr">        Polarization:</span> Horizontal and Vertical
+<span class="hljs-attr">        coordinates:</span> time range
+<span class="hljs-attr">fixed_angle:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float32 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees
+<span class="hljs-attr">instrument_parameters:</span> None
+<span class="hljs-attr">latitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_north
+<span class="hljs-attr">longitude:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    units:</span> degrees_east
+<span class="hljs-attr">nsweeps:</span> <span class="hljs-number">11</span>
+<span class="hljs-attr">ngates:</span> <span class="hljs-number">1600</span>
+<span class="hljs-attr">nrays:</span> <span class="hljs-number">3960</span>
+<span class="hljs-attr">radar_calibration:</span> None
+<span class="hljs-attr">range:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">1600</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> projection_range_coordinate
+<span class="hljs-attr">    long_name:</span> range_to_measurement_volume
+<span class="hljs-attr">    units:</span> meters
+<span class="hljs-attr">    spacing_is_constant:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    meters_to_center_of_first_gate:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">    axis:</span> radial_range_coordinate
+<span class="hljs-attr">scan_rate:</span> None
+<span class="hljs-attr">scan_type:</span> ppi
+<span class="hljs-attr">sweep_end_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_mode:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: |S1 and shape: (<span class="hljs-number">11</span>, <span class="hljs-number">32</span>)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_number:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int32 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">sweep_start_ray_index:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: int64 and shape: (<span class="hljs-number">11</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">target_scan_rate:</span> None
+<span class="hljs-attr">time:</span>
+<span class="hljs-attr">    data:</span> &lt;ndarray of type: float64 and shape: (<span class="hljs-number">3960</span>,)<span class="hljs-string">&gt;
+</span><span class="hljs-attr">    _FillValue:</span> nan
+<span class="hljs-attr">    standard_name:</span> time
+<span class="hljs-attr">    long_name:</span> time_in_seconds_since_volume_start
+<span class="hljs-attr">    units:</span> seconds since <span class="hljs-number">2019</span><span class="hljs-bullet">-07</span><span class="hljs-bullet">-11</span>T19:<span class="hljs-number">32</span>:<span class="hljs-number">41</span>
+<span class="hljs-attr">    calendar:</span> gregorian
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">    instrument_name:</span> SHAR S-band Dual-pol DWR
+    Created using: pyiwr (Indian Weather Radar) Module developed by Researchers at SIGMA Research Lab, IIT Indore
+<span class="hljs-attr">    version:</span> Version <span class="hljs-number">1.0</span>
+<span class="hljs-attr">    title:</span> SHAR S-band DDWR data
+<span class="hljs-attr">    institution:</span> ISRO
+<span class="hljs-attr">    references:</span> Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html
+<span class="hljs-attr">    source:</span> DWR volume scan data
+<span class="hljs-attr">    comment:</span>
+<span class="hljs-attr">    Conventions:</span> CF/Radial
+<span class="hljs-attr">    field_names:</span> DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV
+<span class="hljs-attr">    history:</span> DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file
+<span class="hljs-attr">    volume_number:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">    platform_type:</span> fixed
+<span class="hljs-attr">    instrument_type:</span> radar
+<span class="hljs-attr">    primary_axis:</span> axis_z
+</code></pre><h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h2 id="ppi-plot-of-any-radar-field-at-any-given-elevation-angle">PPI Plot of any Radar Field at any given elevation angle</h2>
+<pre><code class="lang-python">pyiwr.visualize.elevation(radar2, <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">elevation_index=0,</span> <span class="hljs-attr">rings=True,</span> <span class="hljs-attr">grid=True,</span> <span class="hljs-attr">range_in_km=True,</span>
+                                                                         <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terls_dbz0.png')</span>
+</code></pre>
+<p><img src="output_55_0.png" alt="png"></p>
+<h2 id="ppi-plots-at-all-elevation-angle-of-any-radar-field">PPI Plots at all elevation angle of any Radar Field</h2>
+<pre><code class="lang-python">pyiwr.visualize.all_elevation(radar2, field_name=<span class="hljs-symbol">'DBZ</span>', rings=<span class="hljs-literal">True</span>, grid=<span class="hljs-literal">True</span>, range_in_km=<span class="hljs-literal">True</span>,
+                                                                      save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terls_dbzall.png</span>')
+</code></pre>
+<p><img src="output_57_0.png" alt="png"></p>
+<h2 id="ppi-plots-of-all-radar-fields-at-any-given-elevation-angle">PPI Plots of all Radar Fields at any given elevation angle</h2>
+<pre><code class="lang-python">pyiwr.visualize.fields_elevation(radar2, <span class="hljs-attr">elevation_index=0,</span> <span class="hljs-attr">range_in_km=True,</span> <span class="hljs-attr">rings=True,</span> <span class="hljs-attr">grid=True,</span>
+                                                                     <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terls_fieldall.png')</span>
+</code></pre>
+<p><img src="images/output_59_0.png" alt="png"></p>
+<h2 id="reading-content-of-file-and-making-grid-object">Reading content of file and making grid object</h2>
+<pre><code class="lang-python">xg2 = pyiwr.format_transform.sweeps2gridnc(filenamel1, grid_shape=(<span class="hljs-number">81</span>, <span class="hljs-number">501</span>, <span class="hljs-number">501</span>), height=<span class="hljs-number">20</span>, length=<span class="hljs-number">250</span>, save_file=False)
+xg2
+</code></pre>
+<pre><code>Processing <span class="hljs-built_in">file</span>:  RSSHR_11JUL2019_193241_L2B_STD.nc
+Xarray gridding <span class="hljs-keyword">of</span> volumetric sweeps <span class="hljs-keyword">of</span> radar PPI scan <span class="hljs-built_in">file</span>: RSSHR_11JUL2019_193241_L2B_STD.nc done successfully
+</code></pre><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 			
 
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
+Dimensions:  (time: 1, z: 81, y: 501, x: 501)
+Coordinates:
+  </em> time     (time) object 2019-07-11 19:32:41.055556
+  <em> z        (z) float64 0.0 250.0 500.0 750.0 ... 1.95e+04 1.975e+04 2e+04
+    lat      (y) float64 11.41 11.42 11.42 11.43 ... 15.87 15.88 15.89 15.9
+    lon      (x) float64 77.93 77.94 77.95 77.96 ... 82.49 82.5 82.51 82.52
+  </em> y        (y) float64 -2.5e+05 -2.49e+05 -2.48e+05 ... 2.49e+05 2.5e+05
+  * x        (x) float64 -2.5e+05 -2.49e+05 -2.48e+05 ... 2.49e+05 2.5e+05
+Data variables:
+    DBZ      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    VEL      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    WIDTH    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    ZDR      (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    PHIDP    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    RHOHV    (time, z, y, x) float32 nan nan nan nan nan ... nan nan nan nan nan
+    ROI      (time, z, y, x) float32 9.258e+03 9.24e+03 ... 1.024e+04 1.026e+04</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-e525b21c-cc0a-418f-ab02-3fd6e0e82ada' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-e525b21c-cc0a-418f-ab02-3fd6e0e82ada' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 1</li><li><span class='xr-has-index'>z</span>: 81</li><li><span class='xr-has-index'>y</span>: 501</li><li><span class='xr-has-index'>x</span>: 501</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-1bc7a2bd-6727-4a61-97e0-957691af3133' class='xr-section-summary-in' type='checkbox'  checked><label for='section-1bc7a2bd-6727-4a61-97e0-957691af3133' class='xr-section-summary' >Coordinates: <span>(6)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>2019-07-11 19:32:41.055556</div><input id='attrs-b7f80a60-67f8-4188-bb64-89c69d91d741' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b7f80a60-67f8-4188-bb64-89c69d91d741' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-29305d10-f951-4b7c-8536-762da44260bd' class='xr-var-data-in' type='checkbox'><label for='data-29305d10-f951-4b7c-8536-762da44260bd' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([cftime.DatetimeGregorian(2019, 7, 11, 19, 32, 41, 55556, has_year_zero=False)],
 
 
-
-
-
-
-
-
-
-
-
-
+<h2 id="visualization-in-cartesian-plane">Visualization in Cartesian Plane</h2>
+<h3 id="cappi-3km">CAPPI@3km</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi(xg2, <span class="hljs-attr">altitude_level=3,</span> <span class="hljs-attr">field_name='DBZ',</span> <span class="hljs-attr">radar_location='SHAR',</span> <span class="hljs-attr">grid=False,</span> <span class="hljs-attr">rings=False,</span>
+                                                                         <span class="hljs-attr">ticks_in_km=True,</span> <span class="hljs-attr">save_image=False,</span> <span class="hljs-attr">img_name='terlsdbz_cappi3.png')</span>
+</code></pre>
+<p><img src="images/output_64_0.png" alt="png"></p>
+<h3 id="maxz-cappi">MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.cappi_max(xg2, field_name=<span class="hljs-symbol">'DBZ</span>', radar_location=<span class="hljs-symbol">'SHAR</span>', grid=<span class="hljs-literal">True</span>, rings=<span class="hljs-literal">True</span>, ticks_in_km=<span class="hljs-literal">True</span>,
+                                                                           save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_maxcappi.png</span>')
+</code></pre>
+<p><img src="images/output_66_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi">Marginal Distribution of MAXZ CAPPI</h3>
+<pre><code class="lang-python">pyiwr.visualize.marginal_max(xg2, radar_location=<span class="hljs-symbol">'SHAR</span>', field_name=<span class="hljs-symbol">'DBZ</span>', rings=<span class="hljs-literal">True</span>, grid=<span class="hljs-literal">True</span>, cross_sections=<span class="hljs-literal">True</span>,
+                                                                                 save_image=<span class="hljs-literal">False</span>, img_name=<span class="hljs-symbol">'terlsdbz_margmax.png</span>')
+</code></pre>
+<p><img src="images/output_68_0.png" alt="png"></p>
+<h3 id="marginal-distribution-of-maxz-cappi-with-background-map">Marginal Distribution of MAXZ CAPPI with background map</h3>
+<pre><code class="lang-python">pyiwr<span class="hljs-selector-class">.visualize</span><span class="hljs-selector-class">.marginal_max_map</span>(xg2, radar_location=<span class="hljs-string">'SHAR'</span>, field_name=<span class="hljs-string">'DBZ'</span>, <span class="hljs-attribute">background</span>=<span class="hljs-string">'terrain-background'</span>,
+                                                                                  cross_sections=True, save_image=False, img_name=None)
+</code></pre>
+<p><img src="images/output_70_0.png" alt="png"></p>
+<h1 id="thank-you">THANK YOU</h1>
+<h3 id="for-any-problem-please-contact-the-developers">For any problem Please contact the developers</h3>
+<pre><code class="lang-python">
+</code></pre>
 
 
 
