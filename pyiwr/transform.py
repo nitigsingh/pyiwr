@@ -498,15 +498,7 @@ def sweeps2mergednc(path_string,
         else:
             if gridder:
                 grid = make_grid(radar)
-                # Save the corrected xarray.Dataset to a temporary in-memory file
-                with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp_file:
-                    pyart.io.write_grid(tmp_file.name, grid)  
-                grids = pyart.io.read_grid(tmp_file.name)
-                
-                # Delete the temporary in-memory file
-                os.remove(tmp_file.name)                
-                
-                return grids
+                return grid.to_xarray()
             else:
                 return radar
     print("Data merging done \nTotal Time Elapsed: ", dt.datetime.now() - startt)
