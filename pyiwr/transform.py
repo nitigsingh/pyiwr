@@ -91,15 +91,14 @@ def raw2nc(dwr_path, save_file=False):
         return read
 
 
-# "correctednc" function takes in any dual-pol NetCDF file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
+# "format_correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr and also format correct the radar files and removes all the errors
 # The user is provided with the advantage of choosing whether to save the file
 
 
-def correctednc(file_path, save_file=False):
+def format_correctednc(file_path, save_file=False):
     """
-    `correctednc` function takes in any dual-pol NetCDF file.
-    restructures it into a radar object to be visualized by pyiwr.
-    makes it compatible with Py-ART.
+    "format_correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr 
+    and also format correct the radar files and removes all the errors
     The user is provided with the advantage of choosing whether to save the file.
     Returns all corrected radar objects from any Cf/Radial object file.
     corrects all date and Time issues.
@@ -132,7 +131,7 @@ def correctednc(file_path, save_file=False):
         print(
             "File",
             os.path.basename(file_path),
-            'corrected and restructured successfully and saved in the newly added "corrected" folder in your file path',
+            'format corrected and restructured successfully and saved in the newly added "corrected" folder in your file path',
         )
         return pyart.io.read_cfradial(new_file_path)
     else:
@@ -148,7 +147,7 @@ def correctednc(file_path, save_file=False):
         print(
             "File",
             os.path.basename(file_path),
-            "corrected and restructured successfully",
+            "format corrected and restructured successfully",
         )
         return radar
 
