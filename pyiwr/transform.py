@@ -202,18 +202,8 @@ def sweeps2gridnc(
         # Read the data from the in-memory file and return the Py-ART radar object
         radar = pyart.io.read_cfradial(tmp_file.name)
         # Read the data from the in-memory file and return the Py-ART radar object
-        grid = pyart.map.grid_from_radars(
-            radar,
-            grid_shape=grid_shape,
-            grid_limits=(
-                (0, height * 1e3),
-                (-length * 1e3, length * 1e3),
-                (-length * 1e3, length * 1e3),
-            ),
-            fields=radar.fields.keys(),
-            weighting_function="Barnes2",
-            min_radius=length,
-        )
+        grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,)           
+
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
 
@@ -241,7 +231,7 @@ def sweeps2gridnc(
         )
         new_file_path = os.path.join(updated_dir, new_file_name)
 
-        xg0.to_netcdf(new_file_path)
+        pyart.io.write_grid(new_file_path, xg0)
         print(
             "Xarray gridding of volumetric sweeps of radar PPI scan file:",
             os.path.basename(file_path),
@@ -495,7 +485,7 @@ def sweeps2mergednc(path_string,
             pyart.io.write_cfradial(new_file_path, radar, format="NETCDF4")
               
             if gridder:
-                grid = make_grid(radar)
+                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,) )           
                 new_file_name = f"merged_grid_{fname}.nc"
                 new_file_path = os.path.join(merged_dir, new_file_name)
                 pyart.io.write_grid(new_file_path, grid)
@@ -504,7 +494,7 @@ def sweeps2mergednc(path_string,
                 pass
         else:
             if gridder:
-                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
+                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,) )           
                 return grid.to_xarray()
             else:
                 return radar
