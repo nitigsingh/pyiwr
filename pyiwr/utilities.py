@@ -2,11 +2,13 @@
 """
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
-@reference for raw dwr data reading function: Shahla KP/Sci-Eng -SC/RDA-ISTRAC ISRO
-
 
 @email: nitig14rdfsma[at]gmail[dot]com
 @email: vaibhavtyagi7191[at]gmail[dot]com
+
+@reference for 'fread' and 'raw_product_list' data reading function: Shahla KP/Sci-Eng -SC/RDA-ISTRAC ISRO
+@reference for 'sorting_key' and 'make_grid' file, sorting and data gridding function respectively: Hamid Ali Syed
+
 """
 
 import datetime as dt
@@ -17,6 +19,7 @@ import numpy as np
 import pyart
 import pyart.map
 import xarray as xr
+
 
 
 def fread(fid, nelements, dtype):
@@ -746,19 +749,21 @@ def raw2object(dwr_path, dats):
         b = "Cherrapunji S-band Dual-pol DWR"
     elif Station == "SHAR":
         b = "SHAR S-band Dual-pol DWR"
+    elif Station == "TERLS":
+        a = "TERLS C-band Dual-pol DWR"
     else:
-        b = "TERLS C-band Dual-pol DWR"
+        "DWR"
 
     radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
     radar.metadata = {
         "instrument_name": b,
         "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
-        "version": "Version 1.0.0",
+        "version": "Version 1.0.1",
         "title": b[:-3] + "DWR data",
-        "institution": "ISRO",
+        "institution": "Indian: ISRO/IMD/IITM",
         "references": "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html",
         "source": a,  # 'a' determines the 'source' attribute based on the condition
-        "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into Py-ART compatible NetCDF file",
+        "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into standard radar object NetCDF file",
         "comment": "",
         "platform_type": "fixed",
         "instrument_type": "radar",
@@ -839,7 +844,6 @@ def raw2object(dwr_path, dats):
 
     return radar
 
-
 # for files that are read from mosdac or if manually corrected/restructured/added fields files, the function helps in extracting start time using Try and Except block
 def extract_start_time(raw):
     try:
@@ -915,17 +919,19 @@ def update_xarray_dataset(file_path, raw, xg):
         a = "Cherrapunji S-band Dual-pol DWR"
     elif Station == "SHR":
         a = "SHAR S-band Dual-pol DWR"
-    else:
+    elif Station == "TLS":
         a = "TERLS C-band Dual-pol DWR"
+    else:
+        "DWR"
 
     # Add attributes to the dataset in the given order
     xg.attrs["instrument_name"] = a
     xg.attrs[
         "Created using"
     ] = "pyiwr (Python Indian Weather Radar Toolkit) Module developed by Researchers at SIGMA Research Lab, IIT Indore"
-    xg.attrs["version"] = "Version 1.0.0"
+    xg.attrs["version"] = "Version 1.0.1"
     xg.attrs["title"] = a[0:-3] + "DWR data"
-    xg.attrs["institution"] = "ISRO"
+    xg.attrs["institution"] = "Indian: ISRO/IMD/IITM"
     xg.attrs[
         "references"
     ] = "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html"
@@ -935,10 +941,102 @@ def update_xarray_dataset(file_path, raw, xg):
     xg.attrs["field_names"] = "DBZ, VEL, WIDTH, ZDR, PHIDP, RHOHV"
     xg.attrs[
         "history"
-    ] = "DWR mosdac files (.nc) data encoded into Py-ART compatible NetCDF file"
+    ] = "DWR (.nc) data encoded into format_corrected NetCDF file"
     xg.attrs["volume_number"] = 0
     xg.attrs["platform_type"] = "fixed"
     xg.attrs["instrument_type"] = "radar"
     xg.attrs["primary_axis"] = "axis_z"
 
     return xg
+
+def make_grid(radar, grid_shape=(30, 500, 500), height=15, length=250):
+
+    """
+    Returns grid object from radar object.
+    grid_shape=(60, 500, 500), no. of bins of z,y,x respectively.
+    height:(int) = 15, height in km
+    length:(int) = 250, Range of radar in km
+    """
+    grid = pyart.map.grid_from_radars(
+        radar,
+        grid_shape=grid_shape,
+        grid_limits=(
+            (radar.altitude["data"][0], height * 1e3),
+            (-length * 1e3, length * 1e3),
+            (-length * 1e3, length * 1e3),
+        ),
+        fields=radar.fields.keys(),
+        weighting_function="Barnes2",
+        min_radius=length,
+    )
+    return grid
+
+
+def sorting_key(s, _re=re.compile(r"(\d+)")):
+    return [int(t) if i & 1 else t.lower() for i, t in enumerate(_re.split(s))]
+
+
+#Convert to reflectivity factor Z (unit: mm6/m3 )
+def db2si(x):
+    return 10.0 ** (x / 10.0)
+
+
+def extract_value_at_location(xg, field_name, elevation_index, target_lat, target_lon):
+    """
+    Extract the value of the specified field at the specified location from the radar data.
+
+    Parameters:
+        xg (pyart.core.Grid): Radar data object.
+        field_name (str): Name of the radar field to extract.
+        elevation_index (int): Index of the desired elevation.
+        target_lat (float): Latitude of the target location.
+        target_lon (float): Longitude of the target location.
+
+    Returns:
+        extracted_value: Value of the specified field at the specified location.
+    """
+    # Access the field from the radar data object
+    radar_data_array = xg[field_name][0][elevation_index]
+
+    # Round the target latitude and longitude coordinates to match the nearest grid point
+    rounded_lat = np.round(target_lat, decimals=3)
+    rounded_lon = np.round(target_lon, decimals=3)
+
+    # Find the nearest indices in the latitude and longitude coordinates
+    nearest_lat_idx = np.abs(radar_data_array.lat - rounded_lat).argmin().item()
+    nearest_lon_idx = np.abs(radar_data_array.lon - rounded_lon).argmin().item()
+
+    # Extract the value at the nearest indices
+    extracted_value = radar_data_array[nearest_lat_idx, nearest_lon_idx]
+
+    return extracted_value
+
+
+def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1.3, c = None, a_c= None, b_c= None a_s= None, b_s= None):
+    """
+    Calculate rain rate using the Z-R relationship and mask values below 0.1.
+
+    Parameters:
+        value: Value of the radar field.
+        A (float): Parameter 'A' for the radar polarimetric fields-R relationship.
+        b (float): Parameter 'b' for the radar polarimetric fields-R relationship.
+        c (float): Parameter 'c' for the radar polarimetric fields-R relationship.
+    Returns:
+        rain_rate: Calculated rain rate.
+    """
+    
+    #Convert reflectivity factor Z (unit: mm6/m3 ) to Rain Rate(mm/h) through Z-R Relation followed by DWR_Sohra Currently
+    radar_ref_array = decibel(ref_val)
+    radar_difref_array = decibel(diffref_val)
+    radar_kdp_array = kdp
+
+    # Apply the Z-R relationship
+    rain_rate = (radar_ref_array / a) ** (1.0 / b)
+    rain_rate = (a * (radar_ref_array**b) * (radar_difref_array**c))
+    rain_rate = (a * (radar_kdp_array**b))
+    rain_rate = (a * (radar_kdp_array**b) * (radar_difref_array**c))
+
+    # Mask values below 0.1
+    rain_rate = ma.masked_where(rain_rate < 0.1, rain_rate)
+
+    return rain_rate
