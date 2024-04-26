@@ -259,25 +259,32 @@ def sweeps2gridnc(
         return xg0
 
 def sweeps2mergednc(path_string,
-    start_index = 0,
-    end_index=None,
-    scan_type="B",
-    dualpol=False,
-    gridder=False,
-    save_file=False,
-                ):
+                    start_index = 0,
+                    end_index=None,
+                    scan_type="B",
+                    dualpol=False,
+                    gridder=False,
+                    grid_shape=(30, 500, 500), 
+                    height=15, 
+                    length=250,
+                    save_file=False,
+                    ):
     
     
     """
     Aggregates data to cfradial1 data.
     input_dir(str): Enter path of single sweep data directory,
-    output_dir(str): Enter the path for output data,
+    start_index: Enter the starting index of first file,
+    end_index: Enter the ending index of first file,
     scan_type(str): "B", "C". B is for short range PPI,
                 & C is for long range PPI.
     dualpol(bool): True, False. (If the data contains
                 dual-pol products e.g., ZDR, RHOHV),
     gridder(bool): True, False,
-    nf(int): Number of files to group together
+    grid_shape: the grid shape example, (30, 500, 500), 
+    height: maximum height in km example 15, 
+    length: maximum scan distance radially from radar example 250,
+    save_file: option to save the file made after merging optional and by default it is False,
     """
        
     # List of file names with the .nc extension
@@ -497,7 +504,7 @@ def sweeps2mergednc(path_string,
                 pass
         else:
             if gridder:
-                grid = make_grid(radar)
+                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
                 return grid.to_xarray()
             else:
                 return radar
