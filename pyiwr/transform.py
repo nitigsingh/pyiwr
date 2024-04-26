@@ -5,9 +5,10 @@ developed by researchers at the SIGMA Research
 Lab at IIT Indore. This powerful tool is
 designed to effortlessly convert raw ISRO
 Doppler Weather Radar (DWR) data files and
-Restructure dual-pol radar ISRO DWR NetCDF files
-into Py-ART compatible NetCDF files. pyiwr also
-provides a range of useful tools and visualization
+Restructure and format correct the DWR NetCDF files.
+pyiwr is capable of merging multiple sweep files into a single volumetric CFradial file,
+with facility of saving the files into gridded or CFradial format data after format correction.
+pyiwr also provides a range of useful tools and visualization
 functions to facilitate working with and
 analyzing weather radar data.
 
@@ -27,7 +28,9 @@ import xarray as xr
 
 from .utilities import (
     raw2object,
+    read,
     raw_product_list,
+    raw_reshape_stack,
     update_xarray_dataset,
 )
 
@@ -35,11 +38,15 @@ from .utilities import (
 # The user is provided with the advantage of choosing whether to save the file
 
 
+# "raw2nc" function takes in any raw dual-pol .dwr file and restructures it into a radar object to be visualized by pyiwr
+# The user is provided with the advantage of choosing whether to save the file
+
+
 def raw2nc(dwr_path, save_file=False):
     """
     `raw2nc` function takes in any raw dual-pol .dwr file
-    restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
-    The user is provided with the advantage of choosing whether to save the file
+    restructures it into a radar object to be visualized by pyiwr
+    The user is provided with the advantage of choosing whether to save the file in netCDF format
     """
 
     if dwr_path[-3:] == "dwr":
@@ -76,7 +83,7 @@ def raw2nc(dwr_path, save_file=False):
 
             # Delete the temporary in-memory file
             os.remove(tmp_file.name)
-            print("File", os.path.basename(dwr_path), "converted successfully")
+            print("File", os.path.basename(dwr_path), "converted into radar object successfully")
             return radar
 
     else:
