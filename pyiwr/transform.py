@@ -14,6 +14,7 @@ analyzing weather radar data.
 
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
+@author3: Hamid Ali Syed (special acknowledgement in his contribution for sweeps2mergednc function.
 
 @email: nitig14rdfsma[at]gmail[dot]com
 @email: vaibhavtyagi7191[at]gmail[dot]com
@@ -21,10 +22,11 @@ analyzing weather radar data.
 
 import os
 import tempfile
+import xarray as xr
 
 import pyart
 import pyart.map
-import xarray as xr
+
 
 from .utilities import (
     raw2object,
@@ -32,6 +34,7 @@ from .utilities import (
     raw_product_list,
     raw_reshape_stack,
     update_xarray_dataset,
+    extract_start_time,
 )
 
 # "raw2nc" function takes in any raw dual-pol .dwr file and restructures it into a radar object to be visualized by pyiwr and also makes it compatible with Py-ART
