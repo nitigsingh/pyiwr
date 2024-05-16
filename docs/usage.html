@@ -435,7 +435,8 @@ Radar_grids = pyiwr.transform.sweeps2mergednc (path_string, start_index = 0,  en
 	
 </code></pre>
 
-<h2>B. Visualization CAPPI</h2>
+<h2>analysis module</h2>
+	  
 <pre><code># For CAPPI in cartesian plane
 pyiwr.visualize.cappi(xarray_grids, altitude_level=3, field_name='DBZ', radar_location='CHERRAPUNJI',
                         grid=False, rings=False, ticks_in_km=True, save_image=True, img_name='img.png')
@@ -453,8 +454,8 @@ pyiwr.visualize.marginal_max_map(xarray_grids, radar_location='TERLS', field_nam
                        background='terrain-background', cross_sections=True, save_image=True, img_name='img.png')
 </code></pre>
 
-<h2>C. Visualize module</h2>
-This module is used for plotting Basic Radar fields in Plan Position Indicator (PPI), at a specific elevation, plotting all elevations and plotting all radar fields available in radar objects.
+<h2>visualize module</h2>
+This module is used for plotting Basic Radar fields in Plan Position Indicator (PPI), at a specific elevation or plotting all elevations or plotting all radar fields available in radar object file.
 <pre><code># For PPI at specific elevation
 pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, figwidth = 10, figheight = 8, 
 	show_label = True, xlabel=None, ylabel=None, label_size=15, show_tick_labels = True, 
