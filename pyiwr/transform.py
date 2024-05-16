@@ -248,10 +248,13 @@ def sweeps2gridnc(
         )
         return xg0
 
+
+
 def sweeps2mergednc(path_string,
                     start_index = 0,
                     end_index=None,
                     scan_type="B",
+                    no_swps = None,
                     dualpol=False,
                     gridder=False,
                     grid_shape=(30, 500, 500), 
@@ -262,19 +265,31 @@ def sweeps2mergednc(path_string,
     
     
     """
-    Aggregates data to cfradial1 data.
+    The function sweeps2mergednc is used to merge multiple sweeps file for Indian radars and aggregating them to a 
+    single cfradial1 file format, there is also a provision for saving the file either in cfradial or gridded format.
+    
+    Parameters:
+
     input_dir(str): Enter path of single sweep data directory,
     start_index: Enter the starting index of first file,
     end_index: Enter the ending index of first file,
     scan_type(str): "B", "C". B is for short range PPI,
-                & C is for long range PPI.
+                    & C is for long range PPI.
+    no_swps(int): for short scan file it is usually 10/11 and for long scan it is 2/3, default is None,
+                  so it will choose 10 scan files for short scan 2 for long scan.
     dualpol(bool): True, False. (If the data contains
-                dual-pol products e.g., ZDR, RHOHV),
-    gridder(bool): True, False,
+                   dual-pol products e.g., ZDR, RHOHV and KDP),
+    gridder(bool): True, False, 
     grid_shape: the grid shape example, (30, 500, 500), 
     height: maximum height in km example 15, 
     length: maximum scan distance radially from radar example 250,
     save_file: option to save the file made after merging optional and by default it is False,
+    
+    Example Usage:
+    
+    radar = sweeps2mergednc(directory[4], start_index = 0, end_index=None, scan_type="B", no_swps = None, dualpol=False,
+                gridder=True, grid_shape=(31, 501, 501), save_file=False,
+                )
     """
        
     # List of file names with the .nc extension
@@ -285,20 +300,19 @@ def sweeps2mergednc(path_string,
     files = folder_path[start_index:end_index+1]
 
     files = sorted(files, key=sorting_key)
-    nf = len(files)
-
-    print("Number of files: ", nf)
+   
+    print("Number of total sweep files: ", len(files))
     bb = list()
     if scan_type == "B":
-        if nf is None:
-            nf = 10
-        for i in range(0, len(files), nf):
-            bb.append(files[i : i + nf])
+        if no_swps is None:
+            no_swps = 10
+        for i in range(0, len(files), no_swps):
+            bb.append(files[i : i + no_swps])
     elif scan_type == "C":
-        if nf is None:
-            nf = 2
-        for i in range(0, len(files), nf):
-            bb.append(files[i : i + nf])
+        if no_swps is None:
+            no_swps = 2
+        for i in range(0, len(files), no_swps):
+            bb.append(files[i : i + no_swps])
     print(f"Total no. of output files: {len(bb)}.")
     print("Merging all scans into one Volume")
               
@@ -319,7 +333,7 @@ def sweeps2mergednc(path_string,
         HCLASS1 = []
         nyquist = []
         unambigrange = []
-        for j in range(0, nf):
+        for j in range(0, no_swps):
             ds = Dataset(bb[i][j])
             az = ds.variables["radialAzim"][:]
             time = ds.variables["radialTime"][:]
@@ -368,9 +382,9 @@ def sweeps2mergednc(path_string,
         fname = os.path.basename(bb[i][0]).split(".nc")[0]
 
         radar = pyart.testing.make_empty_ppi_radar(
-            ds.dimensions["bin"].size, ds.dimensions["radial"].size * nf, 1
+            ds.dimensions["bin"].size, ds.dimensions["radial"].size * no_swps, 1
         )
-        radar.nsweeps = nf
+        radar.nsweeps = no_swps
         radar.time["data"] = np.array(t1)
         # 'seconds since 1970-01-01T00:00:00Z'
         radar.time["units"] = ds.variables["radialTime"].units
@@ -388,12 +402,12 @@ def sweeps2mergednc(path_string,
         radar.sweep_number["data"] = np.array(en)
 
         radar.sweep_start_ray_index["data"] = np.arange(
-            0, ds.dimensions["radial"].size * nf, ds.dimensions["radial"].size
+            0, ds.dimensions["radial"].size * no_swps, ds.dimensions["radial"].size
         )
 
         radar.sweep_end_ray_index["data"] = np.arange(
             ds.dimensions["radial"].size - 1,
-            ds.dimensions["radial"].size * nf,
+            ds.dimensions["radial"].size * no_swps,
             ds.dimensions["radial"].size,
         )
 
@@ -476,7 +490,7 @@ def sweeps2mergednc(path_string,
         # Save the updated dataset to a new netCDF file if specified
         if save_file:
             # Create the "corrected" subdirectory if it doesn't exist
-            merged_dir = os.path.join(os.path.dirname(path), "merged")
+            merged_dir = os.path.join(os.path.dirname(path_string), "merged")
             os.makedirs(merged_dir, exist_ok=True)
 
             # Specify the new file path
@@ -485,7 +499,7 @@ def sweeps2mergednc(path_string,
             pyart.io.write_cfradial(new_file_path, radar, format="NETCDF4")
               
             if gridder:
-                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,) )           
+                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
                 new_file_name = f"merged_grid_{fname}.nc"
                 new_file_path = os.path.join(merged_dir, new_file_name)
                 pyart.io.write_grid(new_file_path, grid)
@@ -494,8 +508,8 @@ def sweeps2mergednc(path_string,
                 pass
         else:
             if gridder:
-                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,) )           
+                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
                 return grid.to_xarray()
             else:
                 return radar
-    print("Data merging done \nTotal Time Elapsed: ", dt.datetime.now() - startt)
+    print("Data merging done \nTotal Time Elapsed: ", dt.datetime.now() - startt) 
