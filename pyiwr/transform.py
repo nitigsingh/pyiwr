@@ -6,11 +6,11 @@ Lab at IIT Indore. This powerful tool is
 designed to effortlessly read, analyze, and 
 visualize Indian Doppler Weather Radar (DWR) data.
 pyiwr also provides a range of useful tools and visualization
-functions to facilitate Radar Reflectivity correction, 
-Radar QPE (Polarimetric), Radar Reflectivity 
+functions to facilitate Gridding data for Constant Altitude Plan Position Indicator (CAPPI), 
+Radar Reflectivity correction, Radar Quantitative Precipitation estimation (QPE) 
+using Polarimetric products, Radar Reflectivity 
 Contour Frequency by Altitude Diagram 
-and Time Series Analysis  working with and
-analyzing weather radar data.
+and Time Series Analysis both spatially and at a given location.
 
 @author1: Nitig Singh
 @author2: Vaibhav Tyagi
