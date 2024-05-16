@@ -415,23 +415,18 @@ document.write(`
 <a class="reference external image-reference" href="https://pyiwr.readthedocs.io/en/latest/?version=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/pyiwr/badge/?version=latest" /></a>
 <p align="center"></p><section id="id1">
 <h2>pyiwr<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>pyiwr is an advanced open-source library developed by researchers at the
-SIGMA Research Lab at IIT Indore. This powerful tool is designed to
-effortlessly convert raw ISRO Doppler Weather Radar (DWR) data files and
-Restructure dual-pol radar ISRO-DWR NetCDF files into Py-ART compatible
-NetCDF files. pyiwr also provides a range of useful tools and
-visualization functions to facilitate working with and analyzing weather
-radar data. In addition, for further information, please consult the
+<p>pyiwr is an advanced open-source library developed by researchers at the SIGMA Research Lab at IIT Indore. This powerful tool is designed to effortlessly read, analyze, and visualize 
+Indian Doppler Weather Radar (DWR) data. pyiwr also provides a range of useful tools and visualization functions to facilitate Gridding data for Constant Altitude Plan Position Indicator (CAPPI), 
+Radar Reflectivity correction, Radar Quantitative Precipitation estimation (QPE) using Polarimetric products, Radar Reflectivity Contour Frequency by Altitude Diagram and Time Series Analysis both 
+spatially and at a given location. In addition, for further information, please consult the
 documentation available at <a class="reference external" href="https://nitigsingh.github.io/pyiwr">https://nitigsingh.github.io/pyiwr</a>.</p>
 <section id="features">
 <h3>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Converts raw ISRO Doppler Weather Radar (DWR) data files into Py-ART
-compatible NetCDF files.</p></li>
-<li><p>Restructures dual-pol dwr NetCDF files with missing data moments and
-attributes into Py-ART compatible NetCDF files.</p></li>
-<li><p>Converts radial sweeps format data into cartesian gridded data NetCDF
-files.</p></li>
+<li><p>Converts raw Indian Doppler Weather Radar (DWR) data files into radar/gridded objects NetCDF files.</p></li>
+<li><p>Restructure and format correct the DWR NetCDF files with missing data moments and attributes.</p></li>
+<li><p>Converts radial sweeps format data into cartesian gridded data NetCDF files.</p></li>
+<li><p>Capable of merging multiple sweep files into a single volumetric CFradial file, with the facility of saving the files into gridded or CFradial format data after format correction.</p></li>
 <li><p>Provides convenient tools for data processing and analysis.</p></li>
 <li><p>Offers visualization functions for better understanding and
 interpretation of radar data.</p></li>
