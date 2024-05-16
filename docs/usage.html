@@ -409,19 +409,26 @@ document.write(`
 
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
 
-<p>The pyiwr architecture is designed as a user-friendly toolkit, specifically tailored to address the distinctive requirements of dual-pol DWR data analysis. The architecture of the two primary modules format_transform and visualize serves a vital role in streamlining the radar data processing workflow as shown in the figure below.</p>
+<p>The pyiwr architecture is designed as a user-friendly toolkit, specifically tailored to address the distinctive requirements of dual-pol DWR data analysis. 
+The architecture of the four primary modules transform, analysis, utilities and visualize, serves a vital role in streamlining the radar data processing workflow using various functions as shown in the figure below.</p>
 
 <img src="images/pyiwr_arc.png" alt="up_pyiwr">
 
-<h2>A. Format transform and reading data as radar object/xarray grid</h2>
-<pre><code># For dwr raw files
-radar = pyiwr.format_transform.raw2nc(filename, save_file=True)
+<h2>format: Reading Raw / open-source DWR files, format correction, restructuring DWR NetCDF files, reading and converting radial sweeps format data into cartesian gridded data NetCDF files, merging multiple sweep files into a 
+single volumetric CFradial file</h2>
 
-# For mosdac nc files
-radar = pyiwr.format_transform.correctednc(filename, save_file=True)
+<pre><code># For dual-pol dwr raw files
+radar = pyiwr.transform.raw2nc(filename, save_file=True)
 
-# For xarray grids for mosdac nc files
-xarray_grids = pyiwr.format_transform.sweeps2gridnc(filename, grid_shape=(81, 501, 501), height=20, length=250, save_file=True)
+# For Open-source / IMD / IITM nc files reading and format correction and restructuring
+radar = pyiwr.transform.format_correctednc(filename, save_file=True)
+
+# For xarray grids for NetCDF files
+xarray_grids = pyiwr.transform.sweeps2gridnc(filename, grid_shape=(81, 501, 501), height=20, length=250, save_file=True)
+
+# For merging multiple sweep files into a single file for making volumetric / gridded NetCDF files
+Radar_grids = pyiwr.transform.sweeps2mergednc (path_string, start_index = 0,  end_index=None,  scan_type="B",  no_swps = None, dualpol=False, gridder=False, grid_shape=(30, 500, 500), height=15, length=250, save_file=False)
+	
 </code></pre>
 
 <h2>B. Visualization CAPPI</h2>
@@ -444,16 +451,32 @@ pyiwr.visualize.marginal_max_map(xarray_grids, radar_location='TERLS', field_nam
 
 <h2>C. Visualization PPI</h2>
 <pre><code># For PPI at specific elevation
-pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, rings=True, grid=True, range_in_km=True, save_image=True,
-                          img_name='img.png')
+pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, figwidth = 10, figheight = 8, show_label = True, 
+        xlabel=None, ylabel=None, label_size=15, show_tick_labels = True, tick_label_size = 15, show_bounding_box = True, 
+        show_grid = True, grid_alpha=0.5, show_rings = True, ring_color = "0.5", ring_alpha = 0.5, show_ring_label=True, 
+        ring_label_size=15, ring_label_xloc_adjust=5, ring_label_yloc_adjust=50, show_title = True, title_str = None, 
+        title_size = 14, scan_type = "short_scan", colorbar_range=None, set_cbar_label = None, cbar_label_size=15, 
+        cbar_tick_label_size = None, save_image=False, img_dpi = 600, img_name='ele_image_uncorr.png')   
 
 # For PPI of any field at all elevation
-pyiwr.visualize.all_elevation(radar, field_name='DBZ', rings=True, grid=True, range_in_km=True, save_image=True,
-                          img_name='img.png')
+ pyiwr.visualize.all_elevation(radar, field_name='DBZ', scan_type = "short_scan", figwidth = 20, figheight = 18,
+        show_label = True, xlabel=None, ylabel=None,label_size=18, show_tick_labels = True, tick_label_size = 15, 
+        show_bounding_box = True, show_grid = True, grid_alpha=0.5, show_rings = True, ring_color = "0.5", ring_alpha = 0.5, 
+        show_ring_label=True, ring_label_size=15, ring_label_xloc_adjust=5, ring_label_yloc_adjust=50, show_suptitle = True, 
+        suptitle_str = None, suptitle_size = 20, suptitle_vspace = 1.0, show_subtitle = True, subtitle_str = None, 
+        subtitle_size = 20, colorbar_range=[0,70], set_cbar_label = None, cbar_label_size=25, cbar_tick_label_size = 20, 
+        img_dpi = 600, save_image=False, img_name='all_ele_imagenew.png')  
+
 
 # For PPI of all fields
-pyiwr.visualize.fields_elevation(radar, elevation_index=0, range_in_km=True, rings=True, grid=True, save_image=True,
-                          img_name='img.png')
+pyiwr.visualize.fields_elevation(radar, elevation_index=2, scan_type = "short_scan",  figwidth = 20, figheight = 18, 
+        show_label = True, xlabel=None, ylabel=None, label_size=15, show_tick_labels = True, tick_label_size = 12, 
+        show_bounding_box = True, show_grid = True, grid_alpha=0.5, show_rings = True, ring_color = "0.5", ring_alpha = 0.5, 
+        show_ring_label=True, ring_label_size=15, ring_label_xloc_adjust=5, ring_label_yloc_adjust=50, show_suptitle = True, 
+        suptitle_str = None, suptitle_size = 20, suptitle_vspace = 1.0, show_subtitle = True, subtitle_size = 20, 
+        subplots_vspace = 0.95, subplots_hspace = 0.3, colorbar_range=None, cbar_label_size=20, cbar_tick_label_size = 20, 
+        save_image=False, img_dpi = 600, img_name='fields_ele_imagenew.png')
+
 </code></pre>
 
 </div>
