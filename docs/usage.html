@@ -414,24 +414,32 @@ The architecture of the four primary modules transform, analysis, utilities and 
 
 <img src="images/pyiwr_arc.png" alt="up_pyiwr">
 
-<h2>format module:</h2> 
+<h2>transform module:</h2> 
 Reading Raw / open-source DWR files, format correction, restructuring DWR NetCDF files, reading and converting radial sweeps format data into cartesian gridded data NetCDF files, merging multiple sweep files into a 
 single volumetric CFradial file
 
 <pre><code># For dual-pol dwr raw files
+	
 radar = pyiwr.transform.raw2nc(filename, save_file=True)
 
+	
 # For Open-source / IMD / IITM nc files reading and format correction and restructuring
+	
 radar = pyiwr.transform.format_correctednc(filename, save_file=True)
 
+	
 # For xarray grids for NetCDF files
+	
 xarray_grids = pyiwr.transform.sweeps2gridnc(filename, grid_shape=(81, 501, 501), height=20, 
 	length=250, save_file=True)
 
+	
 # For merging multiple sweep files into a single file for making volumetric / gridded NetCDF files
+	
 Radar_grids = pyiwr.transform.sweeps2mergednc (path_string, start_index = 0,  end_index=None, 
 	scan_type="B",  no_swps = None, dualpol=False, gridder=False, grid_shape=(30, 500, 500), 
 	height=15, length=250, save_file=False)
+
 	
 </code></pre>
 
@@ -457,6 +465,7 @@ pyiwr.visualize.marginal_max_map(xarray_grids, radar_location='TERLS', field_nam
 <h2>visualize module</h2>
 This module is used for plotting Basic Radar fields in Plan Position Indicator (PPI), at a specific elevation or plotting all elevations or plotting all radar fields available in radar object file.
 <pre><code># For PPI at specific elevation
+	
 pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, figwidth = 10, figheight = 8, 
 	show_label = True, xlabel=None, ylabel=None, label_size=15, show_tick_labels = True, 
 	tick_label_size = 15, show_bounding_box = True, show_grid = True, grid_alpha=0.5, 
@@ -466,7 +475,9 @@ pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, figwidth =
 	set_cbar_label = None, cbar_label_size=15, cbar_tick_label_size = None, save_image=False, 
 	img_dpi = 600, img_name='ele_image_uncorr.png')   
 
+	
 # For PPI of any field at all elevation
+	
  pyiwr.visualize.all_elevation(radar, field_name='DBZ', scan_type = "short_scan", figwidth = 20, 
 	figheight = 18, show_label = True, xlabel=None, ylabel=None,label_size=18, show_tick_labels = True, 
 	tick_label_size = 15, show_bounding_box = True, show_grid = True, grid_alpha=0.5, show_rings = True, 
@@ -478,6 +489,7 @@ pyiwr.visualize.elevation(radar, field_name='DBZ', elevation_index=0, figwidth =
 
 
 # For PPI of all fields
+	
 pyiwr.visualize.fields_elevation(radar, elevation_index=2, scan_type = "short_scan",  figwidth = 20, 
 	figheight = 18, show_label = True, xlabel=None, ylabel=None, label_size=15, show_tick_labels = True, 
 	tick_label_size = 12, show_bounding_box = True, show_grid = True, grid_alpha=0.5, show_rings = True,
@@ -487,6 +499,7 @@ pyiwr.visualize.fields_elevation(radar, elevation_index=2, scan_type = "short_sc
 	subplots_hspace = 0.3, colorbar_range=None, cbar_label_size=20, cbar_tick_label_size = 20, 
 	save_image=False, img_dpi = 600, img_name='fields_ele_imagenew.png')
 
+	
 </code></pre>
 
 </div>
