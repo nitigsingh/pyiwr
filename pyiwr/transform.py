@@ -103,9 +103,9 @@ def raw2nc(dwr_path, save_file=False):
 # The user is provided with the advantage of choosing whether to save the file
 
 
-def format_correctednc(file_path, save_file=False):
+def correctednc(file_path, save_file=False):
     """
-    "format_correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr 
+    "correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr 
     and also format correct the radar files and removes all the errors
     The user is provided with the advantage of choosing whether to save the file.
     Returns all corrected radar objects from any Cf/Radial object file.
