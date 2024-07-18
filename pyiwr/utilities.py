@@ -1012,7 +1012,7 @@ def extract_value_at_location(xg, field_name, elevation_index, target_lat, targe
     return extracted_value
 
 
-def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1.3, c = None, a_c= None, b_c= None a_s= None, b_s= None):
+def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1.3, c = None, a_c= None, b_c= None, a_s= None, b_s= None):
     """
     Calculate rain rate using the Z-R relationship and mask values below 0.1.
 
