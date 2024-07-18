@@ -11,10 +11,6 @@ from .utilities import update_xarray_dataset  # noqa
 from .transform import raw2nc  # noqa
 from .transform import correctednc  # noqa
 from .transform import sweeps2gridnc  # noqa
-from .visualize import cappi  # noqa
-from .visualize import cappi_max  # noqa
-from .visualize import marginal_max  # noqa
 from .visualize import elevation  # noqa
 from .visualize import all_elevation  # noqa
 from .visualize import fields_elevation  # noqa
-from .visualize import marginal_max_map  # noqa
