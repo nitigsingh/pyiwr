@@ -99,7 +99,7 @@ def raw2nc(dwr_path, save_file=False):
         return read
 
 
-# "format_correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr and also format correct the radar files and removes all the errors
+# "correctednc" function takes in any DWR NetCDF file and restructures it into a radar object to be visualized by pyiwr and also format correct the radar files and removes all the errors
 # The user is provided with the advantage of choosing whether to save the file
 
 
@@ -139,7 +139,7 @@ def correctednc(file_path, save_file=False):
         print(
             "File",
             os.path.basename(file_path),
-            'format corrected and restructured successfully and saved in the newly added "corrected" folder in your file path',
+            'corrected and restructured successfully and saved in the newly added "corrected" folder in your file path',
         )
         return pyart.io.read_cfradial(new_file_path)
     else:
