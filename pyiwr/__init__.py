@@ -9,7 +9,7 @@ from .utilities import raw2object  # noqa
 from .utilities import extract_start_time  # noqa
 from .utilities import update_xarray_dataset  # noqa
 from .utilities import db2si  # noqa
-from .utilities import qpe_estimates  # noqa
+from .utilities import qpe_estimators  # noqa
 from .utilities import raw2object  # noqa
 from .utilities import make_grid  # noqa
 from .utilities import extract_values_location  # noqa
