@@ -981,7 +981,7 @@ def db2si(x):
     return 10.0 ** (x / 10.0)
 
 
-def extract_value_at_location(xg, field_name, elevation_index, target_lat, target_lon):
+def extract_values_location(xg, field_name, elevation_index, target_lat, target_lon):
     """
     Extract the value of the specified field at the specified location from the radar data.
 
