@@ -1,6 +1,7 @@
-netCDF4
+netCDF4==1.5.7
 numpy
 pyproj
-scipy
-xarray
-arm_pyart==1.18.6
+scipy==1.12.0
+xarray==2023.2.0
+arm_pyart==1.12.2
+cartopy
