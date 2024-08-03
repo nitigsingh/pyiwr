@@ -3,4 +3,4 @@ numpy
 pyproj
 scipy
 xarray
-arm_pyart
+arm_pyart==1.18.6
