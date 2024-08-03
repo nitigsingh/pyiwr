@@ -2,4 +2,4 @@ netCDF4
 numpy
 scipy
 xarray
-arm_pyart==1.12.2
+arm_pyart==1.13.0
