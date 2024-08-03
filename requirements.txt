@@ -1,5 +1,5 @@
-netCDF4==1.5.7
+netCDF4
 numpy
-scipy==1.12.0
-xarray==2023.2.0
+scipy
+xarray
 arm_pyart==1.12.2
