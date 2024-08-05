@@ -949,7 +949,7 @@ def update_xarray_dataset(file_path, raw, xg):
 
     return xg
 
-def make_grid(radar, grid_shape=(30, 500, 500), height=15, length=250):
+def make_grid(radar, height_km=20, length_km=250, vert_res_km=0.5, horiz_res_km=1, gridding_algo='map_gates_to_grid', copy_field_dtypes=True,):
 
     """
     Returns grid object from radar object.
@@ -957,18 +957,23 @@ def make_grid(radar, grid_shape=(30, 500, 500), height=15, length=250):
     height:(int) = 15, height in km
     length:(int) = 250, Range of radar in km
     """
-    grid = pyart.map.grid_from_radars(
-        radar,
-        grid_shape=grid_shape,
-        grid_limits=(
-            (radar.altitude["data"][0], height * 1e3),
-            (-length * 1e3, length * 1e3),
-            (-length * 1e3, length * 1e3),
-        ),
-        fields=radar.fields.keys(),
-        weighting_function="Barnes2",
-        min_radius=length,
-    )
+    # Calculate the number of vertical levels and horizontal points
+    vertical_levels = int(height_km / vert_res_km) + 1
+    horizontal_points = int((2 * length_km) / horiz_res_km) + 1
+
+    # Define the grid shape
+    grid_shape = (vertical_levels, horizontal_points, horizontal_points)
+    
+    # Calculate the grid limits
+    height = (0, height_km * 1000)  # convert to meters
+    length = (-length_km * 1000, length_km * 1000)  # convert to meters
+    
+    # Define the grid limits
+    grid_limits = (height, length, length)
+    
+    # Create the grid from radars
+    grid = pyart.map.grid_from_radars(radar, grid_shape=grid_shape, grid_limits=grid_limits, gridding_algo='map_gates_to_grid', copy_field_dtypes=True,)
+    
     return grid
 
 
