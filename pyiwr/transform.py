@@ -167,7 +167,7 @@ def correctednc(file_path, save_file=False):
 
 
 def sweeps2gridnc(
-    file_path, grid_shape=(31, 501, 501), height=15, length=250, save_file=False
+    file_path, height=15, length=250, vert_res=0.5, horiz_res=1, save_file=False
 ):
     """
     The function takes in parameters like filename, grid shape (altitude levels, x-axis grids, and y-axis grids),
@@ -175,15 +175,14 @@ def sweeps2gridnc(
     Returns grid object from radar object.
     "sweeps2gridnc" function makes a cartesian grid object from a cfradial NetCDF file using Py-ART, which is then saved as a gridded Xarray object.
 
+    grid_limits = ((0.0, 20000),(-250000, 250000),(-250000, 250000)),
+    grid_shape=(81, 500, 500), no. of bins of z,y,x respectively.
 
-    grid_shape=(61, 500, 500), no. of bins of z,y,x respectively.
-
-    height:(int) = 15, height in km
+    height:(int) = 20, height in km
     length:(int) = 250, Range of radar in km
 
-    0.5 km vertical resolution
+    0.25 km vertical resolution
     1 km resolution horizontally
-    radar installed at 1.313 km height
     """
 
     print("Processing file: ", os.path.basename(file_path))
@@ -202,7 +201,7 @@ def sweeps2gridnc(
         # Read the data from the in-memory file and return the Py-ART radar object
         radar = pyart.io.read_cfradial(tmp_file.name)
         # Read the data from the in-memory file and return the Py-ART radar object
-        grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length, fields=radar.fields.keys(), weighting_function="Barnes2", min_radius=length,)           
+        grid = make_grid(radar, height_km=height, length_km=length, vert_res_km=vert_res, horiz_res_km=vert_res, gridding_algo='map_gates_to_grid', copy_field_dtypes=True)           
 
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
