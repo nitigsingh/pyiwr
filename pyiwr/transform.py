@@ -260,7 +260,7 @@ def sweeps2mergednc(path_string,
                     height=15, 
                     length=250, 
                     vert_res=0.5, 
-                    horiz_res=1
+                    horiz_res=1,
                     save_file=False,
                     ):
     
