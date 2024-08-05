@@ -201,7 +201,7 @@ def sweeps2gridnc(
         # Read the data from the in-memory file and return the Py-ART radar object
         radar = pyart.io.read_cfradial(tmp_file.name)
         # Read the data from the in-memory file and return the Py-ART radar object
-        grid = make_grid(radar, height_km=height, length_km=length, vert_res_km=vert_res, horiz_res_km=vert_res, gridding_algo='map_gates_to_grid', copy_field_dtypes=True)           
+        grid = make_grid(radar, height_km=height, length_km=length, vert_res_km=vert_res, horiz_res_km=horiz_res, gridding_algo='map_gates_to_grid', copy_field_dtypes=True)           
 
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
