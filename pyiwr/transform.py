@@ -257,9 +257,10 @@ def sweeps2mergednc(path_string,
                     no_swps = None,
                     dualpol=False,
                     gridder=False,
-                    grid_shape=(30, 500, 500), 
                     height=15, 
-                    length=250,
+                    length=250, 
+                    vert_res=0.5, 
+                    horiz_res=1
                     save_file=False,
                     ):
     
@@ -499,7 +500,8 @@ def sweeps2mergednc(path_string,
             pyart.io.write_cfradial(new_file_path, radar, format="NETCDF4")
               
             if gridder:
-                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
+                grid = make_grid(radar, height_km=height, length_km=length, vert_res_km=vert_res, horiz_res_km=horiz_res, gridding_algo='map_gates_to_grid', copy_field_dtypes=True)           
+          
                 new_file_name = f"merged_grid_{fname}.nc"
                 new_file_path = os.path.join(merged_dir, new_file_name)
                 pyart.io.write_grid(new_file_path, grid)
@@ -508,7 +510,7 @@ def sweeps2mergednc(path_string,
                 pass
         else:
             if gridder:
-                grid = make_grid(radar, grid_shape=grid_shape, height=height, length=length)           
+                grid = make_grid(radar, height_km=height, length_km=length, vert_res_km=vert_res, horiz_res_km=horiz_res, gridding_algo='map_gates_to_grid', copy_field_dtypes=True)           
                 return grid.to_xarray()
             else:
                 return radar
