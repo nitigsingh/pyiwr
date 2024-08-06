@@ -1045,3 +1045,22 @@ def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1
     rain_rate = ma.masked_where(rain_rate < 0.1, rain_rate)
 
     return rain_rate
+
+
+
+def read_byindex(output_files, index):
+    if index < 0 or index >= len(output_files):
+        raise IndexError(f"Index {index} is out of range for {len(output_files)} output files.")
+    
+    file_path = output_files[index]
+    if "_grid" in file_path:
+        radar_data = pyart.io.read_grid(file_path)
+        radar_data = radar_data.to_xarray()
+    else:
+        radar_data = pyart.io.read_cfradial(file_path)
+    return radar_data
+
+
+def list_dirfil (path_string, ):
+    folder_path = glob.glob(os.path.join(path_string, "*nc*"))
+    return folder_path
