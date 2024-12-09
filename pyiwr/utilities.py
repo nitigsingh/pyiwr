@@ -915,7 +915,7 @@ def update_xarray_dataset(file_path, raw, xg):
     time_units = f"seconds since {start_time_str}"
     xg["time"].attrs["units"] = time_units
 
-    Station = os.path.basename(file_path)[2:5]
+    Station = os.path.basename(file_path)[-31:-28]
     if Station == "CHR":
         a = "Cherrapunji S-band Dual-pol DWR"
     elif Station == "SHR":
