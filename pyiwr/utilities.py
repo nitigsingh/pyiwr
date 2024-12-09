@@ -923,7 +923,7 @@ def update_xarray_dataset(file_path, raw, xg):
     elif Station == "TLS":
         a = "TERLS C-band Dual-pol DWR"
     else:
-        "DWR"
+        a =  "DWR"
 
     # Add attributes to the dataset in the given order
     xg.attrs["instrument_name"] = a
