@@ -207,9 +207,9 @@ def sweeps2gridnc(
         xg = grid.to_xarray()
         xg0 = update_xarray_dataset(file_path, raw, xg)
         
-        nz = len(xg0.coords['height'])  # Number of vertical levels (height dimension)
-        ny = len(xg0.coords['latitude'])  # Number of latitude points
-        nx = len(xg0.coords['longitude'])  # Number of longitude points
+        nz = len(xg0.coords['z'])  # Number of vertical levels (height dimension)
+        ny = len(xg0.coords['lat'])  # Number of latitude points
+        nx = len(xg0.coords['lon'])  # Number of longitude points
         
         # Add these as attributes to the dataset
         xg0.attrs['nz'] = nz
