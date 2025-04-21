@@ -753,7 +753,7 @@ def raw2object(dwr_path, dats):
     elif Station == "TERLS":
         a = "TERLS C-band Dual-pol DWR"
     else:
-        "DWR"
+        b = "DWR"
 
     radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
     radar.metadata = {
