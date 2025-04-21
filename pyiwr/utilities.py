@@ -757,7 +757,7 @@ def raw2object(dwr_path, dats):
 
     radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
     radar.metadata = {
-        "instrument_name": b,
+        # "instrument_name": b,
         "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
         "version": "Version 1.0.1",
         "title": b[:-3] + "DWR data",
