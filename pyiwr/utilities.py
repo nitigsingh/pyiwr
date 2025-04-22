@@ -755,35 +755,35 @@ def raw2object(dwr_path, dats):
     else:
         b = "DWR"
 
-    radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
-    radar.metadata = {
-        "instrument_name": "TEST (b earlier)",   
-        "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
-        "version": "Version 1.0.1",
-        "institution": "Indian: ISRO/IMD/IITM",
-        "references": "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html",
-        "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into standard radar object NetCDF file",
-        "comment": "",
-        "platform_type": "fixed",
-        "instrument_type": "radar",
-        "primary_axis": "axis_z",
-    }
-
     # radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
     # radar.metadata = {
-    #     "instrument_name": b,   
+    #     "instrument_name": "TEST (b earlier)",   
     #     "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
     #     "version": "Version 1.0.1",
-    #     "title": b[:-3] + "DWR data",
     #     "institution": "Indian: ISRO/IMD/IITM",
     #     "references": "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html",
-    #     "source": a,  # 'a' determines the 'source' attribute based on the condition
     #     "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into standard radar object NetCDF file",
     #     "comment": "",
     #     "platform_type": "fixed",
     #     "instrument_type": "radar",
     #     "primary_axis": "axis_z",
     # }
+
+    radar.elevation["data"] = np.array(np.repeat(dats[8][:10], 360))
+    radar.metadata = {
+        "instrument_name": b,   
+        "Created using": "pyiwr (Indian Weather Radar Toolkit) Module developed at SIGMA Research Lab, IIT Indore",
+        "version": "Version 1.0.1",
+        "title": b[:-3] + "DWR data",
+        "institution": "Indian: ISRO/IMD/IITM",
+        "references": "Py-art_https://arm-doe.github.io/pyart/notebooks/basic_ingest_using_test_radar_object.html",
+        "source": a,  # 'a' determines the 'source' attribute based on the condition
+        "history": f"DWR raw ({os.path.basename(dwr_path)[-6:]}) data file encoded into standard radar object NetCDF file",
+        "comment": "",
+        "platform_type": "fixed",
+        "instrument_type": "radar",
+        "primary_axis": "axis_z",
+    }
 
     ref = np.array(dats[14][:, :360, :].T)
     ref = raw_reshape_stack(ref, dats[9])
