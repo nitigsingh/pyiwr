@@ -514,12 +514,12 @@ def marginal_max_map(
 
     # Define colormap based on the field_name
     colormaps = {
-        "DBZ": "pyart_NWSRef",
-        "VEL": "pyart_NWSVel",
-        "WIDTH": "pyart_NWS_SPW",
-        "PHIDP": "pyart_PD17",
-        "RHOHV": "pyart_EWilson17",
-        "ZDR": "pyart_RefDiff",
+        "DBZ": "NWSRef",
+        "VEL": "NWSVel",
+        "WIDTH": "NWS_SPW",
+        "PHIDP": "PD17",
+        "RHOHV": "EWilson17",
+        "ZDR": "RefDiff",
     }
 
     # Get the colormap for the field_name
