@@ -32,6 +32,7 @@ def elevation(
     show_bounding_box=True,
     show_grid=True,
     grid_alpha=1.0,
+    clmp = 'jet'
     colorbar_range=None,
     set_cbar_label = None,
     cbar_label_size=10,
@@ -73,6 +74,7 @@ def elevation(
         - show_bounding_box (bool): Whether to show a bounding box around the plot. (Optional, default=False)
         - show_grid (bool): Whether to show grid lines on the plot. (Optional, default=True)
         - grid_alpha (float): Transparency of grid lines. (Optional, default=1.0)
+        - clmp is the parameter for providing the colorbar 
         - colorbar_range (tuple): Range of values for colorbar scaling. (Optional, default=None)
         - set_cbar_label (bool): set the colorbar label. (Optional, default=fields_Unit)
         - cbar_label_size (int): Size of colorbar label. (Optional, default=10)
@@ -124,16 +126,28 @@ def elevation(
         + 1
     ].T
 
-    colormaps = {
-        'DBZ': 'pyart_NWSRef',
-        'VEL': 'pyart_NWSVel',
-        'corrected_reflectivity': 'pyart_NWSRef',
-        'corrected_velocity': 'pyart_NWSVel',
-        'WIDTH': 'pyart_NWS_SPW',
-        'PHIDP': 'pyart_PD17',
-        'RHOHV': 'pyart_EWilson17',
-        'ZDR': 'pyart_RefDiff',
-        }
+    if clmp == None:
+        colormaps = {
+            'DBZ': 'NWSRef',
+            'VEL': 'NWSVel',
+            'corrected_reflectivity': 'NWSRef',
+            'corrected_velocity': 'NWSVel',
+            'WIDTH': 'NWS_SPW',
+            'PHIDP': 'PD17',
+            'RHOHV': 'EWilson17',
+            'ZDR': 'RefDiff',
+            }
+    else:
+        colormaps = {
+            'DBZ': clmp,
+            'VEL': clmp,
+            'corrected_reflectivity': clmp,
+            'corrected_velocity': clmp,
+            'WIDTH': clmp,
+            'PHIDP': clmp,
+            'RHOHV': clmp,
+            'ZDR': clmp,
+            }
 
     cmap = colormaps.get(field_name, colormaps)
 
@@ -269,6 +283,7 @@ def all_elevation(
     show_bounding_box = True, 
     show_grid = True, 
     grid_alpha=0.5,
+    clmp = None,
     colorbar_range=None,
     set_cbar_label = None,    
     cbar_label_size=10,
@@ -312,6 +327,7 @@ def all_elevation(
         - show_bounding_box (bool): Whether to show a bounding box around the plot. (Optional, default=True)
         - show_grid (bool): Whether to show grid lines on the plot. (Optional, default=True)
         - grid_alpha (float): Transparency of grid lines. (Optional, default=1.0)
+        - clmp is the parameter for providing the colorbar scheme for th radar field plotting
         - colorbar_range (tuple): Range of values for colorbar scaling. (Optional, default=None)
         - set_cbar_label (bool): set the colorbar label. (Optional, default=fields_Unit)
         - cbar_label_size (int): Size of colorbar label. (Optional, default=10)
@@ -379,16 +395,28 @@ def all_elevation(
     )
 
 
-    colormaps = {
-        'DBZ': 'pyart_NWSRef',
-        'VEL': 'pyart_NWSVel',
-        'corrected_reflectivity': 'pyart_NWSRef',
-        'corrected_velocity': 'pyart_NWSVel',
-        'WIDTH': 'pyart_NWS_SPW',
-        'PHIDP': 'pyart_PD17',
-        'RHOHV': 'pyart_EWilson17',
-        'ZDR': 'pyart_RefDiff',
-    }
+    if clmp == None:
+        colormaps = {
+            'DBZ': 'NWSRef',
+            'VEL': 'NWSVel',
+            'corrected_reflectivity': 'NWSRef',
+            'corrected_velocity': 'NWSVel',
+            'WIDTH': 'NWS_SPW',
+            'PHIDP': 'PD17',
+            'RHOHV': 'EWilson17',
+            'ZDR': 'RefDiff',   
+        }
+    else:
+        colormaps = {
+            'DBZ': clmp,
+            'VEL': clmp,
+            'corrected_reflectivity': clmp,
+            'corrected_velocity': clmp,
+            'WIDTH': clmp,
+            'PHIDP': clmp,
+            'RHOHV': clmp,
+            'ZDR': clmp,
+            }
 
     cmap = colormaps.get(field_name, colormaps)
 
@@ -535,6 +563,7 @@ def fields_elevation(
     show_bounding_box=True,
     show_grid=True,
     grid_alpha=0.5,
+    clmp = ['jet', 'turbo', 'jet', 'turbo', 'jet', 'turbo'],
     cbar_label_size=10,
     cbar_tick_label_size=None,
     colorbar_range=None,  
@@ -575,8 +604,9 @@ def fields_elevation(
         - show_bounding_box (bool): Whether to show a bounding box around the plot. (Optional, default=True)
         - show_grid (bool): Whether to show grid lines on the plot. (Optional, default=True)
         - grid_alpha (float): Transparency of grid lines. (Optional, default=1.0)
+        - clmp is the list for providing the color scheme for all the radar fields 
         - colorbar_range (tuple): Range of values for colorbar scaling. (Optional, default=None)
-        inthis way use r should enter #[[0, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0.6, 1]]
+          inthis way use r should enter #[[0, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0.6, 1]]
         - cbar_label_size (int): Size of colorbar label. (Optional, default=10)
         - cbar_tick_label_size: int or None, optional Size of the colorbar tick label font. (Optional, default=None)
         - show_suptitle (bool): Whether to display super plot title. (Optional, default=True)
@@ -633,14 +663,22 @@ def fields_elevation(
         "Differential Phase",
         "Correlation Coefficient",
     ]
-    cmap_names = [
-        "pyart_NWSRef",
-        "pyart_NWSVel",
-        "pyart_NWS_SPW",
-        "pyart_RefDiff",
-        "pyart_PD17",
-        "pyart_EWilson17",
-    ]
+    if clmp:
+        cmap_names = [clmp[0],
+                      clmp[1],
+                      clmp[2],
+                      clmp[3],
+                      clmp[4],
+                      clmp[5],
+                     ]
+    else: 
+        cmap_names = ["NWSRef",
+                      "NWSVel",
+                      "NWS_SPW",
+                      "RefDiff",
+                      "PD17",
+                      "EWilson17",
+                      ]
     levels = [[0, 70], [-30, 30], [0, 10], [-10, 10], [0, 360], [0.6, 1]]
 
     rngs = radar.range["data"] / 1000.0
