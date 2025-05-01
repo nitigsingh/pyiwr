@@ -32,7 +32,7 @@ def elevation(
     show_bounding_box=True,
     show_grid=True,
     grid_alpha=1.0,
-    clmp = 'jet'
+    clmp = 'jet',
     colorbar_range=None,
     set_cbar_label = None,
     cbar_label_size=10,
