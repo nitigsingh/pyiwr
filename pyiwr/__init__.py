@@ -23,7 +23,6 @@ from .visualize import all_elevation  # noqa
 from .visualize import fields_elevation  # noqa
 from .analysis import cappi
 from .analysis import cappi_max
-from .analysis import marginal_max
 from .analysis import marginal_max_map
 # from .analysis import qpe_cappi
 # from .analysis import timeseries_spatial
