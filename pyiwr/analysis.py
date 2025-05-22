@@ -29,31 +29,44 @@ def cappi(
     radar_location="CHERRAPUNJI",
     grid=False,
     rings=False,
-    ticks_in_km=True,
+    coord_system="km",  # <-- new param: 'km', 'm', or 'geo'
     save_image=False,
     img_name=None,
 ):
+
     """
     Plot CAPPI at the specified altitude level.
 
     Parameters:
-        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
+        xg (xarray.Dataset): Pyiwr Xarray Dataset containing gridded radar data.
         altitude_level (int): Altitude level in kilometers (e.g., 3 km = 6, 3.5 km = 7).
         field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
         radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI',
-        other options are SHAR and TERLS.
-        grid (bool, optional): If True, display gridlines. Default is True.
-        rings (bool, optional): If True, display range rings. Default is True.
-        ticks_in_km (bool, optional): If True, display ticks in kilometers. Default is True.
+            other options are 'SHAR' and 'TERLS'.
+        grid (bool, optional): If True, display gridlines. Default is False.
+        rings (bool, optional): If True, display range rings. Default is False.
+        coord_system (str, optional): Coordinate system for plotting. Choose from:
+            - 'km': Cartesian coordinates in kilometers.
+            - 'm': Cartesian coordinates in meters.
+            - 'geo': Geographic coordinates (longitude and latitude).
+            Default is 'km'.
         save_image (bool, optional): If True, save the image as a PNG file. Default is False.
         img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
 
-
-        Example usage:
-        pyiwr.visualize.cappi(xg, altitude_level=3, field_name='DBZ', \
-            radar_location='CHERRAPUNJI', grid=False, rings=False, \
-                ticks_in_km=True, save_image=True, img_name='cappi_image.png')
+    Example usage:
+        pyiwr.visualize.cappi(
+            xg,
+            altitude_level=3,
+            field_name='DBZ',
+            radar_location='CHERRAPUNJI',
+            grid=False,
+            rings=True,
+            coord_system='geo',
+            save_image=True,
+            img_name='cappi_image.png'
+        )
     """
+
     alt_index = int(
         altitude_level * 2
     )  # Calculate the index corresponding to the altitude level
@@ -79,22 +92,30 @@ def cappi(
     }
 
     # Access the field from the xg dataset using the field_name parameter
-    if ticks_in_km:
-        plt.contourf(
-            xg.x / 1000,
-            xg.y / 1000,
-            xg[field_name][0][alt_index],
-            levels=np.linspace(*levels.get(field_name, [-20, 70]), 31),
-            cmap=colormaps.get(field_name, "pyart_NWSRef"),
-        )
-    else:
-        plt.contourf(
-            xg.x,
-            xg.y,
-            xg[field_name][0][alt_index],
-            levels=np.linspace(*levels.get(field_name, [-20, 70]), 31),
-            cmap=colormaps.get(field_name, "pyart_NWSRef"),
-        )
+    if coord_system == "geo":
+        x = xg.lon
+        y = xg.lat
+        xlabel = "Longitude due East"
+        ylabel = "Latitude due North"
+    elif coord_system == "m":
+        x = xg.x
+        y = xg.y
+        xlabel = "Range (in m) of Radar (at Center) in Cartesian"
+        ylabel = "Range (in m) of Radar (at Center) in Cartesian"
+    else:  # Default to 'km'
+        x = xg.x / 1000
+        y = xg.y / 1000
+        xlabel = "Range (in km) of Radar (at Center) in Cartesian"
+        ylabel = "Range (in km) of Radar (at Center) in Cartesian"
+    
+    plt.contourf(
+        x,
+        y,
+        xg[field_name][0][alt_index],
+        levels=np.linspace(*levels.get(field_name, [-20, 70]), 31),
+        cmap=colormaps.get(field_name, "NWSRef"),
+    )
+
 
     plt.colorbar(label=field_name)
 
@@ -112,26 +133,26 @@ def cappi(
     if grid:
         plt.grid()
 
-    if rings:
-        if ticks_in_km:
-            t = np.linspace(0, 2 * np.pi)
-            for r in [50, 150, 250]:
-                (a,) = plt.plot(
-                    r * np.cos(t), r * np.sin(t), color="0.5"
-                )  # Use '0.5' for medium grey color
-        else:
-            t = np.linspace(0, 2 * np.pi)
-            for r in [50000, 150000, 250000]:
-                (a,) = plt.plot(
-                    r * np.cos(t), r * np.sin(t), color="0.5"
-                )  # Use '0.5' for medium grey color
+    if rings and coord_system != "geo":
+        t = np.linspace(0, 2 * np.pi)
+        if coord_system == "km":
+            ring_radii = [50, 150, 250]  # in kilometers
+            scale = 1  # already in km
+        elif coord_system == "m":
+            ring_radii = [50000, 150000, 250000]  # in meters
+            scale = 1  # already in meters
+    
+        for r in ring_radii:
+            plt.plot(
+                r * np.cos(t) * scale,
+                r * np.sin(t) * scale,
+                color="0.5",
+            )
 
-    if ticks_in_km:
-        plt.xlabel("Range (in km) of Radar (at Center) in Cartesian")
-        plt.ylabel("Range (in km) of Radar (at Center) in Cartesian")
-    else:
-        plt.xlabel("Range (in m) of Radar (at Center) in Cartesian")
-        plt.ylabel("Range (in m) of Radar (at Center) in Cartesian")
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
 
     # Save the image if save_image is True and file_name is provided
     if save_image:
@@ -143,7 +164,6 @@ def cappi(
         # Save the image as a PNG file with 600 DPI
         plt.savefig(img_name, dpi=600, bbox_inches="tight")
     plt.show()
-
 
 def cappi_max(
     xg,
@@ -263,100 +283,138 @@ def marginal_max(
     radar_location="CHERRAPUNJI",
     field_name="DBZ",
     rings=False,
-    grid=False,
+    grids=False,
     cross_sections=True,
+    coord_system="km",
     save_image=False,
     img_name=None,
 ):
     """
-    Plot the MAX-Z CAPPI with cross-sections for the given xarray Dataset.
+    Plot the MAX-Z CAPPI (Constant Altitude Plan Position Indicator) with optional cross-sections 
+    for the given xarray Dataset.
 
     Parameters:
-        xg (xarray.Dataset): Py_SRT Xarray Dataset containing gridded radar data.
-        radar_location (str, optional): Radar location name. Default is 'CHERRAPUNJI'.
-        field_name (str, optional): Name of the radar field to plot. Default is 'DBZ'.
-        rings (bool, optional): If True, display range rings. Default is False.
-        grid (bool, optional): If True, display gridlines. Default is False.
-        cross_sections (bool, optional): If True, display cross-sections. Default is True.
-        save_image (bool, optional): If True, save the image as a PNG file. Default is False.
-        img_name (str, optional): Name of the PNG file to save. Required if save_image is True.
+        xg (xarray.Dataset): Gridded radar data in xarray format (as output by PyIWR).
+        radar_location (str, optional): Name of the radar location. Default is 'CHERRAPUNJI'.
+        field_name (str, optional): Radar variable/field to plot (e.g., 'DBZ', 'VEL'). Default is 'DBZ'.
+        rings (bool, optional): If True, draw range rings around radar. Default is False.
+        grids (bool, optional): If True, overlay gridlines on the plot. Default is False.
+        cross_sections (bool, optional): If True, plot vertical cross-sections along centerlines. Default is True.
+        coord_system (str, optional): Coordinate system to use for plotting. One of:
+            - 'km': Cartesian coordinates in kilometers from radar center.
+            - 'm' : Cartesian coordinates in meters from radar center.
+            - 'geo': Geographic coordinates (longitude and latitude).
+            Default is 'km'.
 
+            Note: When using 'geo', the plot uses 2D latitude/longitude arrays and colorbar is 
+            manually added (unlike 'km' or 'm', where it is auto-handled by xarray).
 
-        Example usage:
-        marginal_maxz(xg, radar_location='SHAR', field_name='WIDTH', rings=True, grid=True, cross_sections=True, save_image=True, img_name='marg_max_image.png')
+        save_image (bool, optional): If True, save the plot to disk as a PNG file. Default is False.
+        img_name (str, optional): Filename for the PNG output. Required if save_image is True.
+
+    Example usage:
+        marginal_max(
+            xg,
+            radar_location='SHAR',
+            field_name='WIDTH',
+            rings=True,
+            grids=True,
+            cross_sections=True,
+            coord_system='geo',
+            save_image=True,
+            img_name='marg_max_image.png'
+        )
     """
+
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_aspect(1.0)
 
-    # Define colormap based on the field_name
+    # Define colormap and levels
     colormaps = {
-        "DBZ": "NWSRef",
-        "VEL": "NWSVel",
-        "WIDTH": "NWS_SPW",
-        "PHIDP": "PD17",
-        "RHOHV": "EWilson17",
-        "ZDR": "RefDiff",
+        "DBZ": "NWSRef", "VEL": "NWSVel", "WIDTH": "NWS_SPW",
+        "PHIDP": "PD17", "RHOHV": "EWilson17", "ZDR": "RefDiff"
     }
-
-    # Get the colormap for the field_name
     cmap = colormaps.get(field_name, "pyart_NWSRef")
-
-    # Define levels for the color bar
     levels = {
-        "DBZ": [-20, 70],
-        "VEL": [-30, 30],
-        "WIDTH": [0, 10],
-        "PHIDP": [0, 360],
-        "RHOHV": [0.6, 1],
-        "ZDR": [-10, 10],
+        "DBZ": [-20, 70], "VEL": [-30, 30], "WIDTH": [0, 10],
+        "PHIDP": [0, 360], "RHOHV": [0.6, 1], "ZDR": [-10, 10]
     }
-
-    # Get the levels for the field_name
     cmap_levels = levels.get(field_name, [-20, 70])
+    
+    # Prepare CAPPI
+    cappi = xg[field_name][0].max("z")  # shape ('y', 'x')
 
-    # Plot the MAX-Z CAPPI
-    cappi = xg[field_name][0].max("z")
-    cappi.plot.contourf(
-        cmap=cmap,
-        levels=range(cmap_levels[0], cmap_levels[1] + 1),
-        cbar_kwargs={"pad": 0.02, "shrink": 0.8},
-        ax=ax,
-    )
-
-    if radar_location == "CHERRAPUNJI":
-        k = "CHERRAPUNJI S-band Dual-Pol DWR"
-    elif radar_location == "SHAR":
-        k = "SHAR S-band Dual-pol DWR"
+    
+    # Choose coordinates
+    if coord_system == "geo":
+        x, y = xg["lon"].values, xg["lat"].values  # These are 2D (y, x)
+        xlabel = "Longitude due East"
+        ylabel = "Latitude due North"
+        cf = ax.contourf(x, y, cappi.values,
+                         cmap=cmap,
+                         levels=range(cmap_levels[0], cmap_levels[1] + 1)
+        )
+        # Add colorbar manually
+        cbar = plt.colorbar(cf, ax=ax, pad=0.02, shrink=0.8)
+        cbar.set_label(f"{field_name}")  # Optional label
+        
     else:
-        k = "TERLS C-band Dual-pol DWR"
+        if coord_system == "km":
+            x = xg["x"].values / 1000  # 1D in km
+            y = xg["y"].values / 1000
+            cappi.coords["x"] = x
+            cappi.coords["y"] = y
+        
+        else:
+            x = xg["x"].values  # 1D in meters
+            y = xg["y"].values
+            cappi.coords["x"] = x
+            cappi.coords["y"] = y
+            
+        xlabel = f"East-West distance (in {coord_system}) from radar center"
+        ylabel = f"North-South distance (in {coord_system}) from radar center"
+    
+        # Cartesian: 1D coordinates
+        cf = cappi.plot.contourf(
+            ax=ax,
+            cmap=cmap,
+            levels=range(cmap_levels[0], cmap_levels[1] + 1),
+            cbar_kwargs={"pad": 0.02, "shrink": 0.84},
+        )
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+
 
     # Title
-    title_str = f"{k} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
+    radar_titles = {
+        "CHERRAPUNJI": "CHERRAPUNJI S-band Dual-Pol DWR",
+        "SHAR": "SHAR S-band Dual-pol DWR",
+        "TERLS": "TERLS C-band Dual-pol DWR"
+    }
+    radar_title = radar_titles.get(radar_location.upper(), radar_location)
+    title_str = f"{radar_title} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
+    plt.title(title_str, pad=100 if cross_sections else None)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
 
-    if cross_sections:
-        plt.title(title_str, pad=100)
-    else:
-        plt.title(title_str)
-    plt.xlabel("X distance (in m) from Radar (at Center) in Cartesian")
-    plt.ylabel("Y distance (in m) from Radar (at Center) in Cartesian")
-    if grid:
+    
+    if grids and coord_system != "geo":
         plt.grid()
 
-    if rings:
-        # Range rings
+    if rings and coord_system != "geo":
         t = np.linspace(0, 2 * np.pi)
+        ring_scale = 1 if coord_system == "m" else 1e-3
         for r in [50000, 150000, 250000]:
-            (a,) = plt.plot(
-                r * np.cos(t), r * np.sin(t), color="0.5"
-            )  # Use '0.5' for medium grey color
+            radius = r * ring_scale
+            plt.plot(radius * np.cos(t), radius * np.sin(t), color="0.5")
 
     if cross_sections:
-        # Create new axes for displaying cross-sections
         divider = make_axes_locatable(ax)
         ax_x = divider.append_axes("top", 1.2, pad=0.05)
         ax_y = divider.append_axes("right", 1.2, pad=0.05)
 
-        # Plot cross-sections
         xg[field_name][0].max(axis=1).plot.contourf(
             cmap=cmap,
             levels=range(cmap_levels[0], cmap_levels[1] + 1),
@@ -372,7 +430,6 @@ def marginal_max(
 
         ax_x.xaxis.set_major_formatter(NullFormatter())
         ax_y.yaxis.set_major_formatter(NullFormatter())
-
         ax_x.set_title(None)
         ax_y.set_title(None)
         ax_y.set_ylabel(None)
@@ -380,64 +437,37 @@ def marginal_max(
         ax_x.set_ylabel("Height AMSL (m)", size=10)
         ax_y.set_xlabel("Height AMSL (m)", size=10)
 
-        # Add corner box
-        left, bottom, width, height = 0.647, 0.697, 0.12, 0.12
-        ax_cnr = plt.axes((left, bottom, width, height))
+        # Add corner box with annotations
+        if coord_system == "geo":
+            left, bottom, width, height = 0.641, 0.694, 0.12, 0.12
+        else:
+            left, bottom, width, height = 0.641, 0.704, 0.12, 0.12
+        ax_cnr = inset_axes(ax,
+                            width="100%", height="100%",
+                            bbox_to_anchor=(left, bottom, width, height),
+                            bbox_transform=ax.figure.transFigure,
+                            loc="upper left")
         plt.sca(ax_cnr)
-        plt.tick_params(
-            axis="both",
-            which="both",
-            bottom=False,
-            top=False,
-            left=False,
-            right=False,
-            labelbottom=False,
-        )
+        plt.tick_params(axis="both", which="both", bottom=False, top=False, left=False, right=False, labelbottom=False)
         ax_cnr.yaxis.set_major_formatter(NullFormatter())
         ax_cnr.xaxis.set_major_formatter(NullFormatter())
 
-        # Labels along the bottom edge are off
         plt.text(0.06, 0.8, "MAX-CAPPI", size=12, weight="bold")
-        plt.text(0.02, 0.65, "Max Range:" + str(int(xg.x[-1]) / 1e3) + "km", size=8)
-        plt.text(0.02, 0.5, "Max Height:" + str(int(xg.z[-1]) / 1e3) + "km", size=8)
+        plt.text(0.02, 0.65, f"Max Range: {int(xg.x[-1] / 1e3)}km", size=8)
+        plt.text(0.02, 0.5, f"Max Height: {int(xg.z[-1] / 1e3)}km", size=8)
 
-        # Show the datetime
+        timestamp = str(xg.time["time"].values[0])
+        plt.text(0.15, 0.3, timestamp[11:19], weight="bold", size=12)
+        dt = datetime.strptime(timestamp[:10], "%Y-%m-%d")
+        plt.text(0.1, 0.2, dt.strftime("%d %B"), size=10, ha="left", va="center")
+        plt.text(0.2, 0.08, dt.strftime("%Y UTC"), size=10, ha="left", va="center")
 
-        plt.text(
-            0.15, 0.3, str(xg.time["time"].values[0])[11:19], weight="bold", size=12
-        )
-        plt.text(
-            0.1,
-            0.2,
-            datetime.strptime(str(xg.time["time"].values[0])[:10], "%Y-%m-%d").strftime(
-                "%d %B"
-            ),
-            size=10,
-            ha="left",
-            va="center",
-        )
-        plt.text(
-            0.2,
-            0.08,
-            datetime.strptime(str(xg.time["time"].values[0])[:10], "%Y-%m-%d").strftime(
-                "%Y UTC"
-            ),
-            size=10,
-            ha="left",
-            va="center",
-        )
-
-    # Save the image if save_image is True and file_name is provided
     if save_image:
         if img_name is None:
-            raise ValueError(
-                "Please provide the 'img_name' parameter to save the image."
-            )
-
-        # Save the image as a PNG file with 600 DPI
+            raise ValueError("Please provide the 'img_name' parameter to save the image.")
         plt.savefig(img_name, dpi=600, bbox_inches="tight")
-    plt.show()
 
+    plt.show()
 
 def marginal_max_map(
     xg,
