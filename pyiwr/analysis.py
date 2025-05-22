@@ -177,7 +177,7 @@ def cappi_max(
     img_name=None,
 ):
     """
-    Plot the MAX-Z CAPPI (Constant Altitude Plan Position Indicator) with optional cross-sections 
+    Plot the MAX-Z CAPPI (Constant Altitude Plan Position Indicator) with optional marginal_cross_sections 
     for the given xarray Dataset.
 
     Parameters:
@@ -186,7 +186,7 @@ def cappi_max(
         field_name (str, optional): Radar variable/field to plot (e.g., 'DBZ', 'VEL'). Default is 'DBZ'.
         rings (bool, optional): If True, draw range rings around radar. Default is False.
         grids (bool, optional): If True, overlay gridlines on the plot. Default is False.
-        cross_sections (bool, optional): If True, plot vertical cross-sections along centerlines. Default is True.
+        marginal_cross_sect (bool, optional): If True, plot vertical cross-sections along centerlines. Default is True.
         coord_system (str, optional): Coordinate system to use for plotting. One of:
             - 'km': Cartesian coordinates in kilometers from radar center.
             - 'm' : Cartesian coordinates in meters from radar center.
@@ -206,7 +206,7 @@ def cappi_max(
             field_name='WIDTH',
             rings=True,
             grids=True,
-            cross_sections=True,
+            marginal_cross_sect=True,
             coord_system='geo',
             save_image=True,
             img_name='marg_max_image.png'
@@ -297,7 +297,7 @@ def cappi_max(
             radius = r * ring_scale
             plt.plot(radius * np.cos(t), radius * np.sin(t), color="0.5")
 
-    if cross_sections:
+    if marginal_cross_sect:
         divider = make_axes_locatable(ax)
         ax_x = divider.append_axes("top", 1.2, pad=0.05)
         ax_y = divider.append_axes("right", 1.2, pad=0.05)
