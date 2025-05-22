@@ -240,7 +240,7 @@ def sweeps2gridnc(
         )
         new_file_path = os.path.join(updated_dir, new_file_name)
 
-        pyart.io.write_grid(new_file_path, xg0)
+        xg0.to_netcdf(new_file_path)
         print(
             "Xarray gridding of volumetric sweeps of radar PPI scan file:",
             os.path.basename(file_path),
