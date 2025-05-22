@@ -282,7 +282,7 @@ def cappi_max(
     }
     radar_title = radar_titles.get(radar_location.upper(), radar_location)
     title_str = f"{radar_title} {xg[field_name].standard_name}\nTime: {str(xg.time['time'].values[0])[:19]}, MAXZ CAPPI"
-    plt.title(title_str, pad=100 if cross_sections else None)
+    plt.title(title_str, pad=100 if marginal_cross_sect else None)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
