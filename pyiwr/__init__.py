@@ -28,6 +28,6 @@ from .analysis import marginal_max_map
 # from .analysis import qpe_cappi
 # from .analysis import timeseries_spatial
 # from .analysis import timeseries_location
-from .utilities import classify_echo_filter  # noqa
+from .utilities import classify_echo_filter_dbzh  # noqa
 # from .analysis import cfad
 
