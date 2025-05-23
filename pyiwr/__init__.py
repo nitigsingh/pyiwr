@@ -6,6 +6,7 @@ from .utilities import fread  # noqa
 from .utilities import raw_product_list  # noqa
 from .utilities import raw_reshape_stack  # noqa
 from .utilities import raw2object  # noqa
+from .utilities import xy2latlon
 from .utilities import extract_start_time  # noqa
 from .utilities import update_xarray_dataset  # noqa
 from .utilities import db2si  # noqa
