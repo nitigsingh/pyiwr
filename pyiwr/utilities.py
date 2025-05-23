@@ -1105,8 +1105,8 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
         Combined mask from Gabella filter and fuzzy classification.
 
     Example usage:
-    cleaned_dbzh, combined_mask = filter_and_classify_echo(radar, elevation_index=0)
-    cleaned_dbzh, combined_mask = filter_and_classify_echo(radar, elevation_index=0, static_clutter_map=my_static_map)
+    cleaned_dbzh, combined_mask = classify_echo_filter_dbzh(radar, elevation_index=0)
+    cleaned_dbzh, combined_mask = classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=my_static_map)
    
     """
     # Extract sweep data
