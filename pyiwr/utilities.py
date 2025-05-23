@@ -15,6 +15,7 @@ import datetime as dt
 import os
 import re
 import glob
+from pyproj import CRS, Transformer
 
 import numpy as np
 import pyart
@@ -883,6 +884,27 @@ def extract_start_time(raw):
                 start_time = start_time_from_data_str
 
     return start_time
+
+
+def xy2latlon(xs_km, ys_km, radar_lat, radar_lon):
+    """
+    Convert radar-centered X/Y (in km) grid to latitude and longitude grid.
+    Parameters:
+        xs_km (2D array): X coordinates (east-west) in km
+        ys_km (2D array): Y coordinates (north-south) in km
+        radar_lat (float): Radar latitude (center point)
+        radar_lon (float): Radar longitude (center point)
+    Returns:
+        lats (2D array): Latitude grid matching shape of xs_km
+        lons (2D array): Longitude grid matching shape of xs_km
+    """
+    proj_aeqd = CRS.from_proj4(f"+proj=aeqd +lat_0={radar_lat} +lon_0={radar_lon} +datum=WGS84 +units=m +no_defs")
+    proj_geo = CRS.from_epsg(4326) 
+    transformer = Transformer.from_crs(proj_aeqd, proj_geo, always_xy=True)
+    xs_m = xs_km * 1000
+    ys_m = ys_km * 1000
+    lons, lats = transformer.transform(xs_m, ys_m)
+    return lats, lons
 
 
 def update_xarray_dataset(file_path, raw, xg):
