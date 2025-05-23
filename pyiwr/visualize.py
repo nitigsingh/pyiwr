@@ -22,6 +22,7 @@ def elevation(
     field_name="DBZ",
     elevation_index=0,
     scan_type = "short_scan",
+    coord_system = "geo",
     figwidth = 8,
     figheight = 8,
     show_label = True,
@@ -66,6 +67,7 @@ def elevation(
         - scan_type (str): Type of scan, e.g., 'PPI' or 'RHI'. (Optional, default="short_scan")
         - figwidth (int): control width size for the whole plot. (Optional, default= 8)
         - figheight (int): control height size for the whole plot. (Optional, default= 8)
+        - coord_system = "geo", it will be plotted in latitudes and longitudes, else in km
         - show_label (bool): Whether to show axis labels. (Optional, default=True)
         - xlabel= provide x label for the plot.(Optional, default=None)
         - ylabel= provide y label for the plot.(Optional, default=None)
@@ -110,7 +112,10 @@ def elevation(
     
     fig, ax = plt.subplots(figsize=(figwidth, figheight), dpi=img_dpi)
 
-
+    # Assuming xs0 and ys0 are already computed as in your code
+    radar_lat = radar.latitude['data'][0]
+    radar_lon = radar.longitude['data'][0]
+    
     rngs = radar.range["data"] / 1000.0
     xs0 = rngs[:, np.newaxis] * np.sin(
         np.deg2rad(np.around(radar.azimuth["data"][0:360] * 100) / 100)
@@ -126,7 +131,9 @@ def elevation(
         ] : radar.sweep_end_ray_index["data"][elevation_index]
         + 1
     ].T
-
+    
+    lats, lons = xy2latlon(xs0, ys0, radar_lat, radar_lon)
+    
     if clmp == None:
         colormaps = {
             'DBZ': 'NWSRef',
@@ -163,12 +170,17 @@ def elevation(
         'ZDR': [-10, 10],
         }
 
-    
-    if colorbar_range is not None:
-        plt.contourf(xs0, ys0, ele_data, levels=range(*colorbar_range), cmap=cmap)
+    if coord_system == "geo":      
+        if colorbar_range is not None:
+            plt.contourf(lons, lats, ele_data, levels=range(*colorbar_range), cmap=cmap)
+        else:
+            plt.contourf(lons, lats, ele_data, levels=range(*levels_dict[field_name]), cmap=cmap)  
     else:
-        plt.contourf(xs0, ys0, ele_data, levels=range(*levels_dict[field_name]), cmap=cmap)
-
+        if colorbar_range is not None:
+            plt.contourf(xs0, ys0, ele_data, levels=range(*colorbar_range), cmap=cmap)
+        else:
+            plt.contourf(xs0, ys0, ele_data, levels=range(*levels_dict[field_name]), cmap=cmap)
+            
         
     # Show or hide tick labels based on the value of show_tick_labels
     if not show_tick_labels:
@@ -200,16 +212,28 @@ def elevation(
         
         
     # Set x and y labels if show_label is True
-    if show_label:      
-        if xlabel is not None:
-            ax.set_xlabel(xlabel, fontsize=label_size)
+    if show_label:   
+        if coord_system == "geo":      
+            if xlabel is not None:
+                ax.set_xlabel(xlabel, fontsize=label_size)
+            else:
+                ax.set_xlabel('Longitude due East', fontsize=label_size)
+            
+            if ylabel is not None:
+                ax.set_ylabel(ylabel, fontsize=label_size)
+            else:
+                ax.set_ylabel('Latitude due North', fontsize=label_size)
         else:
-            ax.set_xlabel('Range (in km) of Radar', fontsize=label_size)
-        
-        if ylabel is not None:
-            ax.set_ylabel(ylabel, fontsize=label_size)
-        else:
-            ax.set_ylabel('Range (in km) of Radar', fontsize=label_size)
+            if xlabel is not None:
+                ax.set_xlabel(xlabel, fontsize=label_size)
+            else:
+                ax.set_xlabel('East - West distance (in km) from Radar center', fontsize=label_size)
+            
+            if ylabel is not None:
+                ax.set_ylabel(ylabel, fontsize=label_size)
+            else:
+                ax.set_ylabel('North - South distance (in km) from Radar center', fontsize=label_size)
+    
     else:
         ax.set_xlabel('')
         ax.set_ylabel('')
@@ -237,23 +261,24 @@ def elevation(
         ax.set_frame_on(False)
         ax.grid(False)
 
-    if show_rings:
-        if scan_type == "long_scan":
-            t = np.linspace(0, 2 * np.pi)
-            for r in [100, 250, 500]:
-                x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
-                y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                plt.plot(r * np.cos(t), r * np.sin(t), color=ring_color, alpha=ring_alpha)  # ring_color from 0 for black to 1 for white, Use '0.5' for medium grey color, Adjust the ring alpha as desired from 0 for light to 1 for dark
-                if show_ring_label:
-                    plt.text(x + ring_label_xloc_adjust, y + ring_label_yloc_adjust, f"{r} Km", ha='center', va='center', fontsize=ring_label_size)                
-        else:
-            t = np.linspace(0, 2 * np.pi)
-            for r in [50, 150, 250]:
-                x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
-                y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
-                plt.plot(r * np.cos(t), r * np.sin(t), color=ring_color, alpha=ring_alpha)  # ring_color from 0 for black to 1 for white, Use '0.5' for medium grey color, Adjust the ring alpha as desired from 0 for light to 1 for dark
-                if show_ring_label:
-                    plt.text(x + ring_label_xloc_adjust, y + ring_label_yloc_adjust, f"{r} Km", ha='center', va='center', fontsize=ring_label_size)
+    if coord_system != "geo":      
+        if show_rings:
+            if scan_type == "long_scan":
+                t = np.linspace(0, 2 * np.pi)
+                for r in [100, 250, 500]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    plt.plot(r * np.cos(t), r * np.sin(t), color=ring_color, alpha=ring_alpha)  # ring_color from 0 for black to 1 for white, Use '0.5' for medium grey color, Adjust the ring alpha as desired from 0 for light to 1 for dark
+                    if show_ring_label:
+                        plt.text(x + ring_label_xloc_adjust, y + ring_label_yloc_adjust, f"{r} Km", ha='center', va='center', fontsize=ring_label_size)                
+            else:
+                t = np.linspace(0, 2 * np.pi)
+                for r in [50, 150, 250]:
+                    x = r * np.cos(np.radians(30))  # Calculate x-coordinate of the label
+                    y = r * np.sin(np.radians(30))  # Calculate y-coordinate of the label
+                    plt.plot(r * np.cos(t), r * np.sin(t), color=ring_color, alpha=ring_alpha)  # ring_color from 0 for black to 1 for white, Use '0.5' for medium grey color, Adjust the ring alpha as desired from 0 for light to 1 for dark
+                    if show_ring_label:
+                        plt.text(x + ring_label_xloc_adjust, y + ring_label_yloc_adjust, f"{r} Km", ha='center', va='center', fontsize=ring_label_size)
 
                 # Save the image if save_image is True and file_name is provided
     if save_image:
