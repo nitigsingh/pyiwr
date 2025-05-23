@@ -1084,6 +1084,74 @@ def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1
     return rain_rate
 
 
+def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None):
+    """
+    Apply Gabella filtering and fuzzy echo classification on radar data.
+
+    Parameters:
+    ----------
+    radar : wradlib.io.read_radolan_hdf5() output
+        Radar object with polarimetric fields.
+    elevation_index : int
+        Index of sweep elevation to process (default: 0)
+    static_clutter_map : ndarray or None
+        Optional user-provided static clutter map (same shape as sweep)
+
+    Returns:
+    -------
+    cleaned_dbzh : masked_array
+        Reflectivity field with combined clutter mask applied.
+    combined_mask : ndarray
+        Combined mask from Gabella filter and fuzzy classification.
+
+    Example usage:
+    cleaned_dbzh, combined_mask = filter_and_classify_echo(radar, elevation_index=0)
+    cleaned_dbzh, combined_mask = filter_and_classify_echo(radar, elevation_index=0, static_clutter_map=my_static_map)
+   
+    """
+    # Extract sweep data
+    sweep_start = radar.sweep_start_ray_index["data"][elevation_index]
+    sweep_end = radar.sweep_end_ray_index["data"][elevation_index] + 1
+
+    dbzh = radar.fields["DBZ"]["data"][sweep_start:sweep_end]
+    zdr = radar.fields["ZDR"]["data"][sweep_start:sweep_end]
+    rho = radar.fields["RHOHV"]["data"][sweep_start:sweep_end]
+    phi = radar.fields["PHIDP"]["data"][sweep_start:sweep_end]
+    dop = radar.fields["VEL"]["data"][sweep_start:sweep_end]
+
+    # Apply Gabella filter
+    clutter_mask_gabella = wrl.classify.filter_gabella(
+        dbzh,
+        wsize=5,
+        thrsnorain=0.0,
+        tr1=6.0,
+        n_p=6,
+        tr2=1.3,
+        rm_nans=True,
+        radial=False,
+        cartesian=False,
+    )
+
+    # Prepare input dict for fuzzy classification
+    dat = {
+        "zdr": zdr,
+        "rho": rho,
+        "phi": phi,
+        "dop": dop,
+        "map": static_clutter_map.astype(float) if static_clutter_map is not None else clutter_mask_gabella.astype(float)
+    }
+
+    # Fuzzy echo classification
+    prob, fuzzy_mask = classify_echo_fuzzy(dat)
+
+    # Combine masks
+    combined_mask = np.logical_or(clutter_mask_gabella, fuzzy_mask)
+
+    # Masked reflectivity
+    cleaned_dbzh = np.ma.array(dbzh, mask=combined_mask)
+
+    return cleaned_dbzh, combined_mask
+
 
 def read_byindex(output_files, index):
     if index < 0 or index >= len(output_files):
