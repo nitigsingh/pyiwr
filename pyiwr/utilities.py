@@ -19,7 +19,7 @@ from pyproj import CRS, Transformer
 
 import numpy as np
 import wradlib as wrl
-from wradlib.clutter import classify_echo_fuzzy
+from wradlib.classify import classify_echo_fuzzy
 import pyart
 import pyart.map
 import xarray as xr
@@ -1092,7 +1092,7 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
 
     Parameters:
     ----------
-    radar : wradlib.io.read_radolan_hdf5() output
+    radar : pyart radar objects
         Radar object with polarimetric fields.
     elevation_index : int
         Index of sweep elevation to process (default: 0)
