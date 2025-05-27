@@ -1085,6 +1085,20 @@ def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1
 
     return rain_rate
 
+# Field name mappings
+field_aliases = {
+    "dbzh": ["DBZ", "reflectivity"],
+    "zdr": ["ZDR", "differential_reflectivity"],
+    "rho": ["RHOHV", "cross_correlation_ratio"],
+    "phi": ["PHIDP", "differential_phase"],
+    "dop": ["VEL", "velocity"]
+}
+
+def get_field_data(radar, possible_names, sweep_start, sweep_end):
+    for name in possible_names:
+        if name in radar.fields:
+            return radar.fields[name]["data"][sweep_start:sweep_end]
+    return None
 
 def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None):
     """
@@ -1115,12 +1129,12 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
     sweep_start = radar.sweep_start_ray_index["data"][elevation_index]
     sweep_end = radar.sweep_end_ray_index["data"][elevation_index] + 1
 
-    dbzh = radar.fields["DBZ"]["data"][sweep_start:sweep_end]
-    zdr = radar.fields["ZDR"]["data"][sweep_start:sweep_end]
-    rho = radar.fields["RHOHV"]["data"][sweep_start:sweep_end]
-    phi = radar.fields["PHIDP"]["data"][sweep_start:sweep_end]
-    dop = radar.fields["VEL"]["data"][sweep_start:sweep_end]
-
+    dbzh = get_field_data(radar, field_aliases["dbzh"], sweep_start, sweep_end)
+    zdr  = get_field_data(radar, field_aliases["zdr"], sweep_start, sweep_end)
+    rho  = get_field_data(radar, field_aliases["rho"], sweep_start, sweep_end)
+    phi  = get_field_data(radar, field_aliases["phi"], sweep_start, sweep_end)
+    dop  = get_field_data(radar, field_aliases["dop"], sweep_start, sweep_end)
+    
     # Apply Gabella filter
     clutter_mask_gabella = wrl.classify.filter_gabella(
         dbzh,
