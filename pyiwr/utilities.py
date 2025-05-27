@@ -19,7 +19,7 @@ from pyproj import CRS, Transformer
 
 import numpy as np
 import wradlib as wrl
-from wradlib.classify import classify_echo_fuzzy
+from wradlib.clutter import classify_echo_fuzzy
 import pyart
 import pyart.map
 import xarray as xr
