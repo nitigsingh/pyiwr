@@ -29,5 +29,6 @@ from .analysis import marginal_max_map
 # from .analysis import timeseries_spatial
 # from .analysis import timeseries_location
 from .utilities import classify_echo_filter_dbzh  # noqa
+from .utilities import get_field_data, field_aliases
 # from .analysis import cfad
 
