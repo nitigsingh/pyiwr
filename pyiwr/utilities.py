@@ -1156,22 +1156,25 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
         cartesian=False,
     )
 
-# Prepare inputs for fuzzy classification (only include available fields)
-    dat = {
-        "map": static_clutter_map.astype(float) if static_clutter_map is not None else clutter_mask_gabella.astype(float)
-    }
+    # If all dual-pol fields are present, apply fuzzy classification
+    if all(field is not None for field in [zdr, rho, phi, dop]):
+        dat = {
+            "zdr": zdr,
+            "rho": rho,
+            "phi": phi,
+            "dop": dop,
+            "map": static_clutter_map.astype(float) if static_clutter_map is not None else clutter_mask_gabella.astype(float)
+        }
 
-    if zdr is not None: dat["zdr"] = zdr
-    if rho is not None: dat["rho"] = rho
-    if phi is not None: dat["phi"] = phi
-    if dop is not None: dat["dop"] = dop
-
-
-    # Fuzzy echo classification
-    prob, fuzzy_mask = classify_echo_fuzzy(dat)
-
-    # Combine masks
-    combined_mask = np.logical_or(clutter_mask_gabella, fuzzy_mask)
+        # Fuzzy echo classification
+        prob, fuzzy_mask = classify_echo_fuzzy(dat)
+        combined_mask = np.logical_or(clutter_mask_gabella, fuzzy_mask)
+    else:
+        # Only Gabella used
+        if static_clutter_map is not None:
+            combined_mask = np.logical_or(clutter_mask_gabella, static_clutter_map)
+        else:
+            combined_mask = clutter_mask_gabella
 
     # Masked reflectivity
     cleaned_dbzh = np.ma.array(dbzh, mask=combined_mask)
