@@ -504,7 +504,7 @@ def sweeps2mergednc(path_string,
                 # Create the "corrected" subdirectory if it doesn't exist
                 merged_dir = os.path.join(os.path.dirname(path_string), "merged")
             else:
-                merged_dir = ouput_path
+                merged_dir = output_path
             os.makedirs(merged_dir, exist_ok=True)
 
             # Specify the new file path
