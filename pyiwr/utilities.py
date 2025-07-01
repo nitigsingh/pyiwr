@@ -1087,7 +1087,7 @@ def qpe_estimators(ref_val = 'DBZ', diffref_val = 'ZDR', kdp = 'KDP', a=267, b=1
 
 # Field name mappings
 field_aliases = {
-    "dbzh": ["DBZ", "reflectivity"],
+    "dbzh": ["DBZ", "reflectivity", "REF"],
     "zdr": ["ZDR", "differential_reflectivity"],
     "rho": ["RHOHV", "cross_correlation_ratio"],
     "phi": ["PHIDP", "differential_phase"],
@@ -1130,10 +1130,18 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
     sweep_end = radar.sweep_end_ray_index["data"][elevation_index] + 1
 
     dbzh = get_field_data(radar, field_aliases["dbzh"], sweep_start, sweep_end)
-    zdr  = get_field_data(radar, field_aliases["zdr"], sweep_start, sweep_end)
-    rho  = get_field_data(radar, field_aliases["rho"], sweep_start, sweep_end)
-    phi  = get_field_data(radar, field_aliases["phi"], sweep_start, sweep_end)
-    dop  = get_field_data(radar, field_aliases["dop"], sweep_start, sweep_end)
+
+        # Safely try to extract optional dual-pol fields
+    def safe_field(alias):
+        try:
+            return get_field_data(radar, field_aliases[alias], sweep_start, sweep_end)
+        except KeyError:
+            return None
+
+    zdr = safe_field("zdr")
+    rho = safe_field("rho")
+    phi = safe_field("phi")
+    dop = safe_field("dop")
     
     # Apply Gabella filter
     clutter_mask_gabella = wrl.classify.filter_gabella(
@@ -1148,14 +1156,16 @@ def classify_echo_filter_dbzh(radar, elevation_index=0, static_clutter_map=None)
         cartesian=False,
     )
 
-    # Prepare input dict for fuzzy classification
+# Prepare inputs for fuzzy classification (only include available fields)
     dat = {
-        "zdr": zdr,
-        "rho": rho,
-        "phi": phi,
-        "dop": dop,
         "map": static_clutter_map.astype(float) if static_clutter_map is not None else clutter_mask_gabella.astype(float)
     }
+
+    if zdr is not None: dat["zdr"] = zdr
+    if rho is not None: dat["rho"] = rho
+    if phi is not None: dat["phi"] = phi
+    if dop is not None: dat["dop"] = dop
+
 
     # Fuzzy echo classification
     prob, fuzzy_mask = classify_echo_fuzzy(dat)
