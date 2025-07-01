@@ -392,6 +392,21 @@ def sweeps2mergednc(path_string,
 
         fname = os.path.basename(bb[i][0]).split(".nc")[0]
 
+        # Determine output directory
+        if output_path is None:
+            merged_dir = os.path.join(os.path.dirname(path_string), "merged")
+        else:
+            merged_dir = output_path
+        os.makedirs(merged_dir, exist_ok=True)
+        
+        # Check if merged file already exists
+        new_file_name = f"merged_cfrad_{fname}.nc"
+        new_file_path = os.path.join(merged_dir, new_file_name)
+        
+        if os.path.exists(new_file_path) and save_file:
+            print(f"[⏩] Skipping {new_file_name}: Already exists.")
+            continue
+    
         radar = pyart.testing.make_empty_ppi_radar(
             ds.dimensions["bin"].size, ds.dimensions["radial"].size * no_swps, 1
         )
