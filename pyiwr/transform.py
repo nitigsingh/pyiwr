@@ -271,6 +271,7 @@ def sweeps2mergednc(path_string,
                     vert_res=0.5, 
                     horiz_res=1,
                     save_file=False,
+                    output_path=None,
                     ):
     
     
@@ -294,11 +295,11 @@ def sweeps2mergednc(path_string,
     height: maximum height in km example 15, 
     length: maximum scan distance radially from radar example 250,
     save_file: option to save the file made after merging optional and by default it is False,
-    
+    output_path: path to save the file made after merging
     Example Usage:
     
     radar = sweeps2mergednc(directory[4], start_index = 0, end_index=None, scan_type="B", no_swps = None, dualpol=False,
-                gridder=True, grid_shape=(31, 501, 501), save_file=False,
+                gridder=True, grid_shape=(31, 501, 501), save_file=False, output_path=None,
                 )
     """
        
@@ -499,8 +500,11 @@ def sweeps2mergednc(path_string,
               
         # Save the updated dataset to a new netCDF file if specified
         if save_file:
-            # Create the "corrected" subdirectory if it doesn't exist
-            merged_dir = os.path.join(os.path.dirname(path_string), "merged")
+            if output_path is None:
+                # Create the "corrected" subdirectory if it doesn't exist
+                merged_dir = os.path.join(os.path.dirname(path_string), "merged")
+            else:
+                merged_dir = ouput_path
             os.makedirs(merged_dir, exist_ok=True)
 
             # Specify the new file path
